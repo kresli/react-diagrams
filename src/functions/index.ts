@@ -1,3 +1,2 @@
-export * from "./createSchema";
-export * from "./schema.reducer";
-export * from "./clientToViewPosition";
+export * from './createSchema';
+export * from './schema.reducer';

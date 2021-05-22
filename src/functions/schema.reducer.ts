@@ -1,10 +1,10 @@
-import produce, { current } from "immer";
-import { Schema, SchemaNode, SchemaPort } from "src/types";
+import produce from 'immer';
+import { Schema, SchemaNode } from 'src/types';
 
 export enum SchemaActionType {
-  VIEWPORT_MOVE = "VIEWPORT_MOVE",
-  VIEWPORT_ZOOM = "VIEWPORT_ZOOM",
-  NODE_MOVE = "NODE_MOVE",
+  VIEWPORT_MOVE = 'VIEWPORT_MOVE',
+  VIEWPORT_ZOOM = 'VIEWPORT_ZOOM',
+  NODE_MOVE = 'NODE_MOVE',
 }
 
 export type SchemaAction =

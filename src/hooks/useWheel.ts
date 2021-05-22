@@ -1,4 +1,4 @@
-import { useCallback } from "react";
+import { useCallback } from 'react';
 
 export function useWheel(
   onZoom: (data: { deltaY: number; clientX: number; clientY: number }) => void
@@ -9,7 +9,7 @@ export function useWheel(
       function onWheel({ deltaY, clientX, clientY }: WheelEvent) {
         onZoom({ deltaY, clientY, clientX });
       }
-      element.addEventListener("wheel", onWheel);
+      element.addEventListener('wheel', onWheel);
     },
     [onZoom]
   );

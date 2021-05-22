@@ -1,10 +1,10 @@
-import { useState, useEffect, useMemo, useRef } from "react";
+import { useState, useEffect, useRef } from 'react';
 
 type DragCallback = (movementX: number, movementY: number) => void;
 
 export const useDrag = (onDragCb: DragCallback) => {
   const [ref, setRef] = useState<HTMLDivElement | null>(null);
-  const onDrag = useRef<DragCallback>(null as any as DragCallback);
+  const onDrag = useRef<DragCallback>((null as any) as DragCallback);
   onDrag.current = onDragCb;
   useEffect(() => {
     if (!ref) return;
@@ -14,15 +14,15 @@ export const useDrag = (onDragCb: DragCallback) => {
       const mouseMove = (ev: MouseEvent) => {
         ev.preventDefault();
         ev.stopImmediatePropagation();
-        if (!ev.buttons) window.removeEventListener("mousemove", mouseMove);
+        if (!ev.buttons) window.removeEventListener('mousemove', mouseMove);
         onDrag.current(ev.movementX, ev.movementY);
       };
-      window.addEventListener("mousemove", mouseMove);
+      window.addEventListener('mousemove', mouseMove);
     };
-    ref.addEventListener("mousedown", onMouseDown);
+    ref.addEventListener('mousedown', onMouseDown);
     return () => {
-      ref.removeEventListener("mousedown", onMouseDown);
-      window.removeEventListener("mousemove", onMouseMove);
+      ref.removeEventListener('mousedown', onMouseDown);
+      window.removeEventListener('mousemove', onMouseMove);
     };
   }, [ref]);
 
