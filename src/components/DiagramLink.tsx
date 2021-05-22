@@ -1,17 +1,18 @@
+import React from 'react';
 import {
   FunctionComponent,
   useState,
   useMemo,
   memo,
   useLayoutEffect,
-} from "react";
-import { useViewport } from "src/context";
-import { useSchema } from "src/hooks";
-import { SchemaLink, SchemaNode } from "src/types";
+} from 'react';
+import { useViewport } from 'src/context';
+import { useSchema } from 'src/hooks';
+import { SchemaLink } from 'src/types';
 
 const config = {
   attributes: true,
-  attributeFilter: ["style"],
+  attributeFilter: ['style'],
 };
 
 // @TODO optimize it
@@ -58,17 +59,6 @@ export const DiagramLink: FunctionComponent<SchemaLink> = memo(
     );
   }
 );
-
-function getNode(
-  portElement: HTMLElement,
-  nodes: SchemaNode[]
-): SchemaNode | null {
-  const element = getNodeElement(portElement);
-  console.log(element, nodes);
-  if (!element) return null;
-  const id = element.dataset.node;
-  return nodes.find((node) => node.id === id) || null;
-}
 
 function getNodeElement(portElement: HTMLElement): HTMLElement | null {
   let element = portElement.parentElement;

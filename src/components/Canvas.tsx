@@ -4,11 +4,12 @@ import {
   useState,
   CSSProperties,
   useCallback,
-} from "react";
-import { useViewport } from "src/context";
-import { SchemaActionType } from "src/functions";
-import { useSchemaAction, useDrag, useWheel, useContextMenu } from "src/hooks";
-import { ViewLayer } from "src/components";
+} from 'react';
+import { useViewport } from 'src/context';
+import { SchemaActionType } from 'src/functions';
+import { useSchemaAction, useDrag, useWheel, useContextMenu } from 'src/hooks';
+import { ViewLayer } from 'src/components';
+import React from 'react';
 
 const ContextPopup: FunctionComponent = () => {
   const handleCreate = useCallback(() => {}, []);
@@ -26,17 +27,17 @@ export const Canvas: FunctionComponent = memo(() => {
     action({ type: SchemaActionType.VIEWPORT_MOVE, movementX, movementY })
   );
   const [viewLayer] = useViewport();
-  const setZoomRef = useWheel((data) => {
+  const setZoomRef = useWheel(data => {
     if (viewLayer)
       action({ ...data, type: SchemaActionType.VIEWPORT_ZOOM, viewLayer });
   });
   const [style] = useState(
     () =>
       ({
-        position: "relative",
-        background: "green",
-        width: "100%",
-        height: "100%",
+        position: 'relative',
+        background: 'green',
+        width: '100%',
+        height: '100%',
       } as CSSProperties)
   );
   const setRef = useCallback(

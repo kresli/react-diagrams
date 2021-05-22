@@ -1,7 +1,8 @@
-import { FunctionComponent, memo, useMemo, CSSProperties } from "react";
-import { useViewport } from "src/context";
-import { useSchema } from "src/hooks";
-import { LinksLayer, NodesLayer } from "src/components";
+import { FunctionComponent, memo, useMemo, CSSProperties } from 'react';
+import { useViewport } from 'src/context';
+import { useSchema } from 'src/hooks';
+import { LinksLayer, NodesLayer } from 'src/components';
+import React from 'react';
 
 export const ViewLayer: FunctionComponent = memo(() => {
   const schema = useSchema();
@@ -12,9 +13,9 @@ export const ViewLayer: FunctionComponent = memo(() => {
   const viewLayerStyle = useMemo(
     () =>
       ({
-        position: "absolute",
+        position: 'absolute',
         transform: `scale(${scale})`,
-        transformOrigin: "top left",
+        transformOrigin: 'top left',
         left,
         top,
       } as CSSProperties),
