@@ -1,8 +1,9 @@
-import { Dispatch, FunctionComponent, memo } from "react";
-import { SchemaProvider, ViewportProvider } from "src/context";
-import { Canvas } from "src/components";
-import { Schema } from "src/types";
-import { SchemaAction } from "src/functions";
+import { Dispatch, FunctionComponent, memo } from 'react';
+import { SchemaProvider, ViewportProvider } from 'src/context';
+import { Canvas } from 'src/components';
+import { Schema } from 'src/types';
+import { SchemaAction } from 'src/functions';
+import React from 'react';
 
 export const Diagram: FunctionComponent<{
   schema: Schema;
