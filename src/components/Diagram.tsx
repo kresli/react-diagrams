@@ -1,9 +1,8 @@
-import { Dispatch, memo, MutableRefObject } from 'react';
-import { SchemaProvider, ViewportProvider } from '../context';
-import { Canvas } from './Canvas';
-import { Schema } from '../types';
-import { SchemaAction } from '../functions';
-import React from 'react';
+import { Dispatch, memo, MutableRefObject } from "react";
+import { SchemaProvider, ViewportProvider } from "../context";
+import { Canvas } from "./Canvas";
+import { Schema } from "../types";
+import { SchemaAction } from "../functions";
 
 interface Props {
   schema: Schema;

@@ -1,5 +1,4 @@
-import { FunctionComponent, memo, useEffect, useMemo, useState } from 'react';
-import React from 'react';
+import { FunctionComponent, memo, useEffect, useMemo, useState } from "react";
 // @TODO: optimize
 export const useContextMenu = (Popup: FunctionComponent) => {
   const [triggerRef, setTriggerRef] = useState<HTMLElement | null>(null);
@@ -15,11 +14,11 @@ export const useContextMenu = (Popup: FunctionComponent) => {
       if (ev.buttons !== 1) return;
       setVisible(null);
     };
-    window.addEventListener('mousedown', onMouseDown);
-    triggerRef.addEventListener('contextmenu', onContextMenu);
+    window.addEventListener("mousedown", onMouseDown);
+    triggerRef.addEventListener("contextmenu", onContextMenu);
     return () => {
-      triggerRef.removeEventListener('contextmenu', onContextMenu);
-      window.removeEventListener('mousedown', onMouseDown);
+      triggerRef.removeEventListener("contextmenu", onContextMenu);
+      window.removeEventListener("mousedown", onMouseDown);
     };
   }, [triggerRef]);
   const ContextMenu = useMemo(() => {
@@ -47,8 +46,8 @@ const ContextMenuPopup: FunctionComponent<{ x: number; y: number }> = memo(
     return (
       <div
         style={{
-          background: 'white',
-          position: 'fixed',
+          background: "white",
+          position: "fixed",
           left: x,
           top: y,
           zIndex: 99999,

@@ -4,8 +4,7 @@ import {
   useContext,
   useMemo,
   useState,
-} from 'react';
-import React from 'react';
+} from "react";
 type ViewportContextValue = [Element | null, (element: Element | null) => void];
 
 const ViewportContext = createContext<ViewportContextValue>(null as any);

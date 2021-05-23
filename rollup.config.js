@@ -4,8 +4,8 @@ import external from 'rollup-plugin-peer-deps-external';
 import resolve from '@rollup/plugin-node-resolve';
 import image from '@rollup/plugin-image'
 import visualizer from 'rollup-plugin-visualizer';
-import pkg from './package.json';
 import typescript from '@rollup/plugin-typescript';
+import {dependencies, peerDependencies } from './package.json';
 
 const config = {
   input: './src/index.ts',
@@ -19,6 +19,7 @@ const config = {
       format: 'esm'
     }
   ],
+  external: Object.keys({ ...dependencies, ...peerDependencies }),
   plugins: [
     typescript(),
     external(),

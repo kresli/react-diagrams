@@ -1,7 +1,6 @@
-import { createContext, Dispatch, FunctionComponent } from 'react';
-import { SchemaAction } from '../functions';
-import { Schema } from '../types';
-import React from 'react';
+import { createContext, Dispatch, FunctionComponent } from "react";
+import { SchemaAction } from "../functions";
+import { Schema } from "../types";
 export const SchemaContext = createContext<Schema>((null as any) as Schema);
 export const SchemaActionContext = createContext<Dispatch<SchemaAction>>(
   (null as any) as Dispatch<SchemaAction>

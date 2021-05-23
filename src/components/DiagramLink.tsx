@@ -1,18 +1,17 @@
-import React from 'react';
 import {
   FunctionComponent,
   useState,
   useMemo,
   memo,
   useLayoutEffect,
-} from 'react';
-import { useViewport } from '../context';
-import { useData } from '../hooks';
-import { SchemaLink } from '../types';
+} from "react";
+import { useViewport } from "../context";
+import { useData } from "../hooks";
+import { SchemaLink } from "../types";
 
 const config = {
   attributes: true,
-  attributeFilter: ['style'],
+  attributeFilter: ["style"],
 };
 
 // @TODO optimize it

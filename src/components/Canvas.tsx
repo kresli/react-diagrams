@@ -6,12 +6,11 @@ import {
   useRef,
   useLayoutEffect,
   MutableRefObject,
-} from 'react';
-import { useViewport } from '../context';
-import { SchemaActionType } from '../functions';
-import { useAction, useDrag, useWheel, useContextMenu } from '../hooks';
-import { ViewLayer } from './ViewLayer';
-import React from 'react';
+} from "react";
+import { useViewport } from "../context";
+import { SchemaActionType } from "../functions";
+import { useAction, useDrag, useWheel, useContextMenu } from "../hooks";
+import { ViewLayer } from "./ViewLayer";
 
 const ContextPopup = memo(() => {
   const handleCreate = useCallback(() => {}, []);
@@ -34,17 +33,17 @@ export const Canvas = memo<Props>(({ ref: scopeRef }) => {
     action({ type: SchemaActionType.VIEWPORT_MOVE, movementX, movementY })
   );
   const [viewLayer] = useViewport();
-  const setZoomRef = useWheel(data => {
+  const setZoomRef = useWheel((data) => {
     if (viewLayer)
       action({ ...data, type: SchemaActionType.VIEWPORT_ZOOM, viewLayer });
   });
   const [style] = useState(
     () =>
       ({
-        position: 'relative',
-        background: 'green',
-        width: '100%',
-        height: '100%',
+        position: "relative",
+        background: "green",
+        width: "100%",
+        height: "100%",
       } as CSSProperties)
   );
   // const setRef = useCallback(
