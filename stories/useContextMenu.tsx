@@ -1,6 +1,7 @@
 import { FunctionComponent, memo, useEffect, useMemo, useState } from "react";
+import React from "react";
 // @TODO: optimize
-export const useContextMenu = (Popup: FunctionComponent) => {
+export const useContextMenu = <P extends {}>(Popup: FunctionComponent<P>) => {
   const [triggerRef, setTriggerRef] = useState<HTMLElement | null>(null);
   const [visible, setVisible] = useState<[number, number] | null>(null);
   useEffect(() => {
@@ -21,12 +22,12 @@ export const useContextMenu = (Popup: FunctionComponent) => {
       window.removeEventListener("mousedown", onMouseDown);
     };
   }, [triggerRef]);
-  const ContextMenu = useMemo(() => {
-    return () => (
+  const ContextMenu: FunctionComponent<P> = useMemo(() => {
+    return (props) => (
       <>
         {visible && (
           <ContextMenuPopup x={visible[0]} y={visible[1]}>
-            <Popup />
+            <Popup {...props} />
           </ContextMenuPopup>
         )}
       </>

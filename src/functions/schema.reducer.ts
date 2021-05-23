@@ -1,8 +1,9 @@
-import { Schema, SchemaNode } from '../types';
+import { Schema, SchemaNode } from "../types";
 export enum SchemaActionType {
-  VIEWPORT_MOVE = 'VIEWPORT_MOVE',
-  VIEWPORT_ZOOM = 'VIEWPORT_ZOOM',
-  NODE_MOVE = 'NODE_MOVE',
+  VIEWPORT_MOVE = "VIEWPORT_MOVE",
+  VIEWPORT_ZOOM = "VIEWPORT_ZOOM",
+  NODE_MOVE = "NODE_MOVE",
+  ADD_NODE = "ADD_NODE",
 }
 
 export type SchemaAction =
@@ -24,6 +25,10 @@ export type SchemaAction =
       clientX: number;
       clientY: number;
       viewLayer: Element;
+    }
+  | {
+      type: SchemaActionType.ADD_NODE;
+      position: [number, number];
     };
 
 export const schemaReducer = (schema: Schema, action: SchemaAction): Schema => {
@@ -40,7 +45,7 @@ export const schemaReducer = (schema: Schema, action: SchemaAction): Schema => {
     case SchemaActionType.NODE_MOVE: {
       const { node, movementX, movementY, scale } = action;
       const [x, y] = node.position;
-      const nodes = schema.nodes.map(n =>
+      const nodes = schema.nodes.map((n) =>
         n.id === node.id
           ? {
               ...n,
@@ -76,6 +81,12 @@ export const schemaReducer = (schema: Schema, action: SchemaAction): Schema => {
         ...schema,
         position,
         scale,
+      };
+    }
+    case SchemaActionType.ADD_NODE: {
+      console.log(action);
+      return {
+        ...schema,
       };
     }
     default:

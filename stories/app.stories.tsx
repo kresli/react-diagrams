@@ -1,14 +1,38 @@
-import React from "react";
+import React, {
+  FunctionComponent,
+  memo,
+  useCallback,
+  useLayoutEffect,
+  useRef,
+} from "react";
 import { Meta } from "@storybook/react";
 import { Diagram, useSchema } from "../src";
+import { useContextMenu } from "./useContextMenu";
 
 const meta: Meta = {
   title: "default",
   component: Diagram,
 };
 
+const ContextPopup: FunctionComponent<{
+  onAddNode: (data: { position: [number, number] }) => void;
+}> = memo(() => {
+  const handleCreate = useCallback(
+    (ev: React.MouseEvent<HTMLButtonElement>) => {
+      console.log("add node??");
+    },
+    []
+  );
+  return (
+    <div>
+      <button onClick={handleCreate}>create</button>
+    </div>
+  );
+});
+
 export const Playground = () => {
-  const [schema, { onChange }] = useSchema({
+  const ref = useRef<HTMLDivElement>(null);
+  const [schema, { onChange, addNode }] = useSchema({
     nodes: [
       {
         id: "1",
@@ -25,9 +49,21 @@ export const Playground = () => {
     position: [0, 0],
     scale: 1,
   });
+  const { ContextMenu, setContextTrigger } = useContextMenu(ContextPopup);
+  const x = useCallback(
+    (d: any) => {
+      console.log(d);
+      onChange(d);
+    },
+    [onChange]
+  );
+  useLayoutEffect(() => {
+    setContextTrigger(ref.current);
+  }, [setContextTrigger]);
   return (
     <div style={{ width: 500, height: 500 }}>
-      <Diagram schema={schema} onChange={onChange} />
+      <Diagram schema={schema} onChange={x} ref={ref} />
+      <ContextMenu onAddNode={addNode} />
     </div>
   );
 };
