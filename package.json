@@ -1,5 +1,5 @@
 {
-  "name": "react-diagrams",
+  "name": "@kresli/react-diagrams",
   "version": "0.1.0",
   "private": true,
   "main": "dist/index.cjs.js",
