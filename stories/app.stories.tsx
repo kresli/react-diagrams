@@ -1,8 +1,7 @@
-import React, { FunctionComponent, memo, useLayoutEffect, useRef } from "react";
+import React, { FunctionComponent, memo } from "react";
 import { Meta } from "@storybook/react";
 import { Diagram, useSchema } from "../src";
 import { useContextMenu } from "./useContextMenu";
-import { SchemaActionType } from "../src/functions";
 
 const meta: Meta = {
   title: "default",
@@ -38,14 +37,11 @@ const initData = {
 };
 
 export const Playground = () => {
-  const ref = useRef<HTMLDivElement>(null);
   const schema = useSchema(initData);
   const { ContextMenu, setContextTrigger, contextPosition } = useContextMenu(
     ContextPopup
   );
-  useLayoutEffect(() => {
-    setContextTrigger(ref.current);
-  }, [setContextTrigger]);
+  const setRef = (elem: HTMLDivElement) => setContextTrigger(elem);
   const onAdd = () => {
     if (!contextPosition) return;
     const position = schema.clientToLocalPosition(...contextPosition);
@@ -54,7 +50,7 @@ export const Playground = () => {
 
   return (
     <div style={{ width: 500, height: 500 }}>
-      <Diagram schema={schema} ref={ref} />
+      <Diagram schema={schema} ref={setRef} />
       <ContextMenu onAddNode={onAdd} />
     </div>
   );
