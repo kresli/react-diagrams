@@ -11,15 +11,12 @@ export const useContextMenu = <P extends {}>(Popup: FunctionComponent<P>) => {
       ev.preventDefault();
       setVisible([ev.clientX, ev.clientY]);
     };
-    const onMouseDown = (ev: MouseEvent) => {
-      if (ev.buttons !== 1) return;
-      setVisible(null);
-    };
-    window.addEventListener("mousedown", onMouseDown);
+    const onMouseDown = (ev: MouseEvent) => setVisible(null);
+    window.addEventListener("click", onMouseDown);
     triggerRef.addEventListener("contextmenu", onContextMenu);
     return () => {
       triggerRef.removeEventListener("contextmenu", onContextMenu);
-      window.removeEventListener("mousedown", onMouseDown);
+      window.removeEventListener("click", onMouseDown);
     };
   }, [triggerRef]);
   const ContextMenu: FunctionComponent<P> = useMemo(() => {

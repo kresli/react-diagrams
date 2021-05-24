@@ -84,7 +84,7 @@ export const schemaReducer = (schema: Schema, action: SchemaAction): Schema => {
       };
     }
     case SchemaActionType.ADD_NODE: {
-      console.log(action);
+      console.log(action.position[0]);
       return {
         ...schema,
       };
