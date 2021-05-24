@@ -1,4 +1,4 @@
-import { Dispatch, useMemo, useReducer, useState } from "react";
+import { Dispatch, useCallback, useMemo, useReducer, useState } from "react";
 import { SchemaAction, schemaReducer } from "../functions";
 import { validateSchema } from "../functions/validateSchema";
 import { Schema } from "../types";
@@ -12,8 +12,16 @@ export interface Ctx {
 export const useSchema = (initSchema: Schema): Ctx => {
   validateSchema(initSchema);
   const [data, dispatchAction] = useReducer(schemaReducer, initSchema);
-  const clientToLocalPosition = (): [number, number] => [0, 0];
   const viewportRef = useState<HTMLDivElement | null>(null);
+  const [view] = viewportRef;
+  const clientToLocalPosition = useCallback(
+    (clientX: number, clientY: number): [number, number] => {
+      if (!view) return [0, 0];
+      const { left, top } = view.getBoundingClientRect();
+      return [(clientX - left) / data.scale, (clientY - top) / data.scale];
+    },
+    [data.scale, view]
+  );
   return useMemo(
     () => ({
       data,
@@ -21,7 +29,7 @@ export const useSchema = (initSchema: Schema): Ctx => {
       viewportRef,
       clientToLocalPosition,
     }),
-    [data, viewportRef]
+    [clientToLocalPosition, data, viewportRef]
   );
 };
 

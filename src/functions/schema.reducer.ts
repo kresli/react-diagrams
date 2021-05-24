@@ -1,4 +1,5 @@
 import { Schema, SchemaNode } from "../types";
+import { v4 } from "uuid";
 export enum SchemaActionType {
   VIEWPORT_MOVE = "VIEWPORT_MOVE",
   VIEWPORT_ZOOM = "VIEWPORT_ZOOM",
@@ -84,9 +85,11 @@ export const schemaReducer = (schema: Schema, action: SchemaAction): Schema => {
       };
     }
     case SchemaActionType.ADD_NODE: {
-      console.log(action.position[0]);
+      const { position } = action;
+      const nodes: SchemaNode[] = [...schema.nodes, { id: v4(), position }];
       return {
         ...schema,
+        nodes,
       };
     }
     default:

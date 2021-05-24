@@ -3,15 +3,15 @@ import React from "react";
 // @TODO: optimize
 export const useContextMenu = <P extends {}>(Popup: FunctionComponent<P>) => {
   const [triggerRef, setTriggerRef] = useState<HTMLElement | null>(null);
-  const [visible, setVisible] = useState<[number, number] | null>(null);
+  const [position, setPosition] = useState<[number, number] | null>(null);
   useEffect(() => {
     if (!triggerRef) return;
     const onContextMenu = (ev: MouseEvent) => {
       ev.stopImmediatePropagation();
       ev.preventDefault();
-      setVisible([ev.clientX, ev.clientY]);
+      setPosition([ev.clientX, ev.clientY]);
     };
-    const onMouseDown = (ev: MouseEvent) => setVisible(null);
+    const onMouseDown = (ev: MouseEvent) => setPosition(null);
     window.addEventListener("click", onMouseDown);
     triggerRef.addEventListener("contextmenu", onContextMenu);
     return () => {
@@ -22,20 +22,21 @@ export const useContextMenu = <P extends {}>(Popup: FunctionComponent<P>) => {
   const ContextMenu: FunctionComponent<P> = useMemo(() => {
     return (props) => (
       <>
-        {visible && (
-          <ContextMenuPopup x={visible[0]} y={visible[1]}>
+        {position && (
+          <ContextMenuPopup x={position[0]} y={position[1]}>
             <Popup {...props} />
           </ContextMenuPopup>
         )}
       </>
     );
-  }, [Popup, visible]);
+  }, [Popup, position]);
   return useMemo(
     () => ({
       ContextMenu,
       setContextTrigger: setTriggerRef,
+      contextPosition: position,
     }),
-    [ContextMenu]
+    [ContextMenu, position]
   );
 };
 

@@ -2,6 +2,7 @@ import React, { FunctionComponent, memo, useLayoutEffect, useRef } from "react";
 import { Meta } from "@storybook/react";
 import { Diagram, useSchema } from "../src";
 import { useContextMenu } from "./useContextMenu";
+import { SchemaActionType } from "../src/functions";
 
 const meta: Meta = {
   title: "default",
@@ -57,19 +58,23 @@ export const Playground = () => {
   //   position: [0, 0],
   //   scale: 1,
   // });
-  // const { ContextMenu, setContextTrigger } = useContextMenu(ContextPopup);
-  // useLayoutEffect(() => {
-  //   setContextTrigger(ref.current);
-  // }, [setContextTrigger]);
-  // const onAdd = ({ clientX, clientY }: React.MouseEvent<HTMLButtonElement>) => {
-  //   clientToLocalPosition(clientX, clientY);
-  // };
+  const { ContextMenu, setContextTrigger, contextPosition } = useContextMenu(
+    ContextPopup
+  );
+  useLayoutEffect(() => {
+    setContextTrigger(ref.current);
+  }, [setContextTrigger]);
+  const onAdd = () => {
+    if (!contextPosition) return;
+    const position = schema.clientToLocalPosition(...contextPosition);
+    schema.dispatchAction({ type: SchemaActionType.ADD_NODE, position });
+  };
   // cosnt [schema, setSchema]
 
   return (
     <div style={{ width: 500, height: 500 }}>
       <Diagram schema={schema} ref={ref} />
-      {/* <ContextMenu onAddNode={onAdd} /> */}
+      <ContextMenu onAddNode={onAdd} />
     </div>
   );
 };
