@@ -21,13 +21,13 @@ export const Canvas = memo(
     const setDragRef = useDrag((movementX, movementY) =>
       action({ type: SchemaActionType.VIEWPORT_MOVE, movementX, movementY })
     );
-    const viewLayer = useViewport();
+    const [viewLayer] = useViewport();
     const setZoomRef = useWheel((data) => {
-      if (viewLayer.current)
+      if (viewLayer)
         action({
           ...data,
           type: SchemaActionType.VIEWPORT_ZOOM,
-          viewLayer: viewLayer.current,
+          viewLayer,
         });
     });
     const [style] = useState(

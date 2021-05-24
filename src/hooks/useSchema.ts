@@ -1,19 +1,10 @@
-import {
-  createContext,
-  Dispatch,
-  MutableRefObject,
-  useCallback,
-  useContext,
-  useMemo,
-  useReducer,
-  useRef,
-} from "react";
-import { SchemaAction, SchemaActionType, schemaReducer } from "../functions";
+import { Dispatch, useMemo, useReducer, useState } from "react";
+import { SchemaAction, schemaReducer } from "../functions";
 import { validateSchema } from "../functions/validateSchema";
 import { Schema } from "../types";
 
 export interface Ctx {
-  viewportRef: MutableRefObject<HTMLDivElement | null>;
+  viewportRef: [HTMLDivElement | null, (view: HTMLDivElement | null) => void];
   data: Schema;
   dispatchAction: Dispatch<SchemaAction>;
   clientToLocalPosition: (clientX: number, clientY: number) => [number, number];
@@ -22,7 +13,7 @@ export const useSchema = (initSchema: Schema): Ctx => {
   validateSchema(initSchema);
   const [data, dispatchAction] = useReducer(schemaReducer, initSchema);
   const clientToLocalPosition = (): [number, number] => [0, 0];
-  const viewportRef = useRef<HTMLDivElement | null>(null);
+  const viewportRef = useState<HTMLDivElement | null>(null);
   return useMemo(
     () => ({
       data,
@@ -30,7 +21,7 @@ export const useSchema = (initSchema: Schema): Ctx => {
       viewportRef,
       clientToLocalPosition,
     }),
-    [data]
+    [data, viewportRef]
   );
 };
 

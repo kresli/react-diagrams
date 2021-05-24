@@ -6,7 +6,7 @@ import { LinksLayer } from "./LinksLayer";
 
 export const ViewLayer: FunctionComponent = memo(() => {
   const schema = useData();
-  const viewport = useViewport();
+  const [, setViewport] = useViewport();
 
   const { position, scale } = schema;
   const [left, top] = position;
@@ -21,10 +21,9 @@ export const ViewLayer: FunctionComponent = memo(() => {
       } as CSSProperties),
     [left, top, scale]
   );
-  // useCanvasMouse();
 
   return (
-    <div className="viewLayer" style={viewLayerStyle} ref={viewport}>
+    <div className="viewLayer" style={viewLayerStyle} ref={setViewport}>
       <NodesLayer />
       <LinksLayer />
     </div>

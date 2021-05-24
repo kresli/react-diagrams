@@ -1,10 +1,4 @@
-import {
-  createContext,
-  Dispatch,
-  FunctionComponent,
-  MutableRefObject,
-  useContext,
-} from "react";
+import { createContext, Dispatch, FunctionComponent, useContext } from "react";
 import { SchemaAction } from "../functions";
 import { Ctx } from "../hooks";
 import { Schema } from "../types";
@@ -12,9 +6,13 @@ export const SchemaContext = createContext<Schema>((null as any) as Schema);
 export const SchemaActionContext = createContext<Dispatch<SchemaAction>>(
   (null as any) as Dispatch<SchemaAction>
 );
-export const SchemaViewportRefContext = createContext<
-  MutableRefObject<HTMLDivElement | null>
->((null as any) as MutableRefObject<HTMLDivElement | null>);
+type SchemaViewportRefContextValue = [
+  HTMLDivElement | null,
+  (view: HTMLDivElement | null) => void
+];
+export const SchemaViewportRefContext = createContext<SchemaViewportRefContextValue>(
+  [null, () => {}]
+);
 export const useViewport = () => useContext(SchemaViewportRefContext);
 export const SchemaProvider: FunctionComponent<{
   schema: Ctx;
