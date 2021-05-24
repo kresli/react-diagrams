@@ -1,8 +1,7 @@
 import { Meta } from "@storybook/react";
-import { Diagram, Schema, SchemaNode, useSchema } from "../src";
+import { Diagram, Schema, useSchema } from "../src";
 import { useContextMenu } from "./useContextMenu";
 import { ContextPopup } from "./ContextPopup";
-import { v4 } from "uuid";
 
 const meta: Meta = {
   title: "default",
