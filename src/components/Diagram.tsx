@@ -1,8 +1,6 @@
-import { Dispatch, forwardRef, memo, useImperativeHandle, useRef } from "react";
-import { SchemaProvider, ViewportProvider } from "../context";
+import { forwardRef, memo, useImperativeHandle, useRef } from "react";
+import { SchemaProvider } from "../context";
 import { Canvas } from "./Canvas";
-import { Schema } from "../types";
-import { SchemaAction } from "../functions";
 import { Ctx } from "../hooks";
 
 interface Props {
@@ -14,11 +12,9 @@ export const Diagram = memo(
     // @ts-ignore
     useImperativeHandle(forwardedRef, () => ref.current);
     return (
-      <ViewportProvider>
-        <SchemaProvider schema={schema.data} onChange={schema.dispatchAction}>
-          <Canvas ref={ref} />
-        </SchemaProvider>
-      </ViewportProvider>
+      <SchemaProvider schema={schema}>
+        <Canvas ref={ref} />
+      </SchemaProvider>
     );
   })
 );

@@ -16,7 +16,7 @@ const config = {
 
 // @TODO optimize it
 function useElementPosition(elementId: string) {
-  const [viewport] = useViewport();
+  const viewport = useViewport();
   const [x, setX] = useState(0);
   const [y, setY] = useState(0);
   const { scale } = useData();
@@ -24,9 +24,12 @@ function useElementPosition(elementId: string) {
     const element = document.getElementById(elementId);
     if (!element) return;
     const callback = () => {
-      if (!element || !viewport) return;
+      if (!element || !viewport.current) return;
       const { left, top } = element.getBoundingClientRect();
-      const { left: viewLeft, top: viewTop } = viewport.getBoundingClientRect();
+      const {
+        left: viewLeft,
+        top: viewTop,
+      } = viewport.current.getBoundingClientRect();
       const x = (left - viewLeft) / scale;
       const y = (top - viewTop) / scale;
       setX(x);

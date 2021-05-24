@@ -1,6 +1,7 @@
 import {
   createContext,
   Dispatch,
+  MutableRefObject,
   useCallback,
   useContext,
   useMemo,
@@ -12,20 +13,21 @@ import { validateSchema } from "../functions/validateSchema";
 import { Schema } from "../types";
 
 export interface Ctx {
-  viewportElement: HTMLElement | null;
+  viewportRef: MutableRefObject<HTMLDivElement | null>;
   data: Schema;
   dispatchAction: Dispatch<SchemaAction>;
   clientToLocalPosition: (clientX: number, clientY: number) => [number, number];
 }
 export const useSchema = (initSchema: Schema): Ctx => {
+  validateSchema(initSchema);
   const [data, dispatchAction] = useReducer(schemaReducer, initSchema);
   const clientToLocalPosition = (): [number, number] => [0, 0];
-  const viewRef = useRef<HTMLDivElement | null>(null);
+  const viewportRef = useRef<HTMLDivElement | null>(null);
   return useMemo(
     () => ({
       data,
       dispatchAction,
-      viewportElement: viewRef.current,
+      viewportRef,
       clientToLocalPosition,
     }),
     [data]

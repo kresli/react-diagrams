@@ -39,6 +39,7 @@ const initData = {
 export const Playground = () => {
   const ref = useRef<HTMLDivElement>(null);
   const schema = useSchema(initData);
+  //@ts-ignore
   // const [schema, { onChange, addNode }] = useSchema({
   //   nodes: [
   //     {
