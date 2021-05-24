@@ -44,39 +44,49 @@ const InputOutput: FunctionComponent<{
   );
 });
 
+export const DiagramNodeHolder: FunctionComponent<{ node: SchemaNode }> = memo(
+  ({ node, children }) => {
+    const { position, id } = node;
+    const [left, top] = position;
+    const action = useAction();
+    const { scale } = useData();
+    // const { setElementType } = useContext(MouseEventsContext);
+    const setRef = useDrag((movementX, movementY) =>
+      action({
+        type: SchemaActionType.NODE_MOVE,
+        node,
+        movementX,
+        movementY,
+        scale,
+      })
+    );
+    return (
+      <div
+        data-node={id}
+        className="DiagramNode"
+        ref={setRef}
+        style={{
+          position: "absolute",
+          left,
+          top,
+          border: "1px solid black",
+          background: "blue",
+          width: "5rem",
+          cursor: "default",
+        }}
+      >
+        {children}
+      </div>
+    );
+  }
+);
+
 export const DiagramNode: FunctionComponent<{
   node: SchemaNode;
 }> = memo(({ node }) => {
-  const { position, outputs, inputs, id } = node;
-  const [left, top] = position;
-  const action = useAction();
-  const { scale } = useData();
-  // const { setElementType } = useContext(MouseEventsContext);
-  const setRef = useDrag((movementX, movementY) =>
-    action({
-      type: SchemaActionType.NODE_MOVE,
-      node,
-      movementX,
-      movementY,
-      scale,
-    })
-  );
-
+  const { outputs, inputs } = node;
   return (
-    <div
-      data-node={id}
-      className="DiagramNode"
-      ref={setRef}
-      style={{
-        position: "absolute",
-        left,
-        top,
-        border: "1px solid black",
-        background: "blue",
-        width: "5rem",
-        cursor: "default",
-      }}
-    >
+    <>
       <div>title</div>
       <div
         className="io"
@@ -115,6 +125,6 @@ export const DiagramNode: FunctionComponent<{
           ))}
         </div>
       </div>
-    </div>
+    </>
   );
 });

@@ -1,11 +1,25 @@
+import { FunctionComponent } from "react";
+
 export interface SchemaPort {
   id: string;
 }
 
 export enum PortAlign {
-  LEFT = 'LEFT',
-  RIGHT = 'RIGHT',
+  LEFT = "LEFT",
+  RIGHT = "RIGHT",
 }
+
+interface RenderPortProps extends SchemaPort {
+  key: string;
+}
+
+interface RenderProps {
+  inputs?: RenderPortProps[];
+  outputs?: RenderPortProps[];
+  data?: any;
+}
+
+export type SchemaNodeRender = FunctionComponent<RenderProps>;
 
 export interface SchemaNode {
   id: string;
@@ -13,6 +27,7 @@ export interface SchemaNode {
   position: [number, number];
   inputs?: SchemaPort[];
   outputs?: SchemaPort[];
+  render?: SchemaNodeRender;
 }
 export interface SchemaLink {
   input: string;

@@ -1,29 +1,41 @@
-import React, { FunctionComponent, memo } from "react";
 import { Meta } from "@storybook/react";
-import { Diagram, useSchema } from "../src";
+import { Diagram, Schema, SchemaNode, useSchema } from "../src";
 import { useContextMenu } from "./useContextMenu";
+import { ContextPopup } from "./ContextPopup";
+import { v4 } from "uuid";
 
 const meta: Meta = {
   title: "default",
   component: Diagram,
 };
 
-const ContextPopup: FunctionComponent<{
-  onAddNode: (ev: React.MouseEvent<HTMLButtonElement>) => void;
-}> = memo(({ onAddNode }) => {
-  return (
-    <div>
-      <button onClick={onAddNode}>create</button>
-    </div>
-  );
-});
-
-const initData = {
+const initData: Schema = {
   nodes: [
     {
       id: "1",
       position: [100, 100] as [number, number],
       outputs: [{ id: "1" }],
+      render: ({ inputs, outputs, data }) => {
+        return (
+          <div>
+            <div>custom</div>
+            <div>
+              {inputs?.map((input) => (
+                <div key={input.id}>
+                  Input
+                  <div id={input.key} />
+                </div>
+              ))}
+              {outputs?.map((output) => (
+                <div key={output.id}>
+                  Output
+                  <div id={output.key} />
+                </div>
+              ))}
+            </div>
+          </div>
+        );
+      },
     },
     {
       id: "3",
@@ -35,6 +47,19 @@ const initData = {
   position: [0, 0] as [number, number],
   scale: 1,
 };
+
+// function createTemplate<T extends Partial<SchemaNode>>(node: T): () => T {
+//   return () => ({
+//     id: v4(),
+//     position: [0,0],
+//     ...node
+//   })
+// }
+
+// const TEMPLATES = {
+//   DEFAULT: createTemplate({}),
+//   CUSTOM: createTemplate({})
+// }
 
 export const Playground = () => {
   const schema = useSchema(initData);
