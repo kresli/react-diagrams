@@ -1,13 +1,15 @@
 import { Dispatch, useCallback, useMemo, useReducer, useState } from "react";
-import { SchemaAction, schemaReducer } from "../functions";
+import { v4 } from "uuid";
+import { SchemaAction, SchemaActionType, schemaReducer } from "../functions";
 import { validateSchema } from "../functions/validateSchema";
-import { Schema } from "../types";
+import { Schema, SchemaNode } from "../types";
 
 export interface Ctx {
   viewportRef: [HTMLDivElement | null, (view: HTMLDivElement | null) => void];
   data: Schema;
   dispatchAction: Dispatch<SchemaAction>;
   clientToLocalPosition: (clientX: number, clientY: number) => [number, number];
+  addNode: (node: Partial<SchemaNode>) => void;
 }
 export const useSchema = (initSchema: Schema): Ctx => {
   validateSchema(initSchema);
@@ -22,12 +24,21 @@ export const useSchema = (initSchema: Schema): Ctx => {
     },
     [data.scale, view]
   );
+  const addNode = (node: Partial<SchemaNode>) => {
+    const data: SchemaNode = {
+      id: v4(),
+      position: [0, 0],
+      ...node,
+    };
+    dispatchAction({ type: SchemaActionType.ADD_NODE, ...data });
+  };
   return useMemo(
     () => ({
       data,
       dispatchAction,
       viewportRef,
       clientToLocalPosition,
+      addNode,
     }),
     [clientToLocalPosition, data, viewportRef]
   );

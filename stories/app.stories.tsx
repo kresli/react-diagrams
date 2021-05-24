@@ -40,24 +40,6 @@ const initData = {
 export const Playground = () => {
   const ref = useRef<HTMLDivElement>(null);
   const schema = useSchema(initData);
-  //@ts-ignore
-  // const [schema, { onChange, addNode }] = useSchema({
-  //   nodes: [
-  //     {
-  //       id: "1",
-  //       position: [100, 100],
-  //       outputs: [{ id: "1" }],
-  //     },
-  //     {
-  //       id: "3",
-  //       position: [400, 400],
-  //       inputs: [{ id: "3" }],
-  //     },
-  //   ],
-  //   links: [{ input: "1", output: "3" }],
-  //   position: [0, 0],
-  //   scale: 1,
-  // });
   const { ContextMenu, setContextTrigger, contextPosition } = useContextMenu(
     ContextPopup
   );
@@ -67,9 +49,8 @@ export const Playground = () => {
   const onAdd = () => {
     if (!contextPosition) return;
     const position = schema.clientToLocalPosition(...contextPosition);
-    schema.dispatchAction({ type: SchemaActionType.ADD_NODE, position });
+    schema.addNode({ position });
   };
-  // cosnt [schema, setSchema]
 
   return (
     <div style={{ width: 500, height: 500 }}>
