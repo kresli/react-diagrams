@@ -1,5 +1,5 @@
 export * from "./Diagram";
-export * from "./NodeContent.default";
+export * from "./NodeRender.default";
 export * from "./NodesLayer";
 export * from "./LinksLayer";
 export * from "./ViewLayer";

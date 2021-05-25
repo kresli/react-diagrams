@@ -13,7 +13,7 @@ interface RenderPortProps extends SchemaPort {
   key: string;
 }
 
-interface RenderProps {
+export interface RenderProps {
   inputs?: RenderPortProps[];
   outputs?: RenderPortProps[];
   data?: any;

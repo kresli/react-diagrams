@@ -1,5 +1,5 @@
 import { FunctionComponent, memo } from "react";
-import { PortAlign, SchemaNode, SchemaPort } from "../types";
+import { PortAlign, RenderProps, SchemaPort } from "../types";
 
 const Port: FunctionComponent<{ port: SchemaPort }> = memo(({ port }) => {
   const { id } = port;
@@ -43,50 +43,49 @@ const InputOutput: FunctionComponent<{
   );
 });
 
-export const NodeContentDefault: FunctionComponent<{
-  node: SchemaNode;
-}> = memo(({ node }) => {
-  const { outputs, inputs } = node;
-  return (
-    <>
-      <div>title</div>
-      <div
-        className="io"
-        style={{
-          position: "relative",
-          display: "flex",
-          flexDirection: "column",
-        }}
-      >
+export const NodeRenderDefault: FunctionComponent<RenderProps> = memo(
+  ({ inputs, outputs }) => {
+    return (
+      <>
+        <div>title</div>
         <div
-          className="Inputs"
+          className="io"
           style={{
-            flex: 1,
+            position: "relative",
             display: "flex",
             flexDirection: "column",
           }}
         >
-          {inputs?.map((input) => (
-            <InputOutput key={input.id} port={input} align={PortAlign.LEFT} />
-          ))}
+          <div
+            className="Inputs"
+            style={{
+              flex: 1,
+              display: "flex",
+              flexDirection: "column",
+            }}
+          >
+            {inputs?.map((input) => (
+              <InputOutput key={input.id} port={input} align={PortAlign.LEFT} />
+            ))}
+          </div>
+          <div
+            className="Outputs"
+            style={{
+              flex: 1,
+              display: "flex",
+              flexDirection: "column",
+            }}
+          >
+            {outputs?.map((output) => (
+              <InputOutput
+                key={output.id}
+                port={output}
+                align={PortAlign.RIGHT}
+              />
+            ))}
+          </div>
         </div>
-        <div
-          className="Outputs"
-          style={{
-            flex: 1,
-            display: "flex",
-            flexDirection: "column",
-          }}
-        >
-          {outputs?.map((output) => (
-            <InputOutput
-              key={output.id}
-              port={output}
-              align={PortAlign.RIGHT}
-            />
-          ))}
-        </div>
-      </div>
-    </>
-  );
-});
+      </>
+    );
+  }
+);

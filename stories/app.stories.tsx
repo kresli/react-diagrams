@@ -2,6 +2,7 @@ import { Meta } from "@storybook/react";
 import { Diagram, Schema, useSchema } from "../src";
 import { useContextMenu } from "./useContextMenu";
 import { ContextPopup } from "./ContextPopup";
+import { memo } from "react";
 
 const meta: Meta = {
   title: "default",
@@ -14,7 +15,7 @@ const initData: Schema = {
       id: "1",
       position: [100, 100] as [number, number],
       outputs: [{ id: "1" }],
-      render: ({ inputs, outputs, data }) => {
+      render: memo(({ inputs, outputs, data }) => {
         return (
           <div>
             <div>custom</div>
@@ -34,7 +35,7 @@ const initData: Schema = {
             </div>
           </div>
         );
-      },
+      }),
     },
     {
       id: "3",

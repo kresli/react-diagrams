@@ -1,19 +1,22 @@
 import { FunctionComponent, memo, useMemo } from "react";
-import { NodeContentDefault } from ".";
+import { NodeRenderDefault } from ".";
 import { SchemaActionType } from "../functions/schema.reducer";
 import { useAction, useData, useDrag } from "../hooks";
-import { SchemaNode, SchemaNodeRender } from "../types";
-import { NodeContentCustom } from "./NodeContent.custom";
-
-type CustomNodeProps = SchemaNode & { render: SchemaNodeRender };
+import { SchemaNode } from "../types";
 
 export const DiagramNode: FunctionComponent<{ node: SchemaNode }> = memo(
-  ({ node }) => {
-    const { position, id } = node;
+  ({ node: nodeData }) => {
+    const node = useMemo(
+      () => ({
+        render: NodeRenderDefault,
+        ...nodeData,
+      }),
+      [nodeData]
+    );
+    const { position, id, inputs, outputs, data } = node;
     const [left, top] = position;
     const action = useAction();
     const { scale } = useData();
-    // const { setElementType } = useContext(MouseEventsContext);
     const setRef = useDrag((movementX, movementY) =>
       action({
         type: SchemaActionType.NODE_MOVE,
@@ -23,14 +26,20 @@ export const DiagramNode: FunctionComponent<{ node: SchemaNode }> = memo(
         scale,
       })
     );
-    const content = useMemo(
-      () =>
-        node.render ? (
-          <NodeContentCustom node={node as CustomNodeProps} />
-        ) : (
-          <NodeContentDefault node={node} />
-        ),
-      [node]
+    const Render = node.render;
+    const props = useMemo(
+      () => ({
+        inputs: inputs?.map((input) => ({
+          ...input,
+          key: `GATE_${input.id}`,
+        })),
+        outputs: outputs?.map((output) => ({
+          ...output,
+          key: `GATE_${output.id}`,
+        })),
+        data: data,
+      }),
+      [data, inputs, outputs]
     );
     return (
       <div
@@ -47,7 +56,7 @@ export const DiagramNode: FunctionComponent<{ node: SchemaNode }> = memo(
           cursor: "default",
         }}
       >
-        {content}
+        <Render key={id} {...props} />
       </div>
     );
   }
