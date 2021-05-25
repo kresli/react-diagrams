@@ -7,10 +7,26 @@ import {
   forwardRef,
   useImperativeHandle,
 } from "react";
+import styled from "styled-components";
 import { useViewport } from "../context";
 import { SchemaActionType } from "../functions";
 import { useAction, useDrag, useWheel } from "../hooks";
 import { ViewLayer } from "./ViewLayer";
+
+const DiagramRoot = styled.div`
+  font-size: 14px;
+  font-weight: 400;
+  letter-spacing: 0;
+  line-height: 1.28581;
+  text-transform: none;
+  color: #182026;
+  font-family: -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Oxygen,
+    Ubuntu, Cantarell, Open Sans, Helvetica Neue, Icons16, sans-serif;
+  position: relative;
+  background: #1e1e1e;
+  width: 100%;
+  height: 100%;
+`;
 
 export const Canvas = memo(
   forwardRef<HTMLDivElement | null>((_, forwardedRef) => {
@@ -30,15 +46,6 @@ export const Canvas = memo(
           viewLayer,
         });
     });
-    const [style] = useState(
-      () =>
-        ({
-          position: "relative",
-          background: "green",
-          width: "100%",
-          height: "100%",
-        } as CSSProperties)
-    );
     useLayoutEffect(() => {
       const element = ref.current;
       if (!element) return;
@@ -46,9 +53,9 @@ export const Canvas = memo(
       setZoomRef(element);
     }, [setDragRef, setZoomRef]);
     return (
-      <div className="Diagram" style={style} ref={ref}>
+      <DiagramRoot className="Diagram" ref={ref}>
         <ViewLayer />
-      </div>
+      </DiagramRoot>
     );
   })
 );

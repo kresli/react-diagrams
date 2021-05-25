@@ -18,7 +18,7 @@ export interface NodeRenderProps {
   outputs?: RenderPortProps[];
   data?: any;
 }
-export type SchemaNodeRender = FunctionComponent<NodeRenderProps>;
+export type DiagramNodeRender = FunctionComponent<NodeRenderProps>;
 
 export interface LinkRenderProps {
   input: string;
@@ -36,7 +36,7 @@ export interface SchemaNode {
   position: [number, number];
   inputs?: SchemaPort[];
   outputs?: SchemaPort[];
-  render?: SchemaNodeRender;
+  render?: DiagramNodeRender;
 }
 export interface SchemaLink {
   input: string;

@@ -1,28 +1,39 @@
 import { FunctionComponent, memo } from "react";
+import styled from "styled-components";
 import { PortAlign, NodeRenderProps, SchemaPort } from "../types";
 
-const Port: FunctionComponent<{ port: SchemaPort }> = memo(({ port }) => {
-  const { id } = port;
-  return (
-    <div
-      className="Port"
-      style={{
-        width: "1rem",
-        height: "1rem",
-        background: "grey",
-        display: "flex",
-        justifyContent: "center",
-        alignItems: "center",
-      }}
-    >
-      <div
-        id={`GATE_${id}`}
-        className="Gate"
-        style={{ width: 2, height: 2, background: "black" }}
-      />
-    </div>
-  );
-});
+const PortRoot = styled.div<{ align: PortAlign }>`
+  width: 12px;
+  height: 12px;
+  background: rgb(98, 98, 98);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: absolute;
+  border-radius: 100%;
+  top: 4px;
+  left: ${({ align }) => (align === PortAlign.LEFT ? "-26px" : "auto")};
+  right: ${({ align }) => (align === PortAlign.RIGHT ? "-26px" : "auto")};
+`;
+
+const Port: FunctionComponent<{ port: SchemaPort; align: PortAlign }> = memo(
+  ({ port, align }) => {
+    const { id } = port;
+    return (
+      <PortRoot align={align}>
+        <div
+          id={`GATE_${id}`}
+          className="Gate"
+          style={{
+            position: "absolute",
+            width: 2,
+            height: 2,
+          }}
+        />
+      </PortRoot>
+    );
+  }
+);
 
 const InputOutput: FunctionComponent<{
   port: SchemaPort;
@@ -32,30 +43,48 @@ const InputOutput: FunctionComponent<{
     <div
       className="InputOutput"
       style={{
-        background: "red",
         flex: 1,
         display: "flex",
+        position: "relative",
+        minHeight: 20,
         justifyContent: align === PortAlign.LEFT ? "flex-start" : "flex-end",
       }}
     >
-      <Port port={port} />
+      <Port port={port} align={align} />
     </div>
   );
 });
 
+const NodeRenderRoot = styled.div`
+  background-color: #2d2d2d;
+  border-radius: 4pt;
+`;
+
+const Title = styled.div`
+  padding: 2pt;
+  color: rgba(255, 255, 255, 0.85);
+  height: 16pt;
+  width: 300px;
+  background-color: #4b4b4b;
+  display: flex;
+  justify-content: center;
+  border-top-left-radius: 4pt;
+  border-top-right-radius: 4pt;
+`;
+
+const Content = styled.div`
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  padding: 8px;
+`;
+
 export const NodeRenderDefault: FunctionComponent<NodeRenderProps> = memo(
   ({ inputs, outputs }) => {
     return (
-      <div>
-        <div style={{ padding: "1rem" }}>title</div>
-        <div
-          className="io"
-          style={{
-            position: "relative",
-            display: "flex",
-            flexDirection: "column",
-          }}
-        >
+      <NodeRenderRoot>
+        <Title>title</Title>
+        <Content className="io">
           <div
             className="Inputs"
             style={{
@@ -84,8 +113,8 @@ export const NodeRenderDefault: FunctionComponent<NodeRenderProps> = memo(
               />
             ))}
           </div>
-        </div>
-      </div>
+        </Content>
+      </NodeRenderRoot>
     );
   }
 );

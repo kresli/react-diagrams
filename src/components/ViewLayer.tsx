@@ -4,6 +4,10 @@ import { useData } from "../hooks";
 import { NodesLayer } from "./NodesLayer";
 import { LinksLayer } from "./LinksLayer";
 
+const ViewportBackgroundDefault = () => {
+  return <div>default background</div>;
+};
+
 export const ViewLayer: FunctionComponent = memo(() => {
   const schema = useData();
   const [, setViewport] = useViewport();

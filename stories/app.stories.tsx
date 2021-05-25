@@ -1,5 +1,5 @@
 import { Meta } from "@storybook/react";
-import { Diagram, Schema, useSchema } from "../src";
+import { Diagram, DiagramNodeRender, Schema, useSchema } from "../src";
 import { useContextMenu } from "./useContextMenu";
 import { ContextPopup } from "./ContextPopup";
 import { memo } from "react";
@@ -9,33 +9,35 @@ const meta: Meta = {
   component: Diagram,
 };
 
+const CustomNode: DiagramNodeRender = memo(({ inputs, outputs, data }) => {
+  return (
+    <div>
+      <div>custom</div>
+      <div>
+        {inputs?.map((input) => (
+          <div key={input.id}>
+            Input
+            <div id={input.key} />
+          </div>
+        ))}
+        {outputs?.map((output) => (
+          <div key={output.id}>
+            Output
+            <div id={output.key} />
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+});
+
 const initData: Schema = {
   nodes: [
     {
       id: "1",
       position: [100, 100] as [number, number],
       outputs: [{ id: "1" }],
-      render: memo(({ inputs, outputs, data }) => {
-        return (
-          <div>
-            <div>custom</div>
-            <div>
-              {inputs?.map((input) => (
-                <div key={input.id}>
-                  Input
-                  <div id={input.key} />
-                </div>
-              ))}
-              {outputs?.map((output) => (
-                <div key={output.id}>
-                  Output
-                  <div id={output.key} />
-                </div>
-              ))}
-            </div>
-          </div>
-        );
-      }),
+      // render: CustomNode,
     },
     {
       id: "3",
@@ -47,16 +49,16 @@ const initData: Schema = {
     {
       input: "1",
       output: "3",
-      render: ({ input, output, start, end }) => (
-        <line
-          id={`LINK_${input}${output}`}
-          x1={start[0]}
-          y1={start[1]}
-          x2={end[0]}
-          y2={end[1]}
-          stroke="yellow"
-        />
-      ),
+      // render: ({ input, output, start, end }) => (
+      //   <line
+      //     id={`LINK_${input}${output}`}
+      //     x1={start[0]}
+      //     y1={start[1]}
+      //     x2={end[0]}
+      //     y2={end[1]}
+      //     stroke="yellow"
+      //   />
+      // ),
     },
   ],
   position: [0, 0] as [number, number],
@@ -89,9 +91,11 @@ export const Playground = () => {
   };
 
   return (
-    <div style={{ width: 500, height: 500 }}>
-      <Diagram schema={schema} ref={setRef} />
-      <ContextMenu onAddNode={onAdd} />
+    <div style={{ width: "100%", height: "100%" }}>
+      <div style={{ display: "flex", flex: 1, height: "100%" }}>
+        <Diagram schema={schema} ref={setRef} />
+        <ContextMenu onAddNode={onAdd} />
+      </div>
     </div>
   );
 };

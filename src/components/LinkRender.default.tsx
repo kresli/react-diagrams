@@ -13,6 +13,7 @@ export const LinkRenderDefault: FunctionComponent<LinkRenderProps> = ({
     y1={start[1]}
     x2={end[0]}
     y2={end[1]}
-    stroke="black"
+    strokeWidth={3}
+    stroke="rgb(98,98,98)"
   />
 );
