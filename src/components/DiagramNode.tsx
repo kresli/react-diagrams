@@ -51,8 +51,6 @@ export const DiagramNode: FunctionComponent<{ node: SchemaNode }> = memo(
           left,
           top,
           border: "1px solid black",
-          background: "blue",
-          width: "5rem",
           cursor: "default",
         }}
       >

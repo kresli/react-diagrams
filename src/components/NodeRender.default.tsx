@@ -46,8 +46,8 @@ const InputOutput: FunctionComponent<{
 export const NodeRenderDefault: FunctionComponent<RenderProps> = memo(
   ({ inputs, outputs }) => {
     return (
-      <>
-        <div>title</div>
+      <div>
+        <div style={{ padding: "1rem" }}>title</div>
         <div
           className="io"
           style={{
@@ -85,7 +85,7 @@ export const NodeRenderDefault: FunctionComponent<RenderProps> = memo(
             ))}
           </div>
         </div>
-      </>
+      </div>
     );
   }
 );
