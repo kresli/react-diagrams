@@ -1,10 +1,14 @@
-import { FunctionComponent, memo } from "react";
-import { SchemaNode } from "..";
-import { SchemaActionType } from "../functions";
+import { FunctionComponent, memo, useMemo } from "react";
+import { NodeContentDefault } from ".";
+import { SchemaActionType } from "../functions/schema.reducer";
 import { useAction, useData, useDrag } from "../hooks";
+import { SchemaNode, SchemaNodeRender } from "../types";
+import { NodeContentCustom } from "./NodeContent.custom";
 
-export const DiagramNodeHolder: FunctionComponent<{ node: SchemaNode }> = memo(
-  ({ node, children }) => {
+type CustomNodeProps = SchemaNode & { render: SchemaNodeRender };
+
+export const DiagramNode: FunctionComponent<{ node: SchemaNode }> = memo(
+  ({ node }) => {
     const { position, id } = node;
     const [left, top] = position;
     const action = useAction();
@@ -18,6 +22,15 @@ export const DiagramNodeHolder: FunctionComponent<{ node: SchemaNode }> = memo(
         movementY,
         scale,
       })
+    );
+    const content = useMemo(
+      () =>
+        node.render ? (
+          <NodeContentCustom node={node as CustomNodeProps} />
+        ) : (
+          <NodeContentDefault node={node} />
+        ),
+      [node]
     );
     return (
       <div
@@ -34,7 +47,7 @@ export const DiagramNodeHolder: FunctionComponent<{ node: SchemaNode }> = memo(
           cursor: "default",
         }}
       >
-        {children}
+        {content}
       </div>
     );
   }

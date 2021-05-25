@@ -40,7 +40,7 @@ function useElementPosition(elementId: string) {
   return useMemo(() => [x, y], [x, y]);
 }
 
-export const DiagramLink: FunctionComponent<SchemaLink> = memo(
+export const DiagramLinkDefault: FunctionComponent<SchemaLink> = memo(
   ({ input, output }) => {
     const [inputId] = useState(() => `GATE_${input}`);
     const [outputId] = useState(() => `GATE_${output}`);
