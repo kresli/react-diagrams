@@ -13,13 +13,22 @@ interface RenderPortProps extends SchemaPort {
   key: string;
 }
 
-export interface RenderProps {
+export interface NodeRenderProps {
   inputs?: RenderPortProps[];
   outputs?: RenderPortProps[];
   data?: any;
 }
+export type SchemaNodeRender = FunctionComponent<NodeRenderProps>;
 
-export type SchemaNodeRender = FunctionComponent<RenderProps>;
+export interface LinkRenderProps {
+  input: string;
+  output: string;
+  data?: any;
+  start: [number, number];
+  end: [number, number];
+}
+
+export type SchemaLinkRender = FunctionComponent<LinkRenderProps>;
 
 export interface SchemaNode {
   id: string;
@@ -32,6 +41,8 @@ export interface SchemaNode {
 export interface SchemaLink {
   input: string;
   output: string;
+  data?: any;
+  render?: SchemaLinkRender;
 }
 export interface Schema {
   position: [number, number];

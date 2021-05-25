@@ -1,5 +1,5 @@
 import { FunctionComponent, memo } from "react";
-import { PortAlign, RenderProps, SchemaPort } from "../types";
+import { PortAlign, NodeRenderProps, SchemaPort } from "../types";
 
 const Port: FunctionComponent<{ port: SchemaPort }> = memo(({ port }) => {
   const { id } = port;
@@ -43,7 +43,7 @@ const InputOutput: FunctionComponent<{
   );
 });
 
-export const NodeRenderDefault: FunctionComponent<RenderProps> = memo(
+export const NodeRenderDefault: FunctionComponent<NodeRenderProps> = memo(
   ({ inputs, outputs }) => {
     return (
       <div>

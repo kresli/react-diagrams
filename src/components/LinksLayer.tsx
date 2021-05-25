@@ -1,6 +1,6 @@
 import { FunctionComponent, memo, useMemo } from "react";
 import { useData } from "../hooks";
-import { DiagramLinkDefault } from "./DiagramLink.default";
+import { DiagramLinkDefault } from "./DiagramLink";
 export const LinksLayer: FunctionComponent = memo(() => {
   const schema = useData();
   const links = useMemo(
