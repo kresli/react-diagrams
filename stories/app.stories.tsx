@@ -43,7 +43,22 @@ const initData: Schema = {
       inputs: [{ id: "3" }],
     },
   ],
-  links: [{ input: "1", output: "3" }],
+  links: [
+    {
+      input: "1",
+      output: "3",
+      render: ({ input, output, start, end }) => (
+        <line
+          id={`LINK_${input}${output}`}
+          x1={start[0]}
+          y1={start[1]}
+          x2={end[0]}
+          y2={end[1]}
+          stroke="yellow"
+        />
+      ),
+    },
+  ],
   position: [0, 0] as [number, number],
   scale: 1,
 };
