@@ -1,4 +1,4 @@
-import { FunctionComponent } from "react";
+import { FunctionComponent, MutableRefObject } from "react";
 
 export interface SchemaPort {
   id: string;
@@ -26,6 +26,7 @@ export interface LinkRenderProps {
   data?: any;
   start: [number, number];
   end: [number, number];
+  lineRef: MutableRefObject<SVGLineElement | null>;
 }
 
 export type SchemaLinkRender = FunctionComponent<LinkRenderProps>;

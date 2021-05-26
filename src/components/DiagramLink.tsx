@@ -4,10 +4,19 @@ import {
   useMemo,
   memo,
   useLayoutEffect,
+  useRef,
+  MutableRefObject,
 } from "react";
 import { useViewport } from "../context";
 import { useData } from "../hooks";
 import { SchemaLink } from "../types";
+import {
+  createElementKey,
+  ElementType,
+  ELEMENT_TYPE_KEY,
+  registerElementType,
+  useRegisterElement,
+} from "./ElementType";
 import { LinkRenderDefault } from "./LinkRender.default";
 
 const config = {
@@ -41,26 +50,31 @@ function useElementPosition(elementId: string): [number, number] {
   return useMemo(() => [x, y], [x, y]);
 }
 
-export const DiagramLinkDefault: FunctionComponent<SchemaLink> = memo(
-  (linkData) => {
-    const [inputId] = useState(() => `GATE_${linkData.input}`);
-    const [outputId] = useState(() => `GATE_${linkData.output}`);
-    const start = useElementPosition(inputId);
-    const end = useElementPosition(outputId);
-    const Render = useMemo(() => linkData.render || LinkRenderDefault, [
-      linkData.render,
-    ]);
-    const link = useMemo(() => {
-      const { render, ...data } = linkData;
-      return {
-        ...data,
-        start,
-        end,
-      };
-    }, [end, linkData, start]);
-    return <Render {...link} />;
-  }
-);
+export const DiagramLink: FunctionComponent<SchemaLink> = memo((linkData) => {
+  const [elemKey] = useState(() => createElementKey(ElementType.LINK));
+  const [inputId] = useState(() => `GATE_${linkData.input}`);
+  const [outputId] = useState(() => `GATE_${linkData.output}`);
+  const start = useElementPosition(inputId);
+  const end = useElementPosition(outputId);
+  const Render = useMemo(() => linkData.render || LinkRenderDefault, [
+    linkData.render,
+  ]);
+  const link = useMemo(() => {
+    const { render, ...data } = linkData;
+    return {
+      ...data,
+      start,
+      end,
+    };
+  }, [end, linkData, start]);
+  const lineRef = useRef<SVGLineElement>(null);
+  useRegisterElement(lineRef, ElementType.LINK);
+  return (
+    <g {...elemKey} pointerEvents="visible">
+      <Render {...link} lineRef={lineRef} />
+    </g>
+  );
+});
 
 function getNodeElement(portElement: HTMLElement): HTMLElement | null {
   let element = portElement.parentElement;

@@ -1,8 +1,15 @@
-import { FunctionComponent, memo, useMemo } from "react";
+import {
+  FunctionComponent,
+  memo,
+  useLayoutEffect,
+  useMemo,
+  useRef,
+} from "react";
 import { NodeRenderDefault } from ".";
 import { SchemaActionType } from "../functions/schema.reducer";
 import { useAction, useData, useDrag } from "../hooks";
 import { SchemaNode } from "../types";
+import { ElementType, useRegisterElement } from "./ElementType";
 
 export const DiagramNode: FunctionComponent<{ node: SchemaNode }> = memo(
   ({ node: nodeData }) => {
@@ -17,7 +24,8 @@ export const DiagramNode: FunctionComponent<{ node: SchemaNode }> = memo(
     const [left, top] = position;
     const action = useAction();
     const { scale } = useData();
-    const setRef = useDrag((movementX, movementY) =>
+    const ref = useRef<HTMLDivElement | null>(null);
+    const setDragRef = useDrag((movementX, movementY) =>
       action({
         type: SchemaActionType.NODE_MOVE,
         node,
@@ -26,6 +34,9 @@ export const DiagramNode: FunctionComponent<{ node: SchemaNode }> = memo(
         scale,
       })
     );
+    useLayoutEffect(() => {
+      setDragRef(ref.current);
+    }, [setDragRef]);
     const Render = node.render;
     const props = useMemo(
       () => ({
@@ -41,11 +52,14 @@ export const DiagramNode: FunctionComponent<{ node: SchemaNode }> = memo(
       }),
       [data, inputs, outputs]
     );
+
+    useRegisterElement(ref, ElementType.NODE);
+
     return (
       <div
         data-node={id}
         className="DiagramNode"
-        ref={setRef}
+        ref={ref}
         style={{
           position: "absolute",
           left,

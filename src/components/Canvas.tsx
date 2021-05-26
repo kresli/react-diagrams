@@ -1,16 +1,16 @@
 import {
   memo,
-  useState,
-  CSSProperties,
   useRef,
   useLayoutEffect,
   forwardRef,
   useImperativeHandle,
+  useState,
 } from "react";
 import styled from "styled-components";
 import { useViewport } from "../context";
 import { SchemaActionType } from "../functions";
 import { useAction, useDrag, useWheel } from "../hooks";
+import { createElementKey, ElementType } from "./ElementType";
 import { ViewLayer } from "./ViewLayer";
 
 const DiagramRoot = styled.div`
@@ -31,6 +31,7 @@ const DiagramRoot = styled.div`
 export const Canvas = memo(
   forwardRef<HTMLDivElement | null>((_, forwardedRef) => {
     const ref = useRef<HTMLDivElement>(null);
+    const [elemKey] = useState(() => createElementKey(ElementType.CANVAS));
     // @ts-ignore
     useImperativeHandle(forwardedRef, () => ref.current);
     const action = useAction();
@@ -53,7 +54,7 @@ export const Canvas = memo(
       setZoomRef(element);
     }, [setDragRef, setZoomRef]);
     return (
-      <DiagramRoot className="Diagram" ref={ref}>
+      <DiagramRoot className="Diagram" ref={ref} {...elemKey}>
         <ViewLayer />
       </DiagramRoot>
     );

@@ -2,7 +2,7 @@ import { Meta } from "@storybook/react";
 import { Diagram, DiagramNodeRender, Schema, useSchema } from "../src";
 import { useContextMenu } from "./useContextMenu";
 import { ContextPopup } from "./ContextPopup";
-import { memo } from "react";
+import { memo, useMemo } from "react";
 
 const meta: Meta = {
   title: "default",
@@ -80,9 +80,7 @@ const initData: Schema = {
 
 export const Playground = () => {
   const schema = useSchema(initData);
-  const { ContextMenu, setContextTrigger, contextPosition } = useContextMenu(
-    ContextPopup
-  );
+  const { ContextMenu, setContextTrigger, contextPosition } = useContextMenu();
   const setRef = (elem: HTMLDivElement) => setContextTrigger(elem);
   const onAdd = () => {
     if (!contextPosition) return;
@@ -90,11 +88,19 @@ export const Playground = () => {
     schema.addNode({ position });
   };
 
+  const { elementsFromPoint } = schema;
+  const type = useMemo(() => {
+    if (!contextPosition) return null;
+    const [clientX, clientY] = contextPosition;
+    console.log(elementsFromPoint(clientX, clientY));
+  }, [contextPosition, elementsFromPoint]);
   return (
     <div style={{ width: "100%", height: "100%" }}>
       <div style={{ display: "flex", flex: 1, height: "100%" }}>
         <Diagram schema={schema} ref={setRef} />
-        <ContextMenu onAddNode={onAdd} />
+        <ContextMenu>
+          <ContextPopup onAddNode={onAdd} />
+        </ContextMenu>
       </div>
     </div>
   );

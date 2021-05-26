@@ -1,6 +1,7 @@
-import { FunctionComponent, memo } from "react";
+import { FunctionComponent, memo, useRef } from "react";
 import styled from "styled-components";
 import { PortAlign, NodeRenderProps, SchemaPort } from "../types";
+import { ElementType, useRegisterElement } from "./ElementType";
 
 const PortRoot = styled.div<{ align: PortAlign }>`
   width: 12px;
@@ -19,8 +20,10 @@ const PortRoot = styled.div<{ align: PortAlign }>`
 const Port: FunctionComponent<{ port: SchemaPort; align: PortAlign }> = memo(
   ({ port, align }) => {
     const { id } = port;
+    const ref = useRef<HTMLDivElement | null>(null);
+    useRegisterElement(ref, ElementType.PORT);
     return (
-      <PortRoot align={align}>
+      <PortRoot align={align} ref={ref}>
         <div
           id={`GATE_${id}`}
           className="Gate"
@@ -58,6 +61,9 @@ const InputOutput: FunctionComponent<{
 const NodeRenderRoot = styled.div`
   background-color: #2d2d2d;
   border-radius: 4pt;
+  &:hover {
+    box-shadow: 0 0 8px 4px #ffffff54;
+  }
 `;
 
 const Title = styled.div`

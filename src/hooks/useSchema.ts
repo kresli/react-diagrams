@@ -1,5 +1,6 @@
 import { Dispatch, useCallback, useMemo, useReducer, useState } from "react";
 import { v4 } from "uuid";
+import { ElementType, getELementType } from "../components/ElementType";
 import { SchemaAction, SchemaActionType, schemaReducer } from "../functions";
 import { validateSchema } from "../functions/validateSchema";
 import { Schema, SchemaNode } from "../types";
@@ -10,6 +11,7 @@ export interface Ctx {
   dispatchAction: Dispatch<SchemaAction>;
   clientToLocalPosition: (clientX: number, clientY: number) => [number, number];
   addNode: (node: Partial<SchemaNode>) => void;
+  elementsFromPoint: (clientX: number, clientY: number) => ElementType[];
 }
 export const useSchema = (initSchema: Schema): Ctx => {
   validateSchema(initSchema);
@@ -32,6 +34,18 @@ export const useSchema = (initSchema: Schema): Ctx => {
     };
     dispatchAction({ type: SchemaActionType.ADD_NODE, ...data });
   };
+  const elementsFromPoint = useCallback(
+    (clientX: number, clientY: number): ElementType[] => {
+      console.log(document.elementsFromPoint(clientX, clientY));
+      return document
+        .elementsFromPoint(clientX, clientY)
+        .map((elem) => {
+          return getELementType(elem as HTMLElement);
+        })
+        .filter((v) => v) as ElementType[];
+    },
+    []
+  );
   return useMemo(
     () => ({
       data,
@@ -39,8 +53,9 @@ export const useSchema = (initSchema: Schema): Ctx => {
       viewportRef,
       clientToLocalPosition,
       addNode,
+      elementsFromPoint,
     }),
-    [clientToLocalPosition, data, viewportRef]
+    [clientToLocalPosition, data, elementsFromPoint, viewportRef]
   );
 };
 
