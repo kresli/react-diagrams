@@ -8,14 +8,6 @@ import {
 } from "../functions";
 import { ElementType, Schema, SchemaNode } from "../types";
 
-// export interface Ctx {
-//   viewportRef: [HTMLDivElement | null, (view: HTMLDivElement | null) => void];
-//   data: Schema;
-//   dispatchAction: Dispatch<SchemaAction>;
-//   clientToLocalPosition: (clientX: number, clientY: number) => [number, number];
-//   addNode: (node: Partial<SchemaNode>) => void;
-//   elementsFromPoint: (clientX: number, clientY: number) => ElementType[];
-// }
 export const useSchema = (initSchema: Schema) => {
   validateSchema(initSchema);
   const [data, dispatchAction] = useReducer(schemaReducer, initSchema);
