@@ -28,8 +28,8 @@ const Port: FunctionComponent<{ port: SchemaPort; align: PortAlign }> = memo(
           className="Gate"
           style={{
             position: "absolute",
-            width: 2,
-            height: 2,
+            width: 0,
+            height: 0,
           }}
         />
       </PortRoot>
@@ -61,7 +61,7 @@ const NodeRenderRoot = styled.div`
   background-color: #2d2d2d;
   border-radius: 4pt;
   &:hover {
-    box-shadow: 0 0 8px 4px #ffffff54;
+    box-shadow: 0 0 0px 2px #ffffff73;
   }
 `;
 

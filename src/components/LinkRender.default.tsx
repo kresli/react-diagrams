@@ -1,22 +1,24 @@
-import { FunctionComponent } from "react";
+import { FunctionComponent, useMemo, memo } from "react";
+import styled from "styled-components";
 import { LinkRenderProps } from "../types";
 
-export const LinkRenderDefault: FunctionComponent<LinkRenderProps> = ({
-  input,
-  output,
-  start,
-  end,
-  lineRef,
-}) => (
-  <line
-    ref={lineRef}
-    // id={`LINK_${input}${output}`}
-    x1={start[0]}
-    y1={start[1]}
-    x2={end[0]}
-    y2={end[1]}
-    strokeWidth={3}
-    fill="white"
-    stroke="rgb(98,98,98)"
-  />
-);
+export const LinkRender: FunctionComponent<
+  LinkRenderProps & { className?: string }
+> = ({ input, output, start, end, lineRef, className }) => {
+  const line = useMemo(() => {
+    const [sx, sy] = start;
+    const [ex, ey] = end;
+    return `M${sx} ${sy} H${sx + 30} L${ex - 30} ${ey} ${ex} ${ey}`;
+  }, [end, start]);
+  return <path className={className} ref={lineRef} d={line} />;
+};
+
+export const LinkRenderDefault = memo(styled(LinkRender)`
+  stroke-width: 4;
+  stroke: rgb(98, 98, 98);
+  stroke-linecap: round;
+  fill: none;
+  &:hover {
+    stroke: rgb(255, 255, 255);
+  }
+`);

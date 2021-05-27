@@ -1,11 +1,7 @@
 import { useCallback, useMemo, useReducer, useState } from "react";
 import { v4 } from "uuid";
-import {
-  SchemaActionType,
-  schemaReducer,
-  validateSchema,
-  getELementType,
-} from "../functions";
+import { SchemaActionType, schemaReducer, validateSchema } from "../functions";
+import { getELementType } from "../functions/getElementType";
 import { ElementType, Schema, SchemaNode } from "../types";
 
 export const useSchema = (initSchema: Schema) => {

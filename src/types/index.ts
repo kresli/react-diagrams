@@ -20,13 +20,13 @@ export interface NodeRenderProps {
 }
 export type DiagramNodeRender = FunctionComponent<NodeRenderProps>;
 
-export interface LinkRenderProps {
+export interface LinkRenderProps<T extends SVGElement = any> {
   input: string;
   output: string;
   data?: any;
   start: [number, number];
   end: [number, number];
-  lineRef: MutableRefObject<SVGLineElement | null>;
+  lineRef: MutableRefObject<T | null>;
 }
 
 export type SchemaLinkRender = FunctionComponent<LinkRenderProps>;

@@ -30,8 +30,8 @@ function useElementPosition(elementId: string): [number, number] {
       const { left: viewLeft, top: viewTop } = viewport.getBoundingClientRect();
       const x = (left - viewLeft) / scale;
       const y = (top - viewTop) / scale;
-      setX(x);
-      setY(y);
+      setX(Math.round(x));
+      setY(Math.round(y));
     };
     const observer = new MutationObserver(callback);
     observer.observe(getNodeElement(element)!, config);

@@ -46,6 +46,7 @@ export const schemaReducer = (schema: Schema, action: SchemaAction): Schema => {
     case SchemaActionType.NODE_MOVE: {
       const { node, movementX, movementY, scale } = action;
       const [x, y] = node.position;
+      console.log([x + movementX / scale, y + movementY / scale]);
       const nodes = schema.nodes.map((n) =>
         n.id === node.id
           ? {
