@@ -3,7 +3,6 @@ import { Diagram, DiagramNodeRender, Schema, useSchema } from "../src";
 import { useContextMenu } from "./useContextMenu";
 import { ContextPopup } from "./ContextPopup";
 import { memo, useMemo } from "react";
-import { ElementType } from "../src/functions/getElementType";
 
 const meta: Meta = {
   title: "default",

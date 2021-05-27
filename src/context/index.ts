@@ -1,2 +1,3 @@
-export * from './diagram.context';
-export * from './viewport.context';
+export * from "./Schema.context";
+export * from "./SchemaAction.context";
+export * from "./SchemaViewportRef.context";

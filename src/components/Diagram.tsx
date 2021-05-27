@@ -1,8 +1,8 @@
 import { forwardRef, memo, useImperativeHandle, useRef } from "react";
-import { SchemaProvider } from "../context";
 import { Canvas } from "./Canvas";
 import { Ctx } from "../hooks";
 import { DefaultTheme, ThemeProvider } from "styled-components";
+import { SchemaProvider } from "../components";
 
 interface Props {
   schema: Ctx;

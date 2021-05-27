@@ -6,9 +6,14 @@ import {
   useImperativeHandle,
 } from "react";
 import styled from "styled-components";
-import { useViewport } from "../context";
 import { SchemaActionType } from "../functions";
-import { useAction, useDrag, useRegisterElement, useWheel } from "../hooks";
+import {
+  useAction,
+  useDrag,
+  useRegisterElement,
+  useWheel,
+  useViewport,
+} from "../hooks";
 import { ElementType } from "../types";
 import { ViewLayer } from "../components";
 

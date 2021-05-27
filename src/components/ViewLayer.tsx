@@ -1,6 +1,5 @@
 import { FunctionComponent, memo, useMemo, CSSProperties } from "react";
-import { useViewport } from "../context";
-import { useData } from "../hooks";
+import { useData, useViewport } from "../hooks";
 import { NodesLayer, LinksLayer } from "../components";
 
 export const ViewLayer: FunctionComponent = memo(() => {

@@ -6,11 +6,10 @@ import {
   useLayoutEffect,
   useRef,
 } from "react";
-import { useViewport } from "../context";
 import { useData } from "../hooks";
 import { ElementType, SchemaLink } from "../types";
 import { LinkRenderDefault } from "../components";
-import { useRegisterElement } from "../hooks";
+import { useRegisterElement, useViewport } from "../hooks";
 const config = {
   attributes: true,
   attributeFilter: ["style"],
