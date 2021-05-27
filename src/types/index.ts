@@ -51,3 +51,10 @@ export interface Schema {
   nodes: SchemaNode[];
   links: SchemaLink[];
 }
+
+export enum ElementType {
+  CANVAS = "CANVAS",
+  LINK = "LINK",
+  NODE = "NODE",
+  PORT = "PORT",
+}

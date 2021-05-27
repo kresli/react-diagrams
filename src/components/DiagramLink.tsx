@@ -5,20 +5,12 @@ import {
   memo,
   useLayoutEffect,
   useRef,
-  MutableRefObject,
 } from "react";
 import { useViewport } from "../context";
 import { useData } from "../hooks";
-import { SchemaLink } from "../types";
-import {
-  createElementKey,
-  ElementType,
-  ELEMENT_TYPE_KEY,
-  registerElementType,
-  useRegisterElement,
-} from "./ElementType";
-import { LinkRenderDefault } from "./LinkRender.default";
-
+import { ElementType, SchemaLink } from "../types";
+import { LinkRenderDefault } from "../components";
+import { useRegisterElement } from "../hooks";
 const config = {
   attributes: true,
   attributeFilter: ["style"],
@@ -51,7 +43,6 @@ function useElementPosition(elementId: string): [number, number] {
 }
 
 export const DiagramLink: FunctionComponent<SchemaLink> = memo((linkData) => {
-  const [elemKey] = useState(() => createElementKey(ElementType.LINK));
   const [inputId] = useState(() => `GATE_${linkData.input}`);
   const [outputId] = useState(() => `GATE_${linkData.output}`);
   const start = useElementPosition(inputId);
@@ -70,7 +61,7 @@ export const DiagramLink: FunctionComponent<SchemaLink> = memo((linkData) => {
   const lineRef = useRef<SVGLineElement>(null);
   useRegisterElement(lineRef, ElementType.LINK);
   return (
-    <g {...elemKey} pointerEvents="visible">
+    <g pointerEvents="visible">
       <Render {...link} lineRef={lineRef} />
     </g>
   );

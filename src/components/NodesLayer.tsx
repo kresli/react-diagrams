@@ -1,6 +1,6 @@
 import { FunctionComponent, memo, useMemo } from "react";
 import { useData } from "../hooks";
-import { DiagramNode } from "./DiagramNode";
+import { DiagramNode } from "../components";
 
 export const NodesLayer: FunctionComponent = memo(() => {
   const schema = useData();

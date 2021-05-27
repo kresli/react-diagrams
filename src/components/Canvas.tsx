@@ -4,14 +4,13 @@ import {
   useLayoutEffect,
   forwardRef,
   useImperativeHandle,
-  useState,
 } from "react";
 import styled from "styled-components";
 import { useViewport } from "../context";
 import { SchemaActionType } from "../functions";
-import { useAction, useDrag, useWheel } from "../hooks";
-import { createElementKey, ElementType } from "./ElementType";
-import { ViewLayer } from "./ViewLayer";
+import { useAction, useDrag, useRegisterElement, useWheel } from "../hooks";
+import { ElementType } from "../types";
+import { ViewLayer } from "../components";
 
 const DiagramRoot = styled.div`
   font-size: 14px;
@@ -31,7 +30,6 @@ const DiagramRoot = styled.div`
 export const Canvas = memo(
   forwardRef<HTMLDivElement | null>((_, forwardedRef) => {
     const ref = useRef<HTMLDivElement>(null);
-    const [elemKey] = useState(() => createElementKey(ElementType.CANVAS));
     // @ts-ignore
     useImperativeHandle(forwardedRef, () => ref.current);
     const action = useAction();
@@ -53,8 +51,9 @@ export const Canvas = memo(
       setDragRef(element);
       setZoomRef(element);
     }, [setDragRef, setZoomRef]);
+    useRegisterElement(ref, ElementType.CANVAS);
     return (
-      <DiagramRoot className="Diagram" ref={ref} {...elemKey}>
+      <DiagramRoot className="Diagram" ref={ref}>
         <ViewLayer />
       </DiagramRoot>
     );

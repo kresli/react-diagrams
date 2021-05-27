@@ -1,6 +1,6 @@
 import { Dispatch, useCallback, useMemo, useReducer, useState } from "react";
 import { v4 } from "uuid";
-import { ElementType, getELementType } from "../components/ElementType";
+import { ElementType, getELementType } from "../functions/getElementType";
 import { SchemaAction, SchemaActionType, schemaReducer } from "../functions";
 import { validateSchema } from "../functions/validateSchema";
 import { Schema, SchemaNode } from "../types";

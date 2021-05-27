@@ -1,12 +1,7 @@
 import { FunctionComponent, memo, useMemo, CSSProperties } from "react";
 import { useViewport } from "../context";
 import { useData } from "../hooks";
-import { NodesLayer } from "./NodesLayer";
-import { LinksLayer } from "./LinksLayer";
-
-const ViewportBackgroundDefault = () => {
-  return <div>default background</div>;
-};
+import { NodesLayer, LinksLayer } from "../components";
 
 export const ViewLayer: FunctionComponent = memo(() => {
   const schema = useData();

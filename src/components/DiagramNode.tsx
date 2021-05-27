@@ -8,9 +8,8 @@ import {
 import { NodeRenderDefault } from ".";
 import { SchemaActionType } from "../functions/schema.reducer";
 import { useAction, useData, useDrag } from "../hooks";
-import { SchemaNode } from "../types";
-import { ElementType, useRegisterElement } from "./ElementType";
-
+import { ElementType, SchemaNode } from "../types";
+import { useRegisterElement } from "../hooks";
 export const DiagramNode: FunctionComponent<{ node: SchemaNode }> = memo(
   ({ node: nodeData }) => {
     const node = useMemo(

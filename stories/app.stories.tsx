@@ -3,6 +3,7 @@ import { Diagram, DiagramNodeRender, Schema, useSchema } from "../src";
 import { useContextMenu } from "./useContextMenu";
 import { ContextPopup } from "./ContextPopup";
 import { memo, useMemo } from "react";
+import { ElementType } from "../src/functions/getElementType";
 
 const meta: Meta = {
   title: "default",
@@ -89,17 +90,17 @@ export const Playground = () => {
   };
 
   const { elementsFromPoint } = schema;
-  const type = useMemo(() => {
+  const contextTypes = useMemo(() => {
     if (!contextPosition) return null;
     const [clientX, clientY] = contextPosition;
-    console.log(elementsFromPoint(clientX, clientY));
+    return elementsFromPoint(clientX, clientY);
   }, [contextPosition, elementsFromPoint]);
   return (
     <div style={{ width: "100%", height: "100%" }}>
       <div style={{ display: "flex", flex: 1, height: "100%" }}>
         <Diagram schema={schema} ref={setRef} />
         <ContextMenu>
-          <ContextPopup onAddNode={onAdd} />
+          <ContextPopup onAddNode={onAdd} contextTypes={contextTypes} />
         </ContextMenu>
       </div>
     </div>

@@ -1,8 +1,7 @@
 import { FunctionComponent, memo, useRef } from "react";
 import styled from "styled-components";
-import { PortAlign, NodeRenderProps, SchemaPort } from "../types";
-import { ElementType, useRegisterElement } from "./ElementType";
-
+import { PortAlign, NodeRenderProps, SchemaPort, ElementType } from "../types";
+import { useRegisterElement } from "../hooks";
 const PortRoot = styled.div<{ align: PortAlign }>`
   width: 12px;
   height: 12px;

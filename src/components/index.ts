@@ -5,4 +5,5 @@ export * from "./LinksLayer";
 export * from "./ViewLayer";
 export * from "./DiagramLink";
 export * from "./Canvas";
-// export * from './ViewLayer';
+export * from "./LinkRender.default";
+export * from "./DiagramNode";
