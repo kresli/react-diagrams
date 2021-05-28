@@ -10,6 +10,7 @@ import { useData } from "../hooks";
 import { ElementType, SchemaLink } from "../types";
 import { LinkRenderDefault } from "../components";
 import { useRegisterElement, useViewport } from "../hooks";
+import { getELementType } from "../functions";
 const config = {
   attributes: true,
   attributeFilter: ["style"],
@@ -58,7 +59,7 @@ export const DiagramLink: FunctionComponent<SchemaLink> = memo((linkData) => {
     };
   }, [end, linkData, start]);
   const lineRef = useRef<SVGLineElement>(null);
-  useRegisterElement(lineRef, ElementType.LINK);
+  useRegisterElement(lineRef, ElementType.LINK, { id: "null" });
   return (
     <g pointerEvents="visible">
       <Render {...link} lineRef={lineRef} />
@@ -70,7 +71,7 @@ function getNodeElement(portElement: HTMLElement): HTMLElement | null {
   let element = portElement.parentElement;
   while (element) {
     if (!element) return null;
-    if (element.dataset.node) return element;
+    if (getELementType(element) === ElementType.NODE) return element;
     element = element.parentElement;
   }
   return null;

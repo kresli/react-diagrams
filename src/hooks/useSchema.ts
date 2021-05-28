@@ -1,7 +1,7 @@
 import { useCallback, useMemo, useReducer, useState } from "react";
 import { v4 } from "uuid";
 import { SchemaActionType, schemaReducer, validateSchema } from "../functions";
-import { getELementType } from "../functions/getElementType";
+import { getElementId, getELementType } from "../functions/getElementType";
 import { ElementType, Schema, SchemaNode } from "../types";
 
 export const useSchema = (initSchema: Schema) => {
@@ -9,6 +9,9 @@ export const useSchema = (initSchema: Schema) => {
   const [data, dispatchAction] = useReducer(schemaReducer, initSchema);
   const viewportRef = useState<HTMLDivElement | null>(null);
   const [view] = viewportRef;
+
+  const { nodes } = data;
+
   const clientToLocalPosition = useCallback(
     (clientX: number, clientY: number): [number, number] => {
       if (!view) return [0, 0];
@@ -17,17 +20,9 @@ export const useSchema = (initSchema: Schema) => {
     },
     [data.scale, view]
   );
-  const addNode = (node: Partial<SchemaNode>) => {
-    const data: SchemaNode = {
-      id: v4(),
-      position: [0, 0],
-      ...node,
-    };
-    dispatchAction({ type: SchemaActionType.ADD_NODE, ...data });
-  };
-  const elementsFromPoint = useCallback(
+
+  const clientToElementType = useCallback(
     (clientX: number, clientY: number): ElementType[] => {
-      console.log(document.elementsFromPoint(clientX, clientY));
       return document
         .elementsFromPoint(clientX, clientY)
         .map((elem) => {
@@ -37,16 +32,47 @@ export const useSchema = (initSchema: Schema) => {
     },
     []
   );
+
+  const clientToNode = useCallback(
+    (clientX: number, clientY: number): SchemaNode[] => {
+      return document
+        .elementsFromPoint(clientX, clientY)
+        .map((elem) => {
+          const type = getELementType(elem as HTMLElement);
+          if (type !== ElementType.NODE) return null;
+          return nodes.find(
+            ({ id }) => id === getElementId(elem as HTMLElement)
+          );
+        })
+        .filter((v) => v) as SchemaNode[];
+    },
+    [nodes]
+  );
+
+  const addNode = (node: Partial<SchemaNode>) => {
+    dispatchAction({ type: SchemaActionType.ADD_NODE, node });
+  };
+
+  const removeNode = (node: SchemaNode) =>
+    dispatchAction({ type: SchemaActionType.REMOVE_NODE, node });
   return useMemo(
     () => ({
       data,
       dispatchAction,
       viewportRef,
       clientToLocalPosition,
+      clientToElementType,
+      clientToNode,
       addNode,
-      elementsFromPoint,
+      removeNode,
     }),
-    [clientToLocalPosition, data, elementsFromPoint, viewportRef]
+    [
+      data,
+      viewportRef,
+      clientToLocalPosition,
+      clientToElementType,
+      clientToNode,
+    ]
   );
 };
 

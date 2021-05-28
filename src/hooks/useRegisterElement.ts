@@ -1,16 +1,20 @@
 import { MutableRefObject, useLayoutEffect } from "react";
-import { ELEMENT_TYPE_KEY } from "../functions/getElementType";
+import { setElementId, setElementType } from "../functions";
 import { ElementType } from "../types";
 
-export const useRegisterElement = (
-  ref: MutableRefObject<{
-    setAttribute: (key: string, value: string) => any;
-  } | null>,
-  type: ElementType
-) => {
+type Ref = MutableRefObject<{
+  setAttribute: (key: string, value: string) => any;
+} | null>;
+
+export function useRegisterElement(
+  ref: Ref,
+  type: ElementType,
+  data: { id: string }
+): void {
+  const { id } = data;
   useLayoutEffect(() => {
-    if (!ref.current)
-      throw new Error(`LinkRenderer must reference element with "lineRef"`);
-    ref.current.setAttribute(ELEMENT_TYPE_KEY, type as string);
-  }, [ref, type]);
-};
+    if (!ref.current) return;
+    setElementType(ref.current, type);
+    setElementId(ref.current, id);
+  }, [ref, type, id]);
+}

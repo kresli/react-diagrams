@@ -56,7 +56,7 @@ export const Canvas = memo(
       setDragRef(element);
       setZoomRef(element);
     }, [setDragRef, setZoomRef]);
-    useRegisterElement(ref, ElementType.CANVAS);
+    useRegisterElement(ref, ElementType.CANVAS, { id: "null" });
     return (
       <DiagramRoot className="Diagram" ref={ref}>
         <ViewLayer />

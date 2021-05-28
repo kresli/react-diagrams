@@ -11,8 +11,14 @@ const Canvas: FunctionComponent<{
   );
 };
 
-const Element: FunctionComponent = () => {
-  return <div>node</div>;
+const Element: FunctionComponent<{
+  onRemoveNode: () => void;
+}> = ({ onRemoveNode }) => {
+  return (
+    <div>
+      <button onClick={onRemoveNode}>remove node</button>
+    </div>
+  );
 };
 const Link: FunctionComponent = () => {
   return <div>link</div>;
@@ -23,14 +29,15 @@ const Port: FunctionComponent = () => {
 
 export const ContextPopup: FunctionComponent<{
   onAddNode: () => void;
+  onRemoveNode: () => void;
   contextTypes: ElementType[] | null;
-}> = memo(({ onAddNode, contextTypes }) => {
+}> = memo(({ onAddNode, contextTypes, onRemoveNode }) => {
   if (!contextTypes) return null;
   switch (true) {
     case contextTypes[0] === ElementType.CANVAS:
       return <Canvas onAddNode={onAddNode} />;
     case contextTypes[0] === ElementType.NODE:
-      return <Element />;
+      return <Element onRemoveNode={onRemoveNode} />;
     case contextTypes.includes(ElementType.PORT):
       return <Port />;
     case contextTypes[0] === ElementType.LINK:

@@ -20,7 +20,7 @@ const Port: FunctionComponent<{ port: SchemaPort; align: PortAlign }> = memo(
   ({ port, align }) => {
     const { id } = port;
     const ref = useRef<HTMLDivElement | null>(null);
-    useRegisterElement(ref, ElementType.PORT);
+    useRegisterElement(ref, ElementType.PORT, port);
     return (
       <PortRoot align={align} ref={ref}>
         <div

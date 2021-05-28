@@ -5,6 +5,7 @@ export enum SchemaActionType {
   VIEWPORT_ZOOM = "VIEWPORT_ZOOM",
   NODE_MOVE = "NODE_MOVE",
   ADD_NODE = "ADD_NODE",
+  REMOVE_NODE = "REMOVE_NODE",
 }
 
 export type SchemaAction =
@@ -29,7 +30,11 @@ export type SchemaAction =
     }
   | {
       type: SchemaActionType.ADD_NODE;
-      position: [number, number];
+      node: Partial<SchemaNode>;
+    }
+  | {
+      type: SchemaActionType.REMOVE_NODE;
+      node: SchemaNode;
     };
 
 export const schemaReducer = (schema: Schema, action: SchemaAction): Schema => {
@@ -86,10 +91,29 @@ export const schemaReducer = (schema: Schema, action: SchemaAction): Schema => {
       };
     }
     case SchemaActionType.ADD_NODE: {
-      const { position } = action;
-      const nodes: SchemaNode[] = [...schema.nodes, { id: v4(), position }];
+      const node: SchemaNode = {
+        id: v4(),
+        position: [0, 0],
+        ...action.node,
+      };
+      const nodes: SchemaNode[] = [...schema.nodes, node];
       return {
         ...schema,
+        nodes,
+      };
+    }
+    case SchemaActionType.REMOVE_NODE: {
+      const nodes = schema.nodes.filter((node) => node !== action.node);
+      const io = [
+        ...(action.node.inputs?.map(({ id }) => id) || []),
+        ...(action.node.outputs?.map(({ id }) => id) || []),
+      ];
+      const links = schema.links.filter(
+        ({ input, output }) => !(io.includes(input) || io.includes(output))
+      );
+      return {
+        ...schema,
+        links,
         nodes,
       };
     }

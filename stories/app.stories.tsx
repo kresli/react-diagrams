@@ -3,6 +3,7 @@ import { Diagram, DiagramNodeRender, Schema, useSchema } from "../src";
 import { useContextMenu } from "./useContextMenu";
 import { ContextPopup } from "./ContextPopup";
 import { memo, useMemo } from "react";
+import { v4 } from "uuid";
 
 const meta: Meta = {
   title: "default",
@@ -82,13 +83,23 @@ export const Playground = () => {
   const schema = useSchema(initData);
   const { ContextMenu, setContextTrigger, contextPosition } = useContextMenu();
   const setRef = (elem: HTMLDivElement) => setContextTrigger(elem);
-  const onAdd = () => {
+  const onAddNode = () => {
     if (!contextPosition) return;
     const position = schema.clientToLocalPosition(...contextPosition);
-    schema.addNode({ position });
+    schema.addNode({
+      position,
+      inputs: [{ id: v4() }],
+      outputs: [{ id: v4() }],
+    });
   };
+  const onRemoveNode = () => {
+    if (!contextPosition) return;
+    const [node] = schema.clientToNode(...contextPosition);
+    if (node) schema.removeNode(node);
+  };
+  console.log(schema);
 
-  const { elementsFromPoint } = schema;
+  const { clientToElementType: elementsFromPoint } = schema;
   const contextTypes = useMemo(() => {
     if (!contextPosition) return null;
     const [clientX, clientY] = contextPosition;
@@ -99,7 +110,11 @@ export const Playground = () => {
       <div style={{ display: "flex", flex: 1, height: "100%" }}>
         <Diagram schema={schema} ref={setRef} />
         <ContextMenu>
-          <ContextPopup onAddNode={onAdd} contextTypes={contextTypes} />
+          <ContextPopup
+            onAddNode={onAddNode}
+            contextTypes={contextTypes}
+            onRemoveNode={onRemoveNode}
+          />
         </ContextMenu>
       </div>
     </div>

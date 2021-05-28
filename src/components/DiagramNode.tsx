@@ -52,11 +52,10 @@ export const DiagramNode: FunctionComponent<{ node: SchemaNode }> = memo(
       [data, inputs, outputs]
     );
 
-    useRegisterElement(ref, ElementType.NODE);
+    useRegisterElement(ref, ElementType.NODE, node);
 
     return (
       <div
-        data-node={id}
         className="DiagramNode"
         ref={ref}
         style={{
