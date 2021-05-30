@@ -4,14 +4,14 @@ import {
   useLayoutEffect,
   forwardRef,
   useImperativeHandle,
+  useContext,
 } from "react";
 import styled from "styled-components";
 import { SchemaActionType } from "../functions";
 import { useAction, useDrag, useRegisterElement, useWheel } from "../hooks";
 import { ElementType } from "../types";
 import { ViewLayer } from "../components";
-import { useAtom } from "custom-react-context-state";
-import { ViewportRefAtom } from "./atoms";
+import { ViewportRefContext } from "../context";
 
 const DiagramRoot = styled.div`
   font-size: 14px;
@@ -37,7 +37,7 @@ export const Canvas = memo(
     const setDragRef = useDrag((movementX, movementY) =>
       action({ type: SchemaActionType.VIEWPORT_MOVE, movementX, movementY })
     );
-    const [viewLayer] = useAtom(ViewportRefAtom);
+    const viewLayer = useContext(ViewportRefContext);
     const setZoomRef = useWheel((data) => {
       if (viewLayer)
         action({

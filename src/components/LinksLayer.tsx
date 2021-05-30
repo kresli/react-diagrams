@@ -1,10 +1,8 @@
-import { useAtom } from "custom-react-context-state";
-import { FunctionComponent, memo, useMemo } from "react";
-// import { useData } from "../hooks";
+import { FunctionComponent, memo, useContext, useMemo } from "react";
 import { DiagramLink } from "../components";
-import { LinksAtom } from "./atoms";
+import { LinksContext } from "../context";
 export const LinksLayer: FunctionComponent = memo(() => {
-  const [linksData] = useAtom(LinksAtom);
+  const linksData = useContext(LinksContext);
   const links = useMemo(
     () =>
       linksData.map((link) => (

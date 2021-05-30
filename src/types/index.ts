@@ -46,6 +46,7 @@ export interface SchemaLink {
   render?: SchemaLinkRender;
 }
 export interface Schema {
+  view: null | HTMLDivElement;
   position: [number, number];
   scale: number;
   nodes: SchemaNode[];

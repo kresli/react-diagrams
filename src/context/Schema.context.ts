@@ -1,5 +1,8 @@
 import { createContext } from "react";
-import { Schema } from "../types";
+import { SchemaLink, SchemaNode } from "../types";
 
-// export const SchemaContext = createContext<Schema>((null as any) as Schema);
-export {};
+export const NodesContext = createContext<SchemaNode[]>([]);
+export const LinksContext = createContext<SchemaLink[]>([]);
+export const ScaleContext = createContext(1);
+export const PositionContext = createContext<[number, number]>([0, 0]);
+export const ViewportRefContext = createContext<HTMLDivElement | null>(null);

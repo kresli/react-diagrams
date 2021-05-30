@@ -1,6 +1,7 @@
-import { Schema, SchemaNode } from "../types";
+import { Schema, SchemaLink, SchemaNode } from "../types";
 import { v4 } from "uuid";
 export enum SchemaActionType {
+  VIEWPORT_SET = "VIEWPORT_SET",
   VIEWPORT_MOVE = "VIEWPORT_MOVE",
   VIEWPORT_ZOOM = "VIEWPORT_ZOOM",
   NODE_MOVE = "NODE_MOVE",
@@ -35,8 +36,11 @@ export type SchemaAction =
   | {
       type: SchemaActionType.REMOVE_NODE;
       node: SchemaNode;
+    }
+  | {
+      type: SchemaActionType.VIEWPORT_SET;
+      element: HTMLDivElement | null;
     };
-
 export const schemaReducer = (schema: Schema, action: SchemaAction): Schema => {
   switch (action.type) {
     case SchemaActionType.VIEWPORT_MOVE: {
@@ -48,10 +52,15 @@ export const schemaReducer = (schema: Schema, action: SchemaAction): Schema => {
         position,
       };
     }
+    case SchemaActionType.VIEWPORT_SET: {
+      return {
+        ...schema,
+        view: action.element,
+      };
+    }
     case SchemaActionType.NODE_MOVE: {
       const { node, movementX, movementY, scale } = action;
       const [x, y] = node.position;
-      console.log([x + movementX / scale, y + movementY / scale]);
       const nodes = schema.nodes.map((n) =>
         n.id === node.id
           ? {

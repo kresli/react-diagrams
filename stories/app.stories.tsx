@@ -33,6 +33,7 @@ const CustomNode: DiagramNodeRender = memo(({ inputs, outputs, data }) => {
 });
 
 const initData: Schema = {
+  view: null,
   nodes: [
     {
       id: "1",
@@ -79,6 +80,8 @@ const initData: Schema = {
 //   CUSTOM: createTemplate({})
 // }
 
+export default { title: "Playground" };
+
 export const Playground = () => {
   const schema = useSchema(initData);
   const { ContextMenu, setContextTrigger, contextPosition } = useContextMenu();
@@ -98,12 +101,12 @@ export const Playground = () => {
     if (node) schema.removeNode(node);
   };
 
-  // const { elementsFromPoint } = schema;
+  const { elementsFromPoint } = schema;
   const contextTypes = useMemo(() => {
     if (!contextPosition) return null;
     const [clientX, clientY] = contextPosition;
     return elementsFromPoint(clientX, clientY);
-  }, [contextPosition]);
+  }, [contextPosition, elementsFromPoint]);
   return (
     <div style={{ width: "100%", height: "100%" }}>
       <div style={{ display: "flex", flex: 1, height: "100%" }}>
@@ -119,8 +122,3 @@ export const Playground = () => {
     </div>
   );
 };
-
-export default meta;
-function elementsFromPoint(clientX: number, clientY: number): any {
-  throw new Error("Function not implemented.");
-}

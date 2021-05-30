@@ -1,47 +1,30 @@
-import { FunctionComponent, useCallback } from "react";
+import { FunctionComponent } from "react";
 import {
+  LinksContext,
+  NodesContext,
+  PositionContext,
+  ScaleContext,
   SchemaActionContext,
-  // SchemaContext,
-  // SchemaViewportRefContext,
+  ViewportRefContext,
 } from "../context";
 import { Ctx } from "../hooks";
-import { AtomsProvider, AtomsOnChange } from "custom-react-context-state";
-import {
-  LinksAtom,
-  NodesAtom,
-  PositionAtom,
-  ScaleAtom,
-  ViewportRefAtom,
-} from "./atoms";
-
-const atoms = {
-  viewRef: ViewportRefAtom,
-  nodes: NodesAtom,
-  position: PositionAtom,
-  scale: ScaleAtom,
-  links: LinksAtom,
-};
 
 export const SchemaProvider: FunctionComponent<{
   schema: Ctx;
 }> = ({ children, schema }) => {
-  const { setView } = schema;
-  const onAtomsChange: AtomsOnChange<typeof atoms> = useCallback(
-    (change) => {
-      console.log("----->", change);
-      if (change.viewRef) setView(change.viewRef);
-    },
-    [setView]
-  );
   return (
-    <AtomsProvider atoms={atoms} onChange={onAtomsChange}>
-      <SchemaActionContext.Provider value={schema.dispatchAction}>
-        {/* <SchemaContext.Provider value={schema.data}> */}
-        {/* <SchemaViewportRefContext.Provider value={schema.viewportRef}> */}
-        {children}
-        {/* </SchemaViewportRefContext.Provider> */}
-        {/* </SchemaContext.Provider> */}
-      </SchemaActionContext.Provider>
-    </AtomsProvider>
+    <SchemaActionContext.Provider value={schema.dispatchAction}>
+      <NodesContext.Provider value={schema.nodes}>
+        <LinksContext.Provider value={schema.links}>
+          <ScaleContext.Provider value={schema.scale}>
+            <PositionContext.Provider value={schema.position}>
+              <ViewportRefContext.Provider value={schema.view}>
+                {children}
+              </ViewportRefContext.Provider>
+            </PositionContext.Provider>
+          </ScaleContext.Provider>
+        </LinksContext.Provider>
+      </NodesContext.Provider>
+    </SchemaActionContext.Provider>
   );
 };

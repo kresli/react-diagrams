@@ -1,24 +1,22 @@
-import { useCallback, useMemo, useReducer, useState } from "react";
+import { useCallback, useMemo, useReducer } from "react";
 import { SchemaActionType, schemaReducer, validateSchema } from "../functions";
 import { getElementId, getELementType } from "../functions/getElementType";
 import { ElementType, Schema, SchemaNode } from "../types";
-
 export const useSchema = (initSchema: Schema) => {
   validateSchema(initSchema);
-  const [data, dispatchAction] = useReducer(schemaReducer, initSchema);
-  const [view, setView] = useState<HTMLDivElement | null>(null);
-  // const viewportRef = useState<HTMLDivElement | null>(null);
-  // const [view] = viewportRef;
 
-  const { nodes } = data;
+  const [{ links, nodes, position, scale, view }, dispatchAction] = useReducer(
+    schemaReducer,
+    initSchema
+  );
 
   const clientToLocalPosition = useCallback(
     (clientX: number, clientY: number): [number, number] => {
       if (!view) return [0, 0];
       const { left, top } = view.getBoundingClientRect();
-      return [(clientX - left) / data.scale, (clientY - top) / data.scale];
+      return [(clientX - left) / scale, (clientY - top) / scale];
     },
-    [data.scale, view]
+    [scale, view]
   );
 
   const clientToNode = useCallback(
@@ -41,20 +39,49 @@ export const useSchema = (initSchema: Schema) => {
     dispatchAction({ type: SchemaActionType.ADD_NODE, node });
   };
 
-  const removeNode = (node: SchemaNode) =>
+  const removeNode = (node: SchemaNode) => {
     dispatchAction({ type: SchemaActionType.REMOVE_NODE, node });
+  };
+
+  const elementsFromPoint = useCallback(
+    (clientX: number, clientY: number): ElementType[] => {
+      console.log(document.elementsFromPoint(clientX, clientY));
+      return document
+        .elementsFromPoint(clientX, clientY)
+        .map((elem) => {
+          return getELementType(elem as HTMLElement);
+        })
+        .filter((v) => v) as ElementType[];
+    },
+    []
+  );
+
   return useMemo(
     () => ({
-      data,
+      //
       dispatchAction,
+      elementsFromPoint,
       // clientToLocalPosition,
       clientToLocalPosition,
       clientToNode,
       addNode,
       removeNode,
-      setView,
+      nodes,
+      links,
+      scale,
+      position,
+      view,
     }),
-    [data, clientToLocalPosition, clientToNode]
+    [
+      clientToLocalPosition,
+      clientToNode,
+      elementsFromPoint,
+      links,
+      nodes,
+      position,
+      scale,
+      view,
+    ]
   );
 };
 

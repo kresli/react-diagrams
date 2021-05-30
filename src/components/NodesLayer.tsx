@@ -1,11 +1,9 @@
-import { useAtom } from "custom-react-context-state";
-import { FunctionComponent, memo, useMemo } from "react";
-// import { useData } from "../hooks";
+import { FunctionComponent, memo, useContext, useMemo } from "react";
 import { DiagramNode } from "../components";
-import { NodesAtom } from "./atoms";
+import { NodesContext } from "../context";
 
 export const NodesLayer: FunctionComponent = memo(() => {
-  const [nodesData] = useAtom(NodesAtom);
+  const nodesData = useContext(NodesContext);
   const nodes = useMemo(
     () => nodesData.map((node) => <DiagramNode key={node.id} node={node} />),
     [nodesData]

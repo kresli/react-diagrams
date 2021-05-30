@@ -1,15 +1,17 @@
 import {
   FunctionComponent,
   memo,
+  useContext,
   useLayoutEffect,
   useMemo,
   useRef,
 } from "react";
 import { NodeRenderDefault } from ".";
 import { SchemaActionType } from "../functions/schema.reducer";
-import { useAction, useData, useDrag } from "../hooks";
+import { useAction, useDrag } from "../hooks";
 import { ElementType, SchemaNode } from "../types";
 import { useRegisterElement } from "../hooks";
+import { ScaleContext } from "../context";
 export const DiagramNode: FunctionComponent<{ node: SchemaNode }> = memo(
   ({ node: nodeData }) => {
     const node = useMemo(
@@ -22,7 +24,7 @@ export const DiagramNode: FunctionComponent<{ node: SchemaNode }> = memo(
     const { position, id, inputs, outputs, data } = node;
     const [left, top] = position;
     const action = useAction();
-    const { scale } = useData();
+    const scale = useContext(ScaleContext);
     const ref = useRef<HTMLDivElement | null>(null);
     const setDragRef = useDrag((movementX, movementY) =>
       action({
