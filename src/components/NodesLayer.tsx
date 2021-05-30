@@ -1,12 +1,14 @@
+import { useAtom } from "custom-react-context-state";
 import { FunctionComponent, memo, useMemo } from "react";
-import { useData } from "../hooks";
+// import { useData } from "../hooks";
 import { DiagramNode } from "../components";
+import { NodesAtom } from "./atoms";
 
 export const NodesLayer: FunctionComponent = memo(() => {
-  const schema = useData();
+  const [nodesData] = useAtom(NodesAtom);
   const nodes = useMemo(
-    () => schema.nodes.map((node) => <DiagramNode key={node.id} node={node} />),
-    [schema.nodes]
+    () => nodesData.map((node) => <DiagramNode key={node.id} node={node} />),
+    [nodesData]
   );
   return (
     <div className="nodesLayer" style={{ position: "absolute" }}>

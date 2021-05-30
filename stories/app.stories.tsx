@@ -97,14 +97,13 @@ export const Playground = () => {
     const [node] = schema.clientToNode(...contextPosition);
     if (node) schema.removeNode(node);
   };
-  console.log(schema);
 
-  const { clientToElementType: elementsFromPoint } = schema;
+  // const { elementsFromPoint } = schema;
   const contextTypes = useMemo(() => {
     if (!contextPosition) return null;
     const [clientX, clientY] = contextPosition;
     return elementsFromPoint(clientX, clientY);
-  }, [contextPosition, elementsFromPoint]);
+  }, [contextPosition]);
   return (
     <div style={{ width: "100%", height: "100%" }}>
       <div style={{ display: "flex", flex: 1, height: "100%" }}>
@@ -122,3 +121,6 @@ export const Playground = () => {
 };
 
 export default meta;
+function elementsFromPoint(clientX: number, clientY: number): any {
+  throw new Error("Function not implemented.");
+}

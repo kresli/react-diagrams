@@ -1,4 +1,5 @@
-import { useContext } from 'react';
-import { SchemaContext } from '../context';
+// import { useContext } from 'react';
+// import { SchemaContext } from '../context';
 
-export const useData = () => useContext(SchemaContext);
+// export const useData = () => useContext(SchemaContext);
+export {};

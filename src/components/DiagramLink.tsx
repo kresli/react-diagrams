@@ -6,11 +6,13 @@ import {
   useLayoutEffect,
   useRef,
 } from "react";
-import { useData } from "../hooks";
+// import { useData } from "../hooks";
 import { ElementType, SchemaLink } from "../types";
 import { LinkRenderDefault } from "../components";
-import { useRegisterElement, useViewport } from "../hooks";
+import { useRegisterElement } from "../hooks";
 import { getELementType } from "../functions";
+import { useAtom } from "custom-react-context-state";
+import { ScaleAtom, ViewportRefAtom } from "./atoms";
 const config = {
   attributes: true,
   attributeFilter: ["style"],
@@ -18,10 +20,10 @@ const config = {
 
 // @TODO optimize it
 function useElementPosition(elementId: string): [number, number] {
-  const [viewport] = useViewport();
+  const [viewport] = useAtom(ViewportRefAtom);
   const [x, setX] = useState(0);
   const [y, setY] = useState(0);
-  const { scale } = useData();
+  const [scale] = useAtom(ScaleAtom);
   useLayoutEffect(() => {
     const element = document.getElementById(elementId);
     if (!element) return;

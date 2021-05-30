@@ -1,5 +1,4 @@
 import { useCallback, useMemo, useReducer, useState } from "react";
-import { v4 } from "uuid";
 import { SchemaActionType, schemaReducer, validateSchema } from "../functions";
 import { getElementId, getELementType } from "../functions/getElementType";
 import { ElementType, Schema, SchemaNode } from "../types";
@@ -7,8 +6,9 @@ import { ElementType, Schema, SchemaNode } from "../types";
 export const useSchema = (initSchema: Schema) => {
   validateSchema(initSchema);
   const [data, dispatchAction] = useReducer(schemaReducer, initSchema);
-  const viewportRef = useState<HTMLDivElement | null>(null);
-  const [view] = viewportRef;
+  const [view, setView] = useState<HTMLDivElement | null>(null);
+  // const viewportRef = useState<HTMLDivElement | null>(null);
+  // const [view] = viewportRef;
 
   const { nodes } = data;
 
@@ -19,18 +19,6 @@ export const useSchema = (initSchema: Schema) => {
       return [(clientX - left) / data.scale, (clientY - top) / data.scale];
     },
     [data.scale, view]
-  );
-
-  const clientToElementType = useCallback(
-    (clientX: number, clientY: number): ElementType[] => {
-      return document
-        .elementsFromPoint(clientX, clientY)
-        .map((elem) => {
-          return getELementType(elem as HTMLElement);
-        })
-        .filter((v) => v) as ElementType[];
-    },
-    []
   );
 
   const clientToNode = useCallback(
@@ -59,20 +47,14 @@ export const useSchema = (initSchema: Schema) => {
     () => ({
       data,
       dispatchAction,
-      viewportRef,
+      // clientToLocalPosition,
       clientToLocalPosition,
-      clientToElementType,
       clientToNode,
       addNode,
       removeNode,
+      setView,
     }),
-    [
-      data,
-      viewportRef,
-      clientToLocalPosition,
-      clientToElementType,
-      clientToNode,
-    ]
+    [data, clientToLocalPosition, clientToNode]
   );
 };
 

@@ -1,14 +1,16 @@
+import { useAtom } from "custom-react-context-state";
 import { FunctionComponent, memo, useMemo } from "react";
-import { useData } from "../hooks";
+// import { useData } from "../hooks";
 import { DiagramLink } from "../components";
+import { LinksAtom } from "./atoms";
 export const LinksLayer: FunctionComponent = memo(() => {
-  const schema = useData();
+  const [linksData] = useAtom(LinksAtom);
   const links = useMemo(
     () =>
-      schema.links.map((link) => (
+      linksData.map((link) => (
         <DiagramLink key={`${link.input}${link.output}`} {...link} />
       )),
-    [schema.links]
+    [linksData]
   );
   return (
     <svg
