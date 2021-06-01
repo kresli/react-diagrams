@@ -19,7 +19,7 @@ const config = {
 };
 
 // @TODO optimize it
-function useElementPosition(elementId: string): [number, number] {
+function useNodeObserver(elementId: string): [number, number] {
   const viewport = useContext(ViewportRefContext);
   const [x, setX] = useState(0);
   const [y, setY] = useState(0);
@@ -47,8 +47,8 @@ function useElementPosition(elementId: string): [number, number] {
 export const DiagramLink: FunctionComponent<SchemaLink> = memo((linkData) => {
   const [inputId] = useState(() => `GATE_${linkData.input}`);
   const [outputId] = useState(() => `GATE_${linkData.output}`);
-  const start = useElementPosition(inputId);
-  const end = useElementPosition(outputId);
+  const start = useNodeObserver(inputId);
+  const end = useNodeObserver(outputId);
   const Render = useMemo(() => linkData.render || LinkRenderDefault, [
     linkData.render,
   ]);
@@ -61,7 +61,7 @@ export const DiagramLink: FunctionComponent<SchemaLink> = memo((linkData) => {
     };
   }, [end, linkData, start]);
   const lineRef = useRef<SVGLineElement>(null);
-  useRegisterElement(lineRef, ElementType.LINK, { id: "null" });
+  useRegisterElement(lineRef, ElementType.LINK);
   return (
     <g pointerEvents="visible">
       <Render {...link} lineRef={lineRef} />

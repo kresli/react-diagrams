@@ -45,8 +45,16 @@ export interface SchemaLink {
   data?: any;
   render?: SchemaLinkRender;
 }
+export interface RegisteredElement {
+  element: HTMLOrSVGElement;
+  type: ElementType;
+  data?: any;
+}
+export type RegisteredElements = Map<HTMLOrSVGElement, RegisteredElement>;
 export interface Schema {
-  view: null | HTMLDivElement;
+  registeredElements: RegisteredElements;
+  viewRef: null | HTMLDivElement;
+  canvasRef: null | HTMLDivElement;
   position: [number, number];
   scale: number;
   nodes: SchemaNode[];
@@ -58,4 +66,5 @@ export enum ElementType {
   LINK = "LINK",
   NODE = "NODE",
   PORT = "PORT",
+  VIEW = "VIEW",
 }

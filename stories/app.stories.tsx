@@ -1,14 +1,8 @@
-import { Meta } from "@storybook/react";
 import { Diagram, DiagramNodeRender, Schema, useSchema } from "../src";
 import { useContextMenu } from "./useContextMenu";
 import { ContextPopup } from "./ContextPopup";
 import { memo, useMemo } from "react";
 import { v4 } from "uuid";
-
-const meta: Meta = {
-  title: "default",
-  component: Diagram,
-};
 
 const CustomNode: DiagramNodeRender = memo(({ inputs, outputs, data }) => {
   return (
@@ -33,7 +27,9 @@ const CustomNode: DiagramNodeRender = memo(({ inputs, outputs, data }) => {
 });
 
 const initData: Schema = {
-  view: null,
+  registeredElements: new Map(),
+  canvasRef: null,
+  viewRef: null,
   nodes: [
     {
       id: "1",
@@ -66,19 +62,6 @@ const initData: Schema = {
   position: [0, 0] as [number, number],
   scale: 1,
 };
-
-// function createTemplate<T extends Partial<SchemaNode>>(node: T): () => T {
-//   return () => ({
-//     id: v4(),
-//     position: [0,0],
-//     ...node
-//   })
-// }
-
-// const TEMPLATES = {
-//   DEFAULT: createTemplate({}),
-//   CUSTOM: createTemplate({})
-// }
 
 export default { title: "Playground" };
 

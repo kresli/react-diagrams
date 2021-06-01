@@ -1,17 +1,8 @@
-import {
-  memo,
-  useRef,
-  useLayoutEffect,
-  forwardRef,
-  useImperativeHandle,
-  useContext,
-} from "react";
+import { memo, useRef, forwardRef, useImperativeHandle } from "react";
 import styled from "styled-components";
-import { SchemaActionType } from "../functions";
-import { useAction, useDrag, useRegisterElement, useWheel } from "../hooks";
+import { useRegisterElement } from "../hooks";
 import { ElementType } from "../types";
 import { ViewLayer } from "../components";
-import { ViewportRefContext } from "../context";
 
 const DiagramRoot = styled.div`
   font-size: 14px;
@@ -33,26 +24,7 @@ export const Canvas = memo(
     const ref = useRef<HTMLDivElement>(null);
     // @ts-ignore
     useImperativeHandle(forwardedRef, () => ref.current);
-    const action = useAction();
-    const setDragRef = useDrag((movementX, movementY) =>
-      action({ type: SchemaActionType.VIEWPORT_MOVE, movementX, movementY })
-    );
-    const viewLayer = useContext(ViewportRefContext);
-    const setZoomRef = useWheel((data) => {
-      if (viewLayer)
-        action({
-          ...data,
-          type: SchemaActionType.VIEWPORT_ZOOM,
-          viewLayer,
-        });
-    });
-    useLayoutEffect(() => {
-      const element = ref.current;
-      if (!element) return;
-      setDragRef(element);
-      setZoomRef(element);
-    }, [setDragRef, setZoomRef]);
-    useRegisterElement(ref, ElementType.CANVAS, { id: "null" });
+    useRegisterElement(ref, ElementType.CANVAS);
     return (
       <DiagramRoot className="Diagram" ref={ref}>
         <ViewLayer />

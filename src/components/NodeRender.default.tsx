@@ -1,7 +1,8 @@
-import { FunctionComponent, memo, useRef } from "react";
+import { FunctionComponent, memo, useContext, useMemo, useRef } from "react";
 import styled from "styled-components";
 import { PortAlign, NodeRenderProps, SchemaPort, ElementType } from "../types";
-import { useRegisterElement } from "../hooks";
+import { useAction, useRegisterElement } from "../hooks";
+import { LinksContext } from "../context";
 const PortRoot = styled.div<{ align: PortAlign }>`
   width: 12px;
   height: 12px;
@@ -14,6 +15,9 @@ const PortRoot = styled.div<{ align: PortAlign }>`
   top: 4px;
   left: ${({ align }) => (align === PortAlign.LEFT ? "-26px" : "auto")};
   right: ${({ align }) => (align === PortAlign.RIGHT ? "-26px" : "auto")};
+  &:hover {
+    background-color: red;
+  }
 `;
 
 const Port: FunctionComponent<{ port: SchemaPort; align: PortAlign }> = memo(
@@ -41,6 +45,13 @@ const InputOutput: FunctionComponent<{
   port: SchemaPort;
   align: PortAlign;
 }> = memo(({ align, port }) => {
+  // const action = useAction();
+  // const links = useContext(LinksContext);
+  // const link = useMemo(
+  //   () => links.find((link) => link.input === id || link.output === id),
+  //   [links, id]
+  // );
+  // console.log(link);
   return (
     <div
       className="InputOutput"

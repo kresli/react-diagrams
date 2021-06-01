@@ -4,6 +4,10 @@ import "styled-components";
 // and extend them!
 declare module "styled-components" {
   export interface DefaultTheme {
+    zIndex: {
+      linksLayer: number;
+      nodesLayer: number;
+    };
     node: {
       borderRadius: string;
     };

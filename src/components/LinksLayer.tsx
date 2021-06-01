@@ -1,8 +1,10 @@
 import { FunctionComponent, memo, useContext, useMemo } from "react";
+import { useTheme } from "styled-components";
 import { DiagramLink } from "../components";
 import { LinksContext } from "../context";
 export const LinksLayer: FunctionComponent = memo(() => {
   const linksData = useContext(LinksContext);
+  const { zIndex } = useTheme();
   const links = useMemo(
     () =>
       linksData.map((link) => (
@@ -19,6 +21,7 @@ export const LinksLayer: FunctionComponent = memo(() => {
         width: 1,
         height: 1,
         overflow: "overlay",
+        zIndex: zIndex.linksLayer,
       }}
     >
       {links}

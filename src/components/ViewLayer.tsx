@@ -4,17 +4,17 @@ import {
   useMemo,
   CSSProperties,
   useContext,
-  useCallback,
+  useRef,
 } from "react";
 import { NodesLayer, LinksLayer } from "../components";
 import { PositionContext, ScaleContext } from "../context";
-import { SchemaActionType } from "../functions";
-import { useAction } from "../hooks";
+import { useRegisterElement } from "../hooks";
+import { ElementType } from "../types";
 
 export const ViewLayer: FunctionComponent = memo(() => {
+  const ref = useRef<HTMLDivElement | null>(null);
   const [left, top] = useContext(PositionContext);
   const scale = useContext(ScaleContext);
-  const action = useAction();
   const viewLayerStyle = useMemo(
     () =>
       ({
@@ -27,15 +27,10 @@ export const ViewLayer: FunctionComponent = memo(() => {
     [left, top, scale]
   );
 
-  const setViewport = useCallback(
-    (element: HTMLDivElement | null) => {
-      action({ type: SchemaActionType.VIEWPORT_SET, element });
-    },
-    [action]
-  );
+  useRegisterElement(ref, ElementType.VIEW);
 
   return (
-    <div className="viewLayer" style={viewLayerStyle} ref={setViewport}>
+    <div className="viewLayer" style={viewLayerStyle} ref={ref}>
       <NodesLayer />
       <LinksLayer />
     </div>

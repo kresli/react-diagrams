@@ -1,4 +1,4 @@
-import { Schema, SchemaLink, SchemaNode } from "../types";
+import { ElementType, RegisteredElement, Schema, SchemaNode } from "../types";
 import { v4 } from "uuid";
 export enum SchemaActionType {
   VIEWPORT_SET = "VIEWPORT_SET",
@@ -7,6 +7,8 @@ export enum SchemaActionType {
   NODE_MOVE = "NODE_MOVE",
   ADD_NODE = "ADD_NODE",
   REMOVE_NODE = "REMOVE_NODE",
+  REGISTER_ELEMENT_TYPE = "REGISTER_ELEMENT_TYPE",
+  ELEMENT_MOVE = "MOVE_ELEMENT",
 }
 
 export type SchemaAction =
@@ -27,7 +29,6 @@ export type SchemaAction =
       deltaY: number;
       clientX: number;
       clientY: number;
-      viewLayer: Element;
     }
   | {
       type: SchemaActionType.ADD_NODE;
@@ -38,8 +39,17 @@ export type SchemaAction =
       node: SchemaNode;
     }
   | {
-      type: SchemaActionType.VIEWPORT_SET;
-      element: HTMLDivElement | null;
+      type: SchemaActionType.REGISTER_ELEMENT_TYPE;
+      element: HTMLOrSVGElement;
+      elementType: ElementType;
+      data?: any;
+      register: boolean;
+    }
+  | {
+      type: SchemaActionType.ELEMENT_MOVE;
+      registeredElement: RegisteredElement;
+      movementX: number;
+      movementY: number;
     };
 export const schemaReducer = (schema: Schema, action: SchemaAction): Schema => {
   switch (action.type) {
@@ -50,12 +60,6 @@ export const schemaReducer = (schema: Schema, action: SchemaAction): Schema => {
       return {
         ...schema,
         position,
-      };
-    }
-    case SchemaActionType.VIEWPORT_SET: {
-      return {
-        ...schema,
-        view: action.element,
       };
     }
     case SchemaActionType.NODE_MOVE: {
@@ -78,13 +82,14 @@ export const schemaReducer = (schema: Schema, action: SchemaAction): Schema => {
       };
     }
     case SchemaActionType.VIEWPORT_ZOOM: {
-      const { deltaY, clientX, clientY, viewLayer } = action;
-      if (!viewLayer) return schema;
+      const { deltaY, clientX, clientY } = action;
+      const { viewRef } = schema;
+      if (!viewRef) return schema;
       const factor = schema.scale * 0.1;
       const scaleChange = deltaY < 0 ? -factor : factor;
       const scale = schema.scale + scaleChange;
       if (scale <= 0.1) return schema;
-      const { left, top } = viewLayer.getBoundingClientRect();
+      const { left, top } = viewRef.getBoundingClientRect();
 
       const rootLeft = left - schema.position[0];
       const rootTop = top - schema.position[1];
@@ -125,6 +130,54 @@ export const schemaReducer = (schema: Schema, action: SchemaAction): Schema => {
         links,
         nodes,
       };
+    }
+    case SchemaActionType.REGISTER_ELEMENT_TYPE: {
+      const { element, elementType, register, data } = action;
+      const registeredElements = schema.registeredElements;
+      if (register) {
+        registeredElements.set(element, { element, type: elementType, data });
+      } else {
+        registeredElements.delete(element);
+      }
+
+      const { CANVAS, VIEW } = ElementType;
+
+      const canvasRef =
+        elementType === CANVAS ? (element as HTMLDivElement) : schema.canvasRef;
+      const viewRef =
+        elementType === VIEW ? (element as HTMLDivElement) : schema.viewRef;
+      return {
+        ...schema,
+        registeredElements,
+        canvasRef,
+        viewRef,
+      };
+    }
+    case SchemaActionType.ELEMENT_MOVE: {
+      const { movementX, movementY } = action;
+      switch (action.registeredElement.type) {
+        case ElementType.VIEW:
+          return schemaReducer(schema, {
+            type: SchemaActionType.VIEWPORT_MOVE,
+            movementY,
+            movementX,
+          });
+        case ElementType.NODE: {
+          const { scale, nodes } = schema;
+          const nodeId = action.registeredElement.data;
+          // @TODO create a nodeId to node map
+          const node = nodes.find(({ id }) => id === nodeId);
+          if (!node) return schema;
+          return schemaReducer(schema, {
+            type: SchemaActionType.NODE_MOVE,
+            movementY,
+            movementX,
+            scale,
+            node,
+          });
+        }
+      }
+      return schema;
     }
     default:
       return schema;

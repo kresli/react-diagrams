@@ -9,6 +9,10 @@ interface Props {
 }
 
 const theme: DefaultTheme = {
+  zIndex: {
+    linksLayer: 100,
+    nodesLayer: 200,
+  },
   node: {
     borderRadius: "4pt",
   },
