@@ -15,7 +15,6 @@ export const LinksLayer = memo(() => {
         const key = `${isArray(input) ? "_" : input}${
           isArray(output) ? "_" : output
         }`;
-        console.log(key);
         return <DiagramLink key={key} link={link} />;
       }),
     [linksData]

@@ -215,7 +215,6 @@ export const schemaReducer = (schema: Schema, action: SchemaAction): Schema => {
           schema.dragLink.direction === DragLinkDirection.FORWARD
             ? action.portId
             : schema.dragLink.portId;
-        console.log(input, output);
         return schemaReducer(
           {
             ...schema,
