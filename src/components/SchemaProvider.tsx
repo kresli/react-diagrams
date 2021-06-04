@@ -1,5 +1,6 @@
 import { FunctionComponent } from "react";
 import {
+  DragLinkContext,
   LinksContext,
   NodesContext,
   PositionContext,
@@ -19,7 +20,9 @@ export const SchemaProvider: FunctionComponent<{
           <LinksContext.Provider value={schema.links}>
             <ScaleContext.Provider value={schema.scale}>
               <PositionContext.Provider value={schema.position}>
-                {children}
+                <DragLinkContext.Provider value={schema.dragLink}>
+                  {children}
+                </DragLinkContext.Provider>
               </PositionContext.Provider>
             </ScaleContext.Provider>
           </LinksContext.Provider>

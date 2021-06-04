@@ -1,8 +1,9 @@
-import { memo, useRef, forwardRef, useImperativeHandle } from "react";
+import { memo, useRef, useCallback } from "react";
 import styled from "styled-components";
-import { useRegisterElement } from "../hooks";
+import { useAction, useDrag, useRegisterElement, useWheel } from "../hooks";
 import { ElementType } from "../types";
 import { ViewLayer } from "../components";
+import { SchemaActionType } from "../functions";
 
 const DiagramRoot = styled.div`
   font-size: 14px;
@@ -19,16 +20,40 @@ const DiagramRoot = styled.div`
   height: 100%;
 `;
 
-export const Canvas = memo(
-  forwardRef<HTMLDivElement | null>((_, forwardedRef) => {
-    const ref = useRef<HTMLDivElement>(null);
-    // @ts-ignore
-    useImperativeHandle(forwardedRef, () => ref.current);
-    useRegisterElement(ref, ElementType.CANVAS);
-    return (
-      <DiagramRoot className="Diagram" ref={ref}>
-        <ViewLayer />
-      </DiagramRoot>
-    );
-  })
-);
+export const Canvas = memo(() => {
+  const ref = useRef<HTMLDivElement>(null);
+  const action = useAction();
+  useRegisterElement(ref, ElementType.CANVAS);
+  useDrag(
+    ref,
+    useCallback(
+      (movementX, movementY) => {
+        action({
+          type: SchemaActionType.VIEWPORT_MOVE,
+          movementX,
+          movementY,
+        });
+      },
+      [action]
+    )
+  );
+  useWheel(
+    ref,
+    useCallback(
+      ({ clientX, clientY, deltaY }) => {
+        action({
+          type: SchemaActionType.VIEWPORT_ZOOM,
+          clientX,
+          clientY,
+          deltaY,
+        });
+      },
+      [action]
+    )
+  );
+  return (
+    <DiagramRoot className="Diagram" ref={ref}>
+      <ViewLayer />
+    </DiagramRoot>
+  );
+});

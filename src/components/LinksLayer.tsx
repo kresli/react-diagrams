@@ -1,15 +1,23 @@
-import { FunctionComponent, memo, useContext, useMemo } from "react";
+import { memo, useContext, useMemo } from "react";
 import { useTheme } from "styled-components";
-import { DiagramLink } from "../components";
-import { LinksContext } from "../context";
-export const LinksLayer: FunctionComponent = memo(() => {
+import { DiagramLink, DragLink } from "../components";
+import { DragLinkContext, LinksContext } from "../context";
+
+export const LinksLayer = memo(() => {
   const linksData = useContext(LinksContext);
+  const dragLink = useContext(DragLinkContext);
   const { zIndex } = useTheme();
   const links = useMemo(
     () =>
-      linksData.map((link) => (
-        <DiagramLink key={`${link.input}${link.output}`} {...link} />
-      )),
+      linksData.map((link) => {
+        const { isArray } = Array;
+        const { input, output } = link;
+        const key = `${isArray(input) ? "_" : input}${
+          isArray(output) ? "_" : output
+        }`;
+        console.log(key);
+        return <DiagramLink key={key} link={link} />;
+      }),
     [linksData]
   );
   return (
@@ -25,6 +33,7 @@ export const LinksLayer: FunctionComponent = memo(() => {
       }}
     >
       {links}
+      {dragLink && <DragLink />}
     </svg>
   );
 });

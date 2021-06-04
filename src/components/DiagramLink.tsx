@@ -6,11 +6,12 @@ import {
   useLayoutEffect,
   useRef,
   useContext,
+  useCallback,
 } from "react";
 import { ElementType, SchemaLink } from "../types";
 import { LinkRenderDefault } from "../components";
-import { useRegisterElement } from "../hooks";
-import { getELementType } from "../functions";
+import { useAction, useRegisterElement } from "../hooks";
+import { getELementType, SchemaActionType } from "../functions";
 import { ScaleContext, ViewportRefContext } from "../context";
 
 const config = {
@@ -44,30 +45,36 @@ function useNodeObserver(elementId: string): [number, number] {
   return useMemo(() => [x, y], [x, y]);
 }
 
-export const DiagramLink: FunctionComponent<SchemaLink> = memo((linkData) => {
-  const [inputId] = useState(() => `GATE_${linkData.input}`);
-  const [outputId] = useState(() => `GATE_${linkData.output}`);
-  const start = useNodeObserver(inputId);
-  const end = useNodeObserver(outputId);
-  const Render = useMemo(() => linkData.render || LinkRenderDefault, [
-    linkData.render,
-  ]);
-  const link = useMemo(() => {
-    const { render, ...data } = linkData;
-    return {
-      ...data,
-      start,
-      end,
-    };
-  }, [end, linkData, start]);
-  const lineRef = useRef<SVGLineElement>(null);
-  useRegisterElement(lineRef, ElementType.LINK);
-  return (
-    <g pointerEvents="visible">
-      <Render {...link} lineRef={lineRef} />
-    </g>
-  );
-});
+export const DiagramLink: FunctionComponent<{ link: SchemaLink }> = memo(
+  ({ link: linkData }) => {
+    const action = useAction();
+    const [inputId] = useState(() => `GATE_${linkData.input}`);
+    const [outputId] = useState(() => `GATE_${linkData.output}`);
+    const start = useNodeObserver(inputId);
+    const end = useNodeObserver(outputId);
+    const handleDoubleClick = useCallback(() => {
+      action({ type: SchemaActionType.LINK_REMOVE, link: linkData });
+    }, [action, linkData]);
+    const Render = useMemo(() => linkData.render || LinkRenderDefault, [
+      linkData.render,
+    ]);
+    const link = useMemo(() => {
+      const { render, ...data } = linkData;
+      return {
+        ...data,
+        start,
+        end,
+      };
+    }, [end, linkData, start]);
+    const lineRef = useRef<SVGLineElement>(null);
+    useRegisterElement(lineRef, ElementType.LINK);
+    return (
+      <g pointerEvents="visible" onDoubleClick={handleDoubleClick}>
+        <Render {...link} lineRef={lineRef} />
+      </g>
+    );
+  }
+);
 
 function getNodeElement(portElement: HTMLElement): HTMLElement | null {
   let element = portElement.parentElement;

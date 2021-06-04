@@ -18,17 +18,12 @@ const theme: DefaultTheme = {
   },
 };
 
-export const Diagram = memo(
-  forwardRef<HTMLDivElement | null, Props>(({ schema }, forwardedRef) => {
-    const ref = useRef<HTMLDivElement>(null);
-    // @ts-ignore
-    useImperativeHandle(forwardedRef, () => ref.current);
-    return (
-      <ThemeProvider theme={theme}>
-        <SchemaProvider schema={schema}>
-          <Canvas ref={ref} />
-        </SchemaProvider>
-      </ThemeProvider>
-    );
-  })
-);
+export const Diagram = memo<Props>(({ schema }) => {
+  return (
+    <ThemeProvider theme={theme}>
+      <SchemaProvider schema={schema}>
+        <Canvas />
+      </SchemaProvider>
+    </ThemeProvider>
+  );
+});

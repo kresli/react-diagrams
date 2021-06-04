@@ -27,6 +27,7 @@ const CustomNode: DiagramNodeRender = memo(({ inputs, outputs, data }) => {
 });
 
 const initData: Schema = {
+  dragLink: null,
   registeredElements: new Map(),
   canvasRef: null,
   viewRef: null,
@@ -68,7 +69,6 @@ export default { title: "Playground" };
 export const Playground = () => {
   const schema = useSchema(initData);
   const { ContextMenu, setContextTrigger, contextPosition } = useContextMenu();
-  const setRef = (elem: HTMLDivElement) => setContextTrigger(elem);
   const onAddNode = () => {
     if (!contextPosition) return;
     const position = schema.clientToLocalPosition(...contextPosition);
@@ -93,7 +93,7 @@ export const Playground = () => {
   return (
     <div style={{ width: "100%", height: "100%" }}>
       <div style={{ display: "flex", flex: 1, height: "100%" }}>
-        <Diagram schema={schema} ref={setRef} />
+        <Diagram schema={schema} />
         <ContextMenu>
           <ContextPopup
             onAddNode={onAddNode}

@@ -8,3 +8,4 @@ export * from "./Canvas";
 export * from "./LinkRender.default";
 export * from "./DiagramNode";
 export * from "./SchemaProvider";
+export * from "./DragLink";

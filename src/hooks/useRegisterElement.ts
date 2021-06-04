@@ -3,23 +3,6 @@ import { SchemaActionType, setElementType } from "../functions";
 import { ElementType } from "../types";
 import { useAction } from "./useAction";
 
-// type Ref = MutableRefObject<{
-//   setAttribute: (key: string, value: string) => any;
-// } | null>;
-
-// export function useRegisterElement(
-//   ref: Ref,
-//   type: ElementType,
-//   data: { id: string }
-// ): void {
-//   const { id } = data;
-//   useLayoutEffect(() => {
-//     if (!ref.current) return;
-//     setElementType(ref.current, type);
-//     setElementId(ref.current, id);
-//   }, [ref, type, id]);
-// }
-
 export function useRegisterElement<T extends HTMLElement | SVGElement>(
   ref: RefObject<T | null>,
   elementType: ElementType,

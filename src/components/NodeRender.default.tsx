@@ -1,8 +1,21 @@
-import { FunctionComponent, memo, useContext, useMemo, useRef } from "react";
+import React, {
+  FunctionComponent,
+  memo,
+  useCallback,
+  useLayoutEffect,
+  useRef,
+} from "react";
 import styled from "styled-components";
-import { PortAlign, NodeRenderProps, SchemaPort, ElementType } from "../types";
-import { useAction, useRegisterElement } from "../hooks";
-import { LinksContext } from "../context";
+import {
+  PortAlign,
+  NodeRenderProps,
+  SchemaPort,
+  ElementType,
+  DragLinkDirection,
+} from "../types";
+import { useAction, useDrag, useRegisterElement } from "../hooks";
+import { SchemaActionType } from "../functions";
+
 const PortRoot = styled.div<{ align: PortAlign }>`
   width: 12px;
   height: 12px;
@@ -23,10 +36,38 @@ const PortRoot = styled.div<{ align: PortAlign }>`
 const Port: FunctionComponent<{ port: SchemaPort; align: PortAlign }> = memo(
   ({ port, align }) => {
     const { id } = port;
+    const action = useAction();
     const ref = useRef<HTMLDivElement | null>(null);
     useRegisterElement(ref, ElementType.PORT, port);
+    useDrag(
+      ref,
+      useCallback(() => {}, [])
+    );
+    const onClick = useCallback(
+      ({ clientX, clientY }: React.MouseEvent) => {
+        if (!ref.current) return;
+        action({
+          type: SchemaActionType.CREATE_DRAGGING_LINK,
+          clientX,
+          clientY,
+          portId: id,
+          direction:
+            align === PortAlign.RIGHT
+              ? DragLinkDirection.FORWARD
+              : DragLinkDirection.BACKWARD,
+        });
+      },
+      [action, align, id]
+    );
+
+    useLayoutEffect(() => {
+      ref.current?.addEventListener("mousedown", (ev) =>
+        ev.stopImmediatePropagation()
+      );
+    }, []);
+
     return (
-      <PortRoot align={align} ref={ref}>
+      <PortRoot align={align} ref={ref} onClick={onClick}>
         <div
           id={`GATE_${id}`}
           className="Gate"
@@ -44,29 +85,20 @@ const Port: FunctionComponent<{ port: SchemaPort; align: PortAlign }> = memo(
 const InputOutput: FunctionComponent<{
   port: SchemaPort;
   align: PortAlign;
-}> = memo(({ align, port }) => {
-  // const action = useAction();
-  // const links = useContext(LinksContext);
-  // const link = useMemo(
-  //   () => links.find((link) => link.input === id || link.output === id),
-  //   [links, id]
-  // );
-  // console.log(link);
-  return (
-    <div
-      className="InputOutput"
-      style={{
-        flex: 1,
-        display: "flex",
-        position: "relative",
-        minHeight: 20,
-        justifyContent: align === PortAlign.LEFT ? "flex-start" : "flex-end",
-      }}
-    >
-      <Port port={port} align={align} />
-    </div>
-  );
-});
+}> = memo(({ align, port }) => (
+  <div
+    className="InputOutput"
+    style={{
+      flex: 1,
+      display: "flex",
+      position: "relative",
+      minHeight: 20,
+      justifyContent: align === PortAlign.LEFT ? "flex-start" : "flex-end",
+    }}
+  >
+    <Port port={port} align={align} />
+  </div>
+));
 
 const NodeRenderRoot = styled.div`
   background-color: #2d2d2d;
@@ -96,41 +128,39 @@ const Content = styled.div`
 `;
 
 export const NodeRenderDefault: FunctionComponent<NodeRenderProps> = memo(
-  ({ inputs, outputs }) => {
-    return (
-      <NodeRenderRoot>
-        <Title>title</Title>
-        <Content className="io">
-          <div
-            className="Inputs"
-            style={{
-              flex: 1,
-              display: "flex",
-              flexDirection: "column",
-            }}
-          >
-            {inputs?.map((input) => (
-              <InputOutput key={input.id} port={input} align={PortAlign.LEFT} />
-            ))}
-          </div>
-          <div
-            className="Outputs"
-            style={{
-              flex: 1,
-              display: "flex",
-              flexDirection: "column",
-            }}
-          >
-            {outputs?.map((output) => (
-              <InputOutput
-                key={output.id}
-                port={output}
-                align={PortAlign.RIGHT}
-              />
-            ))}
-          </div>
-        </Content>
-      </NodeRenderRoot>
-    );
-  }
+  ({ inputs, outputs }) => (
+    <NodeRenderRoot>
+      <Title>title</Title>
+      <Content className="io">
+        <div
+          className="Inputs"
+          style={{
+            flex: 1,
+            display: "flex",
+            flexDirection: "column",
+          }}
+        >
+          {inputs?.map((input) => (
+            <InputOutput key={input.id} port={input} align={PortAlign.LEFT} />
+          ))}
+        </div>
+        <div
+          className="Outputs"
+          style={{
+            flex: 1,
+            display: "flex",
+            flexDirection: "column",
+          }}
+        >
+          {outputs?.map((output) => (
+            <InputOutput
+              key={output.id}
+              port={output}
+              align={PortAlign.RIGHT}
+            />
+          ))}
+        </div>
+      </Content>
+    </NodeRenderRoot>
+  )
 );

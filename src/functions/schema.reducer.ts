@@ -1,5 +1,15 @@
-import { ElementType, RegisteredElement, Schema, SchemaNode } from "../types";
+import {
+  ElementType,
+  Schema,
+  SchemaLink,
+  SchemaNode,
+  Position,
+  DragLink,
+  DragLinkDirection,
+} from "../types";
 import { v4 } from "uuid";
+import { clientToWorldPosition } from "./clientToWorldPosition";
+
 export enum SchemaActionType {
   VIEWPORT_SET = "VIEWPORT_SET",
   VIEWPORT_MOVE = "VIEWPORT_MOVE",
@@ -7,8 +17,12 @@ export enum SchemaActionType {
   NODE_MOVE = "NODE_MOVE",
   ADD_NODE = "ADD_NODE",
   REMOVE_NODE = "REMOVE_NODE",
+  LINK_CREATE = "LINK_CREATE",
+  LINK_REMOVE = "LINK_REMOVE",
   REGISTER_ELEMENT_TYPE = "REGISTER_ELEMENT_TYPE",
-  ELEMENT_MOVE = "MOVE_ELEMENT",
+  CREATE_DRAGGING_LINK = "CREATE_DRAGGING_LINK",
+  MOVE_DRAGGING_LINK = "MOVE_DRAGGING_LINK",
+  DELETE_DRAGGING_LINK = "DELETE_DRAGGING_LINK",
 }
 
 export type SchemaAction =
@@ -22,7 +36,6 @@ export type SchemaAction =
       node: SchemaNode;
       movementX: number;
       movementY: number;
-      scale: number;
     }
   | {
       type: SchemaActionType.VIEWPORT_ZOOM;
@@ -46,10 +59,28 @@ export type SchemaAction =
       register: boolean;
     }
   | {
-      type: SchemaActionType.ELEMENT_MOVE;
-      registeredElement: RegisteredElement;
+      type: SchemaActionType.LINK_REMOVE;
+      link: SchemaLink;
+    }
+  | {
+      type: SchemaActionType.LINK_CREATE;
+      input: string;
+      output: string;
+    }
+  | {
+      type: SchemaActionType.CREATE_DRAGGING_LINK;
+      direction: DragLinkDirection;
+      portId: string;
+      clientX: number;
+      clientY: number;
+    }
+  | {
+      type: SchemaActionType.MOVE_DRAGGING_LINK;
       movementX: number;
       movementY: number;
+    }
+  | {
+      type: SchemaActionType.DELETE_DRAGGING_LINK;
     };
 export const schemaReducer = (schema: Schema, action: SchemaAction): Schema => {
   switch (action.type) {
@@ -63,7 +94,8 @@ export const schemaReducer = (schema: Schema, action: SchemaAction): Schema => {
       };
     }
     case SchemaActionType.NODE_MOVE: {
-      const { node, movementX, movementY, scale } = action;
+      const { node, movementX, movementY } = action;
+      const { scale } = schema;
       const [x, y] = node.position;
       const nodes = schema.nodes.map((n) =>
         n.id === node.id
@@ -153,31 +185,93 @@ export const schemaReducer = (schema: Schema, action: SchemaAction): Schema => {
         viewRef,
       };
     }
-    case SchemaActionType.ELEMENT_MOVE: {
-      const { movementX, movementY } = action;
-      switch (action.registeredElement.type) {
-        case ElementType.VIEW:
-          return schemaReducer(schema, {
-            type: SchemaActionType.VIEWPORT_MOVE,
-            movementY,
-            movementX,
-          });
-        case ElementType.NODE: {
-          const { scale, nodes } = schema;
-          const nodeId = action.registeredElement.data;
-          // @TODO create a nodeId to node map
-          const node = nodes.find(({ id }) => id === nodeId);
-          if (!node) return schema;
-          return schemaReducer(schema, {
-            type: SchemaActionType.NODE_MOVE,
-            movementY,
-            movementX,
-            scale,
-            node,
-          });
-        }
+    case SchemaActionType.LINK_REMOVE: {
+      const links = schema.links.filter((link) => link !== action.link);
+      return {
+        ...schema,
+        links,
+      };
+    }
+    case SchemaActionType.LINK_CREATE: {
+      const { input, output } = action;
+      const link: SchemaLink = {
+        output,
+        input,
+      };
+      const links = [...schema.links, link];
+      return {
+        ...schema,
+        links,
+      };
+    }
+    case SchemaActionType.CREATE_DRAGGING_LINK: {
+      const { direction, portId, clientX, clientY } = action;
+      if (schema.dragLink) {
+        const input =
+          schema.dragLink.direction === DragLinkDirection.FORWARD
+            ? schema.dragLink.portId
+            : action.portId;
+        const output =
+          schema.dragLink.direction === DragLinkDirection.FORWARD
+            ? action.portId
+            : schema.dragLink.portId;
+        console.log(input, output);
+        return schemaReducer(
+          {
+            ...schema,
+            dragLink: null,
+          },
+          {
+            type: SchemaActionType.LINK_CREATE,
+            input,
+            output,
+          }
+        );
       }
-      return schema;
+      if (!schema.viewRef) return schema;
+      const start = clientToWorldPosition(
+        [clientX, clientY],
+        schema.viewRef,
+        schema.scale
+      );
+      const end = clientToWorldPosition(
+        [clientX, clientY],
+        schema.viewRef,
+        schema.scale
+      );
+      const dragLink: DragLink = {
+        direction,
+        start,
+        end,
+        portId,
+      };
+      return {
+        ...schema,
+        dragLink,
+      };
+    }
+    case SchemaActionType.MOVE_DRAGGING_LINK: {
+      if (!schema.dragLink) return schema;
+      const { scale } = schema;
+      const { movementX, movementY } = action;
+      const [x, y] = schema.dragLink.end;
+      const { start } = schema.dragLink;
+      const end: Position = [x + movementX / scale, y + movementY / scale];
+      const dragLink: DragLink = {
+        ...schema.dragLink,
+        start,
+        end,
+      };
+      return {
+        ...schema,
+        dragLink,
+      };
+    }
+    case SchemaActionType.DELETE_DRAGGING_LINK: {
+      return {
+        ...schema,
+        dragLink: null,
+      };
     }
     default:
       return schema;
