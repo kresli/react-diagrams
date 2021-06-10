@@ -1,5 +1,5 @@
 import { FunctionComponent, memo } from "react";
-import { ElementType } from "../src/types";
+import { ElementType } from "../types";
 
 const Canvas: FunctionComponent<{
   onAddNode: () => void;
