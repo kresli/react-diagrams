@@ -1,10 +1,10 @@
-# TODO
+# Simple Example
 
-- delete node
-- create link between two ports
+```tsx
+import {useSchema, Diagram} from '@kresli/react-diagrams';
 
-- Canvas
-- Line
-- Connector
-- Node
-- Port
+const Playground = () => {
+  const schema = useSchema();
+  return <Diagram schema={schema}>
+}
+```
