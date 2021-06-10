@@ -1,8 +1,5 @@
 import { Diagram, DiagramNodeRender, Schema, useSchema } from "../src";
-import { useContextMenu } from "./useContextMenu";
-import { ContextPopup } from "./ContextPopup";
-import { memo, useEffect, useMemo } from "react";
-import { v4 } from "uuid";
+import { memo } from "react";
 
 const CustomNode: DiagramNodeRender = memo(({ inputs, outputs, data }) => {
   return (
