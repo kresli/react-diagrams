@@ -18,6 +18,7 @@ export function useRegisterElement<T extends HTMLElement | SVGElement>(
       element,
       elementType,
       register: true,
+      id,
     });
     return () =>
       action({
@@ -25,6 +26,7 @@ export function useRegisterElement<T extends HTMLElement | SVGElement>(
         element,
         elementType,
         register: false,
+        id,
       });
-  }, [action, elementType, ref]);
+  }, [action, elementType, id, ref]);
 }

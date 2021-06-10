@@ -26,3 +26,12 @@ export const setElementId = (elem: Elem, id: string) => {
 export const getElementId = (elem: HTMLElement): string | undefined => {
   return elem.dataset[ELEMENT_ID];
 };
+
+export const queryElements = (
+  type: ElementType,
+  id?: string
+): NodeListOf<HTMLElement> => {
+  const typeSelector = `[data-${ELEMENT_TYPE}="${type}"]`;
+  const idSelector = id ? `[data-${ELEMENT_ID}="${id}"]` : "";
+  return document.querySelectorAll(`${typeSelector}${idSelector}`);
+};

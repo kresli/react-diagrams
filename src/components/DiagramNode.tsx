@@ -22,11 +22,11 @@ export const DiagramNode: FunctionComponent<{ node: SchemaNode }> = memo(
       () => ({
         inputs: inputs?.map((input) => ({
           ...input,
-          key: `GATE_${input.id}`,
+          key: input.id,
         })),
         outputs: outputs?.map((output) => ({
           ...output,
-          key: `GATE_${output.id}`,
+          key: output.id,
         })),
         data: data,
       }),

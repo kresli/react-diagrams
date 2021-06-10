@@ -43,6 +43,7 @@ const Port: FunctionComponent<{ port: SchemaPort; align: PortAlign }> = memo(
       ref,
       useCallback(() => {}, [])
     );
+    const gateRef = useRef<HTMLDivElement | null>(null);
     const onClick = useCallback(
       ({ clientX, clientY }: React.MouseEvent) => {
         if (!ref.current) return;
@@ -66,11 +67,12 @@ const Port: FunctionComponent<{ port: SchemaPort; align: PortAlign }> = memo(
       );
     }, []);
 
-    useRegisterElement(ref, ElementType.GATE, id);
+    useRegisterElement(gateRef, ElementType.GATE, id);
 
     return (
       <PortRoot align={align} ref={ref} onClick={onClick}>
         <div
+          ref={gateRef}
           className="Gate"
           style={{
             position: "absolute",

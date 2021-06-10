@@ -11,7 +11,12 @@ import {
 import { ElementType, SchemaLink } from "../types";
 import { LinkRenderDefault } from "../components";
 import { useAction, useRegisterElement } from "../hooks";
-import { getELementType, SchemaActionType } from "../functions";
+import {
+  ELEMENT_TYPE,
+  getELementType,
+  queryElements,
+  SchemaActionType,
+} from "../functions";
 import { ScaleContext, ViewportRefContext } from "../context";
 
 const config = {
@@ -26,7 +31,7 @@ function useNodeObserver(elementId: string): [number, number] {
   const [y, setY] = useState(0);
   const scale = useContext(ScaleContext);
   useLayoutEffect(() => {
-    const element = document.getElementById(elementId);
+    const [element] = queryElements(ElementType.GATE, elementId);
     console.log(elementId);
     if (!element) return;
     const callback = () => {
@@ -49,10 +54,11 @@ function useNodeObserver(elementId: string): [number, number] {
 export const DiagramLink: FunctionComponent<{ link: SchemaLink }> = memo(
   ({ link: linkData }) => {
     const action = useAction();
-    const [inputId] = useState(() => `GATE_${linkData.input}`);
-    const [outputId] = useState(() => `GATE_${linkData.output}`);
-    const start = useNodeObserver(inputId);
-    const end = useNodeObserver(outputId);
+    // const [inputId] = useState(() => `GATE_${linkData.input}`);
+    // const [outputId] = useState(() => `GATE_${linkData.output}`);
+    // const x = queryElements(ElementType.)
+    const start = useNodeObserver(linkData.input);
+    const end = useNodeObserver(linkData.output);
     const handleDoubleClick = useCallback(() => {
       action({ type: SchemaActionType.LINK_REMOVE, link: linkData });
     }, [action, linkData]);
