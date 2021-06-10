@@ -11,19 +11,6 @@ export const useSchema = (initSchema: Schema) => {
     dispatchAction,
   ] = useReducer(schemaReducer, initSchema);
 
-  // useEffect(() => {
-  //   const onMouseMove = ({ movementX, movementY }: MouseEvent) => {
-  //     if (!dragLink) return;
-  //     dispatchAction({
-  //       type: SchemaActionType.MOVE_DRAGGING_LINK,
-  //       movementX,
-  //       movementY,
-  //     });
-  //   };
-  //   window.addEventListener("mousemove", onMouseMove);
-  //   return () => window.removeEventListener("mousemove", onMouseMove);
-  // }, [dragLink]);
-
   const clientToLocalPosition = useCallback(
     (clientX: number, clientY: number): [number, number] => {
       if (!viewRef) return [0, 0];
@@ -59,7 +46,6 @@ export const useSchema = (initSchema: Schema) => {
 
   const elementsFromPoint = useCallback(
     (clientX: number, clientY: number): ElementType[] => {
-      console.log(document.elementsFromPoint(clientX, clientY));
       return document
         .elementsFromPoint(clientX, clientY)
         .map((elem) => {
