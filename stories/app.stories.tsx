@@ -1,7 +1,7 @@
 import { Diagram, DiagramNodeRender, Schema, useSchema } from "../src";
 import { useContextMenu } from "./useContextMenu";
 import { ContextPopup } from "./ContextPopup";
-import { memo, useMemo } from "react";
+import { memo, useEffect, useMemo } from "react";
 import { v4 } from "uuid";
 
 const CustomNode: DiagramNodeRender = memo(({ inputs, outputs, data }) => {
@@ -68,6 +68,7 @@ export default { title: "Playground" };
 
 export const Playground = () => {
   const schema = useSchema(initData);
+  const { canvas } = schema;
   const { ContextMenu, setContextTrigger, contextPosition } = useContextMenu();
   const onAddNode = () => {
     if (!contextPosition) return;
@@ -90,6 +91,11 @@ export const Playground = () => {
     const [clientX, clientY] = contextPosition;
     return elementsFromPoint(clientX, clientY);
   }, [contextPosition, elementsFromPoint]);
+
+  useEffect(() => {
+    setContextTrigger(canvas);
+  }, [canvas, setContextTrigger]);
+
   return (
     <div style={{ width: "100%", height: "100%" }}>
       <div style={{ display: "flex", flex: 1, height: "100%" }}>

@@ -1,24 +1,22 @@
 import { RefObject, useLayoutEffect } from "react";
-import { SchemaActionType, setElementType } from "../functions";
+import { SchemaActionType } from "../functions";
 import { ElementType } from "../types";
 import { useAction } from "./useAction";
 
 export function useRegisterElement<T extends HTMLElement | SVGElement>(
   ref: RefObject<T | null>,
   elementType: ElementType,
-  data?: any
+  id?: string
 ) {
   const action = useAction();
   useLayoutEffect(() => {
     const element = ref.current;
     if (!element) return;
     const type = SchemaActionType.REGISTER_ELEMENT_TYPE;
-    setElementType(element, elementType);
     action({
       type,
       element,
       elementType,
-      data,
       register: true,
     });
     return () =>
@@ -27,7 +25,6 @@ export function useRegisterElement<T extends HTMLElement | SVGElement>(
         element,
         elementType,
         register: false,
-        data,
       });
-  }, [action, data, elementType, ref]);
+  }, [action, elementType, ref]);
 }

@@ -27,6 +27,7 @@ function useNodeObserver(elementId: string): [number, number] {
   const scale = useContext(ScaleContext);
   useLayoutEffect(() => {
     const element = document.getElementById(elementId);
+    console.log(elementId);
     if (!element) return;
     const callback = () => {
       if (!element || !viewport) return;

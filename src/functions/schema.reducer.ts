@@ -9,6 +9,8 @@ import {
 } from "../types";
 import { v4 } from "uuid";
 import { clientToWorldPosition } from "./clientToWorldPosition";
+import { setElementType } from ".";
+import { setElementId } from "./getElementType";
 
 export enum SchemaActionType {
   VIEWPORT_SET = "VIEWPORT_SET",
@@ -53,9 +55,9 @@ export type SchemaAction =
     }
   | {
       type: SchemaActionType.REGISTER_ELEMENT_TYPE;
-      element: HTMLOrSVGElement;
+      element: HTMLElement | SVGElement;
       elementType: ElementType;
-      data?: any;
+      id?: string;
       register: boolean;
     }
   | {
@@ -164,10 +166,12 @@ export const schemaReducer = (schema: Schema, action: SchemaAction): Schema => {
       };
     }
     case SchemaActionType.REGISTER_ELEMENT_TYPE: {
-      const { element, elementType, register, data } = action;
+      const { element, elementType, register, id } = action;
       const registeredElements = schema.registeredElements;
       if (register) {
-        registeredElements.set(element, { element, type: elementType, data });
+        registeredElements.set(element, { element, type: elementType });
+        setElementType(element, elementType);
+        if (id) setElementId(element, id);
       } else {
         registeredElements.delete(element);
       }

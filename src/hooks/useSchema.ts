@@ -7,7 +7,7 @@ export const useSchema = (initSchema: Schema) => {
   validateSchema(initSchema);
 
   const [
-    { links, nodes, position, scale, viewRef, dragLink },
+    { links, nodes, position, scale, viewRef, dragLink, canvasRef },
     dispatchAction,
   ] = useReducer(schemaReducer, initSchema);
 
@@ -84,8 +84,10 @@ export const useSchema = (initSchema: Schema) => {
       scale,
       position,
       view: viewRef,
+      canvas: canvasRef,
     }),
     [
+      canvasRef,
       clientToLocalPosition,
       clientToNode,
       dragLink,

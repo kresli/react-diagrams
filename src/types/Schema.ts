@@ -50,7 +50,6 @@ export interface SchemaLink {
 export interface RegisteredElement {
   element: HTMLOrSVGElement;
   type: ElementType;
-  data?: any;
 }
 export type RegisteredElements = Map<HTMLOrSVGElement, RegisteredElement>;
 
@@ -83,4 +82,5 @@ export enum ElementType {
   NODE = "NODE",
   PORT = "PORT",
   VIEW = "VIEW",
+  GATE = "GATE",
 }

@@ -38,7 +38,7 @@ const Port: FunctionComponent<{ port: SchemaPort; align: PortAlign }> = memo(
     const { id } = port;
     const action = useAction();
     const ref = useRef<HTMLDivElement | null>(null);
-    useRegisterElement(ref, ElementType.PORT, port);
+    useRegisterElement(ref, ElementType.PORT, id);
     useDrag(
       ref,
       useCallback(() => {}, [])
@@ -66,10 +66,11 @@ const Port: FunctionComponent<{ port: SchemaPort; align: PortAlign }> = memo(
       );
     }, []);
 
+    useRegisterElement(ref, ElementType.GATE, id);
+
     return (
       <PortRoot align={align} ref={ref} onClick={onClick}>
         <div
-          id={`GATE_${id}`}
           className="Gate"
           style={{
             position: "absolute",
