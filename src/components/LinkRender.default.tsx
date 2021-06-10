@@ -2,15 +2,16 @@ import { FunctionComponent, useMemo, memo } from "react";
 import styled from "styled-components";
 import { LinkRenderProps } from "../types";
 
-export const LinkRender: FunctionComponent<
-  LinkRenderProps & { className?: string }
-> = ({ input, output, start, end, lineRef, className }) => {
+const LinkRender: FunctionComponent<
+  { link: LinkRenderProps } & { className?: string }
+> = ({ link, className }) => {
+  const { start, end } = link;
   const line = useMemo(() => {
     const [sx, sy] = start;
     const [ex, ey] = end;
     return `M${sx} ${sy} H${sx + 30} L${ex - 30} ${ey} ${ex} ${ey}`;
   }, [end, start]);
-  return <path className={className} ref={lineRef} d={line} />;
+  return <path className={className} d={line} />;
 };
 
 export const LinkRenderDefault = memo(styled(LinkRender)`

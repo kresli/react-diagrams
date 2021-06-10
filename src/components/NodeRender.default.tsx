@@ -1,22 +1,10 @@
-import React, {
-  FunctionComponent,
-  memo,
-  useCallback,
-  useLayoutEffect,
-  useRef,
-} from "react";
+import { FunctionComponent, memo } from "react";
 import styled from "styled-components";
-import {
-  PortAlign,
-  NodeRenderProps,
-  SchemaPort,
-  ElementType,
-  DragLinkDirection,
-} from "../types";
-import { useAction, useDrag, useRegisterElement } from "../hooks";
-import { SchemaActionType } from "../functions";
+import { NodeRenderProps, SchemaPort, PortType } from "../types";
+import { Port } from "../components";
+import { Gate } from "./Gate";
 
-const PortRoot = styled.div<{ align: PortAlign }>`
+const PortRoot = styled.div<{ type: PortType }>`
   width: 12px;
   height: 12px;
   background: rgb(98, 98, 98);
@@ -26,69 +14,17 @@ const PortRoot = styled.div<{ align: PortAlign }>`
   position: absolute;
   border-radius: 100%;
   top: 4px;
-  left: ${({ align }) => (align === PortAlign.LEFT ? "-26px" : "auto")};
-  right: ${({ align }) => (align === PortAlign.RIGHT ? "-26px" : "auto")};
+  left: ${({ type }) => (type === PortType.INPUT ? "-26px" : "auto")};
+  right: ${({ type }) => (type === PortType.OUTPUT ? "-26px" : "auto")};
   &:hover {
     background-color: red;
   }
 `;
 
-const Port: FunctionComponent<{ port: SchemaPort; align: PortAlign }> = memo(
-  ({ port, align }) => {
-    const { id } = port;
-    const action = useAction();
-    const ref = useRef<HTMLDivElement | null>(null);
-    useRegisterElement(ref, ElementType.PORT, id);
-    useDrag(
-      ref,
-      useCallback(() => {}, [])
-    );
-    const gateRef = useRef<HTMLDivElement | null>(null);
-    const onClick = useCallback(
-      ({ clientX, clientY }: React.MouseEvent) => {
-        if (!ref.current) return;
-        action({
-          type: SchemaActionType.CREATE_DRAGGING_LINK,
-          clientX,
-          clientY,
-          portId: id,
-          direction:
-            align === PortAlign.RIGHT
-              ? DragLinkDirection.FORWARD
-              : DragLinkDirection.BACKWARD,
-        });
-      },
-      [action, align, id]
-    );
-
-    useLayoutEffect(() => {
-      ref.current?.addEventListener("mousedown", (ev) =>
-        ev.stopImmediatePropagation()
-      );
-    }, []);
-
-    useRegisterElement(gateRef, ElementType.GATE, id);
-
-    return (
-      <PortRoot align={align} ref={ref} onClick={onClick}>
-        <div
-          ref={gateRef}
-          className="Gate"
-          style={{
-            position: "absolute",
-            width: 0,
-            height: 0,
-          }}
-        />
-      </PortRoot>
-    );
-  }
-);
-
 const InputOutput: FunctionComponent<{
   port: SchemaPort;
-  align: PortAlign;
-}> = memo(({ align, port }) => (
+  type: PortType;
+}> = memo(({ type, port }) => (
   <div
     className="InputOutput"
     style={{
@@ -96,10 +32,14 @@ const InputOutput: FunctionComponent<{
       display: "flex",
       position: "relative",
       minHeight: 20,
-      justifyContent: align === PortAlign.LEFT ? "flex-start" : "flex-end",
+      justifyContent: type === PortType.INPUT ? "flex-start" : "flex-end",
     }}
   >
-    <Port port={port} align={align} />
+    <PortRoot type={type}>
+      <Port port={port} type={type}>
+        <Gate port={port} />
+      </Port>
+    </PortRoot>
   </div>
 ));
 
@@ -144,7 +84,7 @@ export const NodeRenderDefault: FunctionComponent<NodeRenderProps> = memo(
           }}
         >
           {inputs?.map((input) => (
-            <InputOutput key={input.id} port={input} align={PortAlign.LEFT} />
+            <InputOutput key={input.id} port={input} type={PortType.INPUT} />
           ))}
         </div>
         <div
@@ -156,11 +96,7 @@ export const NodeRenderDefault: FunctionComponent<NodeRenderProps> = memo(
           }}
         >
           {outputs?.map((output) => (
-            <InputOutput
-              key={output.id}
-              port={output}
-              align={PortAlign.RIGHT}
-            />
+            <InputOutput key={output.id} port={output} type={PortType.OUTPUT} />
           ))}
         </div>
       </Content>

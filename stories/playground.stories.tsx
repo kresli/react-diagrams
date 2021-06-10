@@ -1,5 +1,13 @@
-import { Diagram, DiagramNodeRender, Schema, useSchema } from "../src";
-import { memo } from "react";
+import {
+  Diagram,
+  DiagramNodeRender,
+  Port,
+  PortType,
+  Schema,
+  useSchema,
+} from "../src";
+import React, { memo } from "react";
+import { Gate } from "../src/components";
 
 const CustomNode: DiagramNodeRender = memo(({ inputs, outputs, data }) => {
   return (
@@ -7,16 +15,26 @@ const CustomNode: DiagramNodeRender = memo(({ inputs, outputs, data }) => {
       <div>Custom Node</div>
       <div>
         {inputs?.map((input) => (
-          <div key={input.id}>
-            Input
-            <div id={input.key} />
-          </div>
+          <Port key={input.id} port={input} type={PortType.INPUT} />
         ))}
         {outputs?.map((output) => (
-          <div key={output.id}>
-            Output
-            <div id={output.key} />
-          </div>
+          <Port
+            key={output.id}
+            port={output}
+            type={PortType.OUTPUT}
+            style={{
+              width: 20,
+              height: 20,
+              background: "red",
+              left: 40,
+              position: "absolute",
+              justifyContent: "center",
+              alignItems: "center",
+              display: "flex",
+            }}
+          >
+            <Gate port={output} />
+          </Port>
         ))}
       </div>
     </div>

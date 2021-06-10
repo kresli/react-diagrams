@@ -16,24 +16,18 @@ const Playground = () => {
 # Custom Node
 
 ```tsx
-import {useSchema, Diagram, createSchema} from '@kresli/react-diagrams';
+import {useSchema, Diagram, createSchema, Gate} from '@kresli/react-diagrams';
 
 const CustomNode: DiagramNodeRender = memo(({ inputs, outputs, data }) => {
   return (
     <div>
-      <div>custom</div>
+      <div>My Custom Node</div>
       <div>
         {inputs?.map((input) => (
-          <div key={input.id}>
-            Input
-            <div id={input.key} />
-          </div>
+          <Gate key={input.id} port={input} />
         ))}
         {outputs?.map((output) => (
-          <div key={output.id}>
-            Output
-            <div id={output.key} />
-          </div>
+          <Gate key={output.id} port={output}/>
         ))}
       </div>
     </div>
@@ -59,5 +53,12 @@ const Playground = () => {
     </div>
   );
 }
+```
+
+# Custom Link
+
+``tsx
+
+```
 
 ```

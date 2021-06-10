@@ -38,7 +38,9 @@ function useNodeObserver(elementId: string): [number, number] {
       setY(Math.round(y));
     };
     const observer = new MutationObserver(callback);
-    observer.observe(getNodeElement(element)!, config);
+    const nodeElement = getNodeElement(element);
+    if (!nodeElement) return;
+    observer.observe(nodeElement, config);
     callback();
     return () => observer.disconnect();
   }, [elementId, scale, viewport]);
@@ -64,11 +66,11 @@ export const DiagramLink: FunctionComponent<{ link: SchemaLink }> = memo(
         end,
       };
     }, [end, linkData, start]);
-    const lineRef = useRef<SVGLineElement>(null);
-    useRegisterElement(lineRef, ElementType.LINK);
+    // const lineRef = useRef<SVGLineElement>(null);
+    // useRegisterElement(lineRef, ElementType.LINK);
     return (
       <g pointerEvents="visible" onDoubleClick={handleDoubleClick}>
-        <Render {...link} lineRef={lineRef} />
+        <Render link={link} />
       </g>
     );
   }

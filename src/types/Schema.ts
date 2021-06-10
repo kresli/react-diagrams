@@ -21,15 +21,13 @@ export interface NodeRenderProps {
 export type DiagramNodeRender = FunctionComponent<NodeRenderProps>;
 
 export interface LinkRenderProps<T extends SVGElement = any> {
-  input: string;
-  output: string;
   data?: any;
   start: [number, number];
   end: [number, number];
-  lineRef: MutableRefObject<T | null>;
+  // lineRef: MutableRefObject<T | null>;
 }
 
-export type SchemaLinkRender = FunctionComponent<LinkRenderProps>;
+export type SchemaLinkRender = FunctionComponent<{ link: LinkRenderProps }>;
 
 export type Position = [number, number];
 
@@ -56,6 +54,11 @@ export type RegisteredElements = Map<HTMLOrSVGElement, RegisteredElement>;
 export enum DragLinkDirection {
   FORWARD = "FORWARD",
   BACKWARD = "BACKWARD",
+}
+
+export enum PortType {
+  INPUT = "INPUT",
+  OUTPUT = "OUTPUT",
 }
 
 export interface DragLink {
