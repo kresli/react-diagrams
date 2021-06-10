@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useReducer } from "react";
+import { useCallback, useMemo, useReducer } from "react";
 import { SchemaActionType, schemaReducer, validateSchema } from "../functions";
 import { getElementId, getELementType } from "../functions/getElementType";
 import { ElementType, Schema, SchemaNode } from "../types";
