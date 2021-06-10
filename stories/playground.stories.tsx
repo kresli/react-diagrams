@@ -3,8 +3,8 @@ import { memo } from "react";
 
 const CustomNode: DiagramNodeRender = memo(({ inputs, outputs, data }) => {
   return (
-    <div>
-      <div>custom</div>
+    <div style={{ background: "white" }}>
+      <div>Custom Node</div>
       <div>
         {inputs?.map((input) => (
           <div key={input.id}>
@@ -33,7 +33,7 @@ const initData: Schema = {
       id: "1",
       position: [100, 100] as [number, number],
       outputs: [{ id: "1" }],
-      // render: CustomNode,
+      render: CustomNode,
     },
     {
       id: "3",
