@@ -35,11 +35,11 @@ const InputOutput: FunctionComponent<{
       justifyContent: type === PortType.INPUT ? "flex-start" : "flex-end",
     }}
   >
-    <PortRoot type={type}>
-      <Port port={port} type={type}>
+    <Port port={port}>
+      <PortRoot type={type}>
         <Gate port={port} />
-      </Port>
-    </PortRoot>
+      </PortRoot>
+    </Port>
   </div>
 ));
 

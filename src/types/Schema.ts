@@ -62,7 +62,7 @@ export enum PortType {
 }
 
 export interface DragLink {
-  direction: DragLinkDirection;
+  // direction: DragLinkDirection;
   start: Position;
   end: Position;
   portId: string;

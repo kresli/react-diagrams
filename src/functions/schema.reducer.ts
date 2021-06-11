@@ -71,7 +71,7 @@ export type SchemaAction =
     }
   | {
       type: SchemaActionType.CREATE_DRAGGING_LINK;
-      direction: DragLinkDirection;
+      // direction: DragLinkDirection;
       portId: string;
       clientX: number;
       clientY: number;
@@ -209,16 +209,14 @@ export const schemaReducer = (schema: Schema, action: SchemaAction): Schema => {
       };
     }
     case SchemaActionType.CREATE_DRAGGING_LINK: {
-      const { direction, portId, clientX, clientY } = action;
+      const { portId, clientX, clientY } = action;
+      if (!schema.viewRef) return schema;
       if (schema.dragLink) {
-        const input =
-          schema.dragLink.direction === DragLinkDirection.FORWARD
-            ? schema.dragLink.portId
-            : action.portId;
-        const output =
-          schema.dragLink.direction === DragLinkDirection.FORWARD
-            ? action.portId
-            : schema.dragLink.portId;
+        const isForward = schema.nodes.find(({ outputs }) =>
+          outputs?.find(({ id }) => id === schema.dragLink!.portId)
+        );
+        const input = isForward ? schema.dragLink.portId : action.portId;
+        const output = isForward ? action.portId : schema.dragLink.portId;
         return schemaReducer(
           {
             ...schema,
@@ -231,7 +229,6 @@ export const schemaReducer = (schema: Schema, action: SchemaAction): Schema => {
           }
         );
       }
-      if (!schema.viewRef) return schema;
       const start = clientToWorldPosition(
         [clientX, clientY],
         schema.viewRef,
@@ -243,7 +240,6 @@ export const schemaReducer = (schema: Schema, action: SchemaAction): Schema => {
         schema.scale
       );
       const dragLink: DragLink = {
-        direction,
         start,
         end,
         portId,

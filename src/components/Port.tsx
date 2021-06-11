@@ -5,15 +5,14 @@ import React, {
   useCallback,
   useLayoutEffect,
 } from "react";
-import { SchemaPort, ElementType, DragLinkDirection, PortType } from "../types";
+import { SchemaPort, ElementType } from "../types";
 import { SchemaActionType } from "../functions";
 import { useAction, useRegisterElement, useDrag } from "../hooks";
 import { CSSProperties } from "styled-components";
 export const Port: FunctionComponent<{
   port: SchemaPort;
-  type: PortType;
   style?: CSSProperties;
-}> = memo(({ port, type, children, style }) => {
+}> = memo(({ port, children, style }) => {
   const { id } = port;
   const action = useAction();
   const ref = useRef<HTMLDivElement | null>(null);
@@ -30,13 +29,13 @@ export const Port: FunctionComponent<{
         clientX,
         clientY,
         portId: id,
-        direction:
-          type === PortType.OUTPUT
-            ? DragLinkDirection.FORWARD
-            : DragLinkDirection.BACKWARD,
+        // direction:
+        //   type === PortType.OUTPUT
+        //     ? DragLinkDirection.FORWARD
+        //     : DragLinkDirection.BACKWARD,
       });
     },
-    [action, type, id]
+    [action, id]
   );
 
   useLayoutEffect(() => {
