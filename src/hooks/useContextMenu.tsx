@@ -1,4 +1,6 @@
 import { FunctionComponent, memo, useEffect, useMemo, useState } from "react";
+import React from "react";
+
 // @TODO: optimize
 export const useContextMenu = () => {
   const [triggerRef, setTriggerRef] = useState<HTMLElement | null>(null);

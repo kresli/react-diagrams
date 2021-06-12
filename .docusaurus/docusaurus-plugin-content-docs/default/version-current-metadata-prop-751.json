@@ -1,0 +1,37 @@
+{
+  "pluginId": "default",
+  "version": "current",
+  "label": "Next",
+  "isLast": true,
+  "docsSidebars": {
+    "ReactDiagrams": [
+      {
+        "collapsed": true,
+        "type": "category",
+        "label": "Basics",
+        "items": [
+          {
+            "type": "link",
+            "label": "Hello",
+            "href": "/docs/introduction"
+          }
+        ]
+      },
+      {
+        "collapsed": true,
+        "type": "category",
+        "label": "Advanced Features",
+        "items": []
+      },
+      {
+        "collapsed": true,
+        "type": "category",
+        "label": "Resources",
+        "items": []
+      }
+    ]
+  },
+  "permalinkToSidebar": {
+    "/docs/introduction": "ReactDiagrams"
+  }
+}

@@ -2,6 +2,7 @@ import { memo, useContext, useMemo, useEffect } from "react";
 import { DragLinkContext } from "../context";
 import { SchemaActionType } from "../functions";
 import { useAction } from "../hooks";
+import React from "react";
 
 export const DragLink = memo(() => {
   const action = useAction();

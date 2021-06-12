@@ -1,0 +1,15 @@
+{
+  "unversionedId": "introduction",
+  "id": "introduction",
+  "isDocsHomePage": false,
+  "title": "Hello",
+  "description": "",
+  "source": "@site/docs/introduction.mdx",
+  "sourceDirName": ".",
+  "slug": "/introduction",
+  "permalink": "/docs/introduction",
+  "editUrl": "https://github.com/kresli/react-diagrams/edit/master/website/docs/introduction.mdx",
+  "version": "current",
+  "frontMatter": {},
+  "sidebar": "ReactDiagrams"
+}

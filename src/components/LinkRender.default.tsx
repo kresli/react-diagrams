@@ -1,6 +1,7 @@
 import { FunctionComponent, useMemo, memo } from "react";
 import styled from "styled-components";
 import { LinkRenderProps } from "../types";
+import React from "react";
 
 const LinkRender: FunctionComponent<
   { link: LinkRenderProps } & { className?: string }

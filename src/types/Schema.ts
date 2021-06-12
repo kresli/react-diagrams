@@ -1,12 +1,7 @@
-import { FunctionComponent, MutableRefObject } from "react";
+import { FunctionComponent } from "react";
 
 export interface SchemaPort {
   id: string;
-}
-
-export enum PortAlign {
-  LEFT = "LEFT",
-  RIGHT = "RIGHT",
 }
 
 interface RenderPortProps extends SchemaPort {
@@ -61,7 +56,7 @@ export enum PortType {
   OUTPUT = "OUTPUT",
 }
 
-export interface DragLink {
+export interface SchemaDragLink {
   // direction: DragLinkDirection;
   start: Position;
   end: Position;
@@ -69,7 +64,7 @@ export interface DragLink {
 }
 
 export interface Schema {
-  dragLink: DragLink | null;
+  dragLink: SchemaDragLink | null;
   registeredElements: RegisteredElements;
   viewRef: null | HTMLDivElement;
   canvasRef: null | HTMLDivElement;

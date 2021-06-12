@@ -4,8 +4,7 @@ import {
   SchemaLink,
   SchemaNode,
   Position,
-  DragLink,
-  DragLinkDirection,
+  SchemaDragLink,
 } from "../types";
 import { v4 } from "uuid";
 import { clientToWorldPosition } from "./clientToWorldPosition";
@@ -239,7 +238,7 @@ export const schemaReducer = (schema: Schema, action: SchemaAction): Schema => {
         schema.viewRef,
         schema.scale
       );
-      const dragLink: DragLink = {
+      const dragLink: SchemaDragLink = {
         start,
         end,
         portId,
@@ -256,7 +255,7 @@ export const schemaReducer = (schema: Schema, action: SchemaAction): Schema => {
       const [x, y] = schema.dragLink.end;
       const { start } = schema.dragLink;
       const end: Position = [x + movementX / scale, y + movementY / scale];
-      const dragLink: DragLink = {
+      const dragLink: SchemaDragLink = {
         ...schema.dragLink,
         start,
         end,

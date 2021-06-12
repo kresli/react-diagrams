@@ -3,6 +3,7 @@ import styled from "styled-components";
 import { NodeRenderProps, SchemaPort, PortType } from "../types";
 import { Port } from "../components";
 import { Gate } from "./Gate";
+import React from "react";
 
 const PortRoot = styled.div<{ type: PortType }>`
   width: 12px;

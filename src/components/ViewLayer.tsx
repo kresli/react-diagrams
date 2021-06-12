@@ -10,6 +10,7 @@ import { NodesLayer, LinksLayer } from "../components";
 import { PositionContext, ScaleContext } from "../context";
 import { useRegisterElement } from "../hooks";
 import { ElementType } from "../types";
+import React from "react";
 
 export const ViewLayer: FunctionComponent = memo(() => {
   const ref = useRef<HTMLDivElement | null>(null);

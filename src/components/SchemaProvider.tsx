@@ -9,6 +9,7 @@ import {
   ViewportRefContext,
 } from "../context";
 import { Ctx } from "../hooks";
+import React from "react";
 
 export const SchemaProvider: FunctionComponent<{
   schema: Ctx;

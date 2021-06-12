@@ -1,0 +1,24 @@
+{
+  "name": "website",
+  "author": "Eduard Jacko",
+  "license": "MIT",
+  "private": "true",
+  "scripts": {
+    "examples": "docusaurus-examples",
+    "start": "docusaurus start",
+    "build": "docusaurus build",
+    "publish-gh-pages": "docusaurus publish",
+    "write-translations": "docusaurus write-translations"
+  },
+  "dependencies": {
+    "@docusaurus/core": "2.0.0-beta.0",
+    "@docusaurus/plugin-client-redirects": "2.0.0-beta.0",
+    "@docusaurus/plugin-content-docs": "2.0.0-beta.0",
+    "@docusaurus/plugin-google-analytics": "2.0.0-beta.0",
+    "@docusaurus/plugin-sitemap": "2.0.0-beta.0",
+    "@docusaurus/theme-classic": "2.0.0-beta.0",
+    "@docusaurus/theme-live-codeblock": "^2.0.0-beta.0",
+    "react": "^17.0.2",
+    "react-dom": "^17.0.2"
+  }
+}
