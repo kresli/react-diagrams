@@ -2,6 +2,7 @@ import { memo, useContext, useMemo } from "react";
 import { useTheme } from "styled-components";
 import { DiagramLink, DragLink } from "../components";
 import { DragLinkContext, LinksContext } from "../context";
+import React from "react";
 
 export const LinksLayer = memo(() => {
   const linksData = useContext(LinksContext);

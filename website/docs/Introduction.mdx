@@ -1,0 +1,10 @@
+import { MyComponent } from "./MyComponent";
+import { Playground } from "./playground";
+import MyComponentSource from "!!raw-loader!./playground";
+import CodeBlock from "@theme/CodeBlock";
+import { useSchema } from "../../src";
+
+## Quick Example
+
+<CodeBlock className="language-tsx">{MyComponentSource}</CodeBlock>
+<Playground />

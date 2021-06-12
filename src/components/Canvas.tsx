@@ -4,6 +4,7 @@ import { useAction, useDrag, useRegisterElement, useWheel } from "../hooks";
 import { ElementType } from "../types";
 import { ViewLayer } from "../components";
 import { SchemaActionType } from "../functions";
+import React from "react";
 
 const DiagramRoot = styled.div`
   font-size: 14px;
@@ -41,7 +42,10 @@ export const Canvas = memo(() => {
   useWheel(
     ref,
     useCallback(
-      ({ clientX, clientY, deltaY }) => {
+      (ev) => {
+        ev.stopImmediatePropagation();
+        ev.preventDefault();
+        const { clientX, clientY, deltaY } = ev;
         action({
           type: SchemaActionType.VIEWPORT_ZOOM,
           clientX,

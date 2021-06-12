@@ -4,6 +4,8 @@ import { SchemaActionType } from "../functions/schema.reducer";
 import { useAction, useDrag } from "../hooks";
 import { ElementType, SchemaNode } from "../types";
 import { useRegisterElement } from "../hooks";
+import React from "react";
+
 export const DiagramNode: FunctionComponent<{ node: SchemaNode }> = memo(
   ({ node: nodeData }) => {
     const action = useAction();

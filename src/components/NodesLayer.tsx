@@ -2,6 +2,7 @@ import { FunctionComponent, memo, useContext, useMemo } from "react";
 import { useTheme } from "styled-components";
 import { DiagramNode } from "../components";
 import { NodesContext } from "../context";
+import React from "react";
 
 export const NodesLayer: FunctionComponent = memo(() => {
   const { zIndex } = useTheme();

@@ -13,6 +13,7 @@ import { LinkRenderDefault } from "../components";
 import { useAction, useRegisterElement } from "../hooks";
 import { getELementType, queryElements, SchemaActionType } from "../functions";
 import { ScaleContext, ViewportRefContext } from "../context";
+import React from "react";
 
 const config = {
   attributes: true,

@@ -1,9 +1,10 @@
-import React, { memo, useEffect, useMemo } from "react";
+import { memo, useEffect, useMemo } from "react";
 import { Canvas } from "./Canvas";
 import { Ctx, useContextMenu } from "../hooks";
 import { DefaultTheme, ThemeProvider } from "styled-components";
 import { ContextPopup, SchemaProvider } from "../components";
 import { v4 } from "uuid";
+import React from "react";
 
 interface Props {
   schema: Ctx;

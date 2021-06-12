@@ -1,4 +1,4 @@
-import React, {
+import {
   FunctionComponent,
   memo,
   useRef,
@@ -9,6 +9,8 @@ import { SchemaPort, ElementType } from "../types";
 import { SchemaActionType } from "../functions";
 import { useAction, useRegisterElement, useDrag } from "../hooks";
 import { CSSProperties } from "styled-components";
+import React from "react";
+
 export const Port: FunctionComponent<{
   port: SchemaPort;
   style?: CSSProperties;
