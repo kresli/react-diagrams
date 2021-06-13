@@ -4,12 +4,13 @@ module.exports = {
 	title: "React Diagrams",
 	tagline: "",
 	url: "https://kresli.github.io/react-diagrams/",
-	baseUrl: "/docs/",
+	baseUrl: "https://github.com/kresli/react-diagrams",
 	projectName: "react-diagrams",
 	organizationName: "kresli",
 	onBrokenLinks: "throw",
 	onBrokenMarkdownLinks: "warn",
 	favicon: "img/favicon.ico",
+	routeBasePath: '/',
 	themeConfig: {
 		// googleAnalytics: {
 		// 	trackingID: "UA-65632006-3",
@@ -26,7 +27,7 @@ module.exports = {
 					type: "doc",
 					docId: "Introduction",
 					label: "Documentation",
-					position: "right"
+					position: "right",
 				},
 				{
 					href: "https://github.com/kresli/react-diagrams",
