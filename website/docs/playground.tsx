@@ -1,4 +1,4 @@
-import { Schema, useSchema, Diagram } from "@kresli/react-diagrams";
+import { Schema, useSchema, Diagram } from "../../src";
 import React from "react";
 
 const initialSchema: Schema = {
