@@ -3,8 +3,8 @@
 module.exports = {
 	title: "React Diagrams",
 	tagline: "",
-	url: "https://kresli.github.io/react-diagrams/",
-	baseUrl: "/",
+	url: "https://kresli.github.io",
+	baseUrl: "/react-diagrams/",
 	projectName: "react-diagrams",
 	organizationName: "kresli",
 	onBrokenLinks: "throw",
