@@ -53,3 +53,5 @@ jobs:
           npm i
           fi
           npm run build
+          cd ..
+          cp -r website/build/* docs
