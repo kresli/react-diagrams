@@ -42,9 +42,7 @@ jobs:
           USE_SSH: true
           GIT_USER: git
         run: |
-          yarn link
           cd website
-          yarn link @kresli/react-diagrams
           git config --global user.email "jacko.eduard@gmail.com"
           git config --global user.name "kresli"
           yarn install --frozen-lockfile
