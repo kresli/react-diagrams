@@ -28,7 +28,7 @@ export const LinksLayer = memo(() => {
         pointerEvents: "none",
         width: 1,
         height: 1,
-        overflow: "overlay",
+        overflow: "visible",
         zIndex: zIndex.linksLayer,
       }}
     >
