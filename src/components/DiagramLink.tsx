@@ -71,7 +71,7 @@ export const DiagramLink: FunctionComponent<{ link: SchemaLink }> = memo(
 
     return (
       <g pointerEvents="visible" onDoubleClick={handleDoubleClick}>
-        <Render link={link} />
+        <Render {...link} />
       </g>
     );
   }

@@ -22,7 +22,7 @@ export interface LinkRenderProps<T extends SVGElement = any> {
   // lineRef: MutableRefObject<T | null>;
 }
 
-export type SchemaLinkRender = FunctionComponent<{ link: LinkRenderProps }>;
+export type SchemaLinkRender = FunctionComponent<LinkRenderProps>;
 
 export type Position = [number, number];
 

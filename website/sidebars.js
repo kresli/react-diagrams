@@ -3,9 +3,10 @@ module.exports = {
 		// Basics: [
 			"introduction/Introduction",
 			"Installation",
+			"node_data/Node Data",
 			"context_menu/Context Menu",
 			"custom_nodes/Custom Nodes",
-			"Custom Links"
+			"custom_links/Custom Links"
 			// "produce",
 			// "curried-produce",
 			// "example-reducer",
