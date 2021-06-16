@@ -1,4 +1,4 @@
-import { Schema, useSchema, Diagram } from "../../src";
+import { Schema, useSchema, Diagram } from "../../../src";
 import React from "react";
 
 const initialSchema: Schema = {
@@ -28,7 +28,7 @@ const initialSchema: Schema = {
   scale: 1,
 };
 
-export const Playground = () => {
+const DiagramQuickExample = () => {
   const schema = useSchema(initialSchema);
   return (
     <div style={{ width: "100%", height: 500 }}>
@@ -36,3 +36,5 @@ export const Playground = () => {
     </div>
   );
 };
+
+export default DiagramQuickExample;

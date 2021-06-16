@@ -1,7 +1,8 @@
-import { FunctionComponent, useMemo, memo } from "react";
+import { FunctionComponent, useMemo, memo, useRef } from "react";
 import styled from "styled-components";
-import { LinkRenderProps } from "../types";
+import { ElementType, LinkRenderProps } from "../types";
 import React from "react";
+import { useRegisterElement } from "../hooks";
 
 const LinkRender: FunctionComponent<
   { link: LinkRenderProps } & { className?: string }
@@ -12,7 +13,9 @@ const LinkRender: FunctionComponent<
     const [ex, ey] = end;
     return `M${sx} ${sy} H${sx + 30} L${ex - 30} ${ey} ${ex} ${ey}`;
   }, [end, start]);
-  return <path className={className} d={line} />;
+  const ref = useRef<SVGLineElement>(null);
+  useRegisterElement(ref, ElementType.LINK);
+  return <path className={className} d={line} ref={ref} />;
 };
 
 export const LinkRenderDefault = memo(styled(LinkRender)`

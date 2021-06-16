@@ -1,5 +1,6 @@
-import { useSchema } from "./hooks";
+import { useSchema, useAction } from "./hooks";
+import { SchemaActionType } from "./functions";
 export * from "./components";
 export * from "./types";
 
-export { useSchema };
+export { useSchema, useAction, SchemaActionType };

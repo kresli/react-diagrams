@@ -22,12 +22,12 @@ module.exports = {
 			// 	alt: "Immer Logo"
 			// },
 			items: [
-				{
-					type: "doc",
-					docId: "Introduction",
-					label: "Documentation",
-					position: "right",
-				},
+				// {
+				// 	type: "doc",
+				// 	docId: "Introduction",
+				// 	label: "Documentation",
+				// 	position: "right",
+				// },
 				{
 					href: "https://github.com/kresli/react-diagrams",
 					label: "GitHub",

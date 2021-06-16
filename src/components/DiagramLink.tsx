@@ -68,7 +68,7 @@ export const DiagramLink: FunctionComponent<{ link: SchemaLink }> = memo(
       };
     }, [end, linkData, start]);
     // const lineRef = useRef<SVGLineElement>(null);
-    // useRegisterElement(lineRef, ElementType.LINK);
+
     return (
       <g pointerEvents="visible" onDoubleClick={handleDoubleClick}>
         <Render link={link} />

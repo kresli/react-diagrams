@@ -1,9 +1,10 @@
 module.exports = {
 	ReactDiagrams: [
 		// Basics: [
-			"Introduction",
+			"introduction/Introduction",
 			"Installation",
-			"Custom Nodes",
+			"context_menu/Context Menu",
+			"custom_nodes/Custom Nodes",
 			"Custom Links"
 			// "produce",
 			// "curried-produce",
