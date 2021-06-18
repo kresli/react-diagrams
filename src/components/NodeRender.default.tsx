@@ -1,5 +1,5 @@
-import { FunctionComponent, memo } from "react";
-import styled from "styled-components";
+import { FunctionComponent, memo, useMemo } from "react";
+import styled, { CSSProperties } from "styled-components";
 import { NodeRenderProps, SchemaPort, PortType } from "../types";
 import { Port } from "../components";
 import { Gate } from "./Gate";
@@ -22,27 +22,36 @@ const PortRoot = styled.div<{ type: PortType }>`
   }
 `;
 
+const Label = styled.span`
+  color: white;
+`;
+
 const InputOutput: FunctionComponent<{
   port: SchemaPort;
   type: PortType;
-}> = memo(({ type, port }) => (
-  <div
-    className="InputOutput"
-    style={{
+}> = memo(({ type, port }) => {
+  const style: CSSProperties = useMemo(
+    () => ({
       flex: 1,
       display: "flex",
       position: "relative",
       minHeight: 20,
       justifyContent: type === PortType.INPUT ? "flex-start" : "flex-end",
-    }}
-  >
-    <Port port={port}>
-      <PortRoot type={type}>
-        <Gate port={port} />
-      </PortRoot>
-    </Port>
-  </div>
-));
+    }),
+    [type]
+  );
+
+  return (
+    <div className="InputOutput" style={style}>
+      <Label>{port.label}</Label>
+      <Port port={port}>
+        <PortRoot type={type}>
+          <Gate port={port} />
+        </PortRoot>
+      </Port>
+    </div>
+  );
+});
 
 const NodeRenderRoot = styled.div`
   background-color: #2d2d2d;
@@ -72,9 +81,9 @@ const Content = styled.div`
 `;
 
 export const NodeRenderDefault: FunctionComponent<NodeRenderProps> = memo(
-  ({ inputs, outputs }) => (
+  ({ inputs, outputs, label }) => (
     <NodeRenderRoot>
-      <Title>title</Title>
+      <Title>{label}</Title>
       <Content className="io">
         <div
           className="Inputs"

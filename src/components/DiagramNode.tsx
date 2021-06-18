@@ -22,6 +22,7 @@ export const DiagramNode: FunctionComponent<{ node: SchemaNode }> = memo(
     const Render = node.render;
     const props = useMemo(
       () => ({
+        ...node,
         inputs: inputs?.map((input) => ({
           ...input,
           key: input.id,
@@ -32,7 +33,7 @@ export const DiagramNode: FunctionComponent<{ node: SchemaNode }> = memo(
         })),
         data: data,
       }),
-      [data, inputs, outputs]
+      [data, inputs, outputs, node]
     );
 
     useRegisterElement(ref, ElementType.NODE, node.id);
@@ -48,8 +49,7 @@ export const DiagramNode: FunctionComponent<{ node: SchemaNode }> = memo(
           });
         },
         [action, node]
-      ),
-      true
+      )
     );
     return (
       <div

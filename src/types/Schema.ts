@@ -2,6 +2,7 @@ import { FunctionComponent } from "react";
 
 export interface SchemaPort {
   id: string;
+  label?: string;
 }
 
 interface RenderPortProps extends SchemaPort {
@@ -11,6 +12,7 @@ interface RenderPortProps extends SchemaPort {
 export interface NodeRenderProps {
   inputs?: RenderPortProps[];
   outputs?: RenderPortProps[];
+  label?: string;
   data?: any;
 }
 export type DiagramNodeRender = FunctionComponent<NodeRenderProps>;
@@ -29,6 +31,7 @@ export type Position = [number, number];
 export interface SchemaNode {
   id: string;
   data?: any;
+  label?: string;
   position: [number, number];
   inputs?: SchemaPort[];
   outputs?: SchemaPort[];
@@ -57,7 +60,6 @@ export enum PortType {
 }
 
 export interface SchemaDragLink {
-  // direction: DragLinkDirection;
   start: Position;
   end: Position;
   portId: string;

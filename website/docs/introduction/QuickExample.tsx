@@ -8,14 +8,16 @@ const initialSchema: Schema = {
   viewRef: null,
   nodes: [
     {
-      id: "1",
+      id: "node_a",
+      label: "Node A",
       position: [100, 100] as [number, number],
-      outputs: [{ id: "1" }],
+      outputs: [{ id: "1", label: "Out" }],
     },
     {
-      id: "3",
+      id: "node_b",
+      label: "Node B",
       position: [400, 400] as [number, number],
-      inputs: [{ id: "3" }],
+      inputs: [{ id: "3", label: "In" }],
     },
   ],
   links: [

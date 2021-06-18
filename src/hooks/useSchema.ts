@@ -5,7 +5,6 @@ import { ElementType, Schema, SchemaNode } from "../types";
 
 export const useSchema = (initSchema: Schema) => {
   validateSchema(initSchema);
-
   const [
     { links, nodes, position, scale, viewRef, dragLink, canvasRef },
     dispatchAction,
