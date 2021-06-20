@@ -2,8 +2,6 @@ name: documentation
 
 on:
   pull_request:
-    branches: [documentation]
-  push:
     branches: [main]
 
 jobs:
@@ -42,7 +40,7 @@ jobs:
           USE_SSH: true
           GIT_USER: git
         run: |
-          cd website
+          cd packages/react-diagrams-docs
           git config --global user.email "jacko.eduard@gmail.com"
           git config --global user.name "kresli"
           yarn install --frozen-lockfile
