@@ -11,7 +11,7 @@
   "license": "MIT",
   "author": {
     "name": "Eduard Jacko",
-    "email": "jacko.eduard@gmail.com"
+    "email": "jacko.eduard@gmail.cdom"
   },
   "scripts": {
     "start": "node scripts/start.js",
