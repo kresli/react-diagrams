@@ -16,6 +16,7 @@
     "start": "node scripts/start.js",
     "build": "rm -rf dist && rollup -c",
     "test": "jest",
+    "test:ci": "jest -ci",
     "lint": "echo 0;",
     "storybook": "start-storybook -p 6006",
     "build-storybook": "build-storybook",

@@ -5,7 +5,7 @@
   ],
   "scripts": {
     "lint": "echo 0;",
-    "test": "echo 0;",
+    "test:ci": "yarn workspaces run test:ci",
     "build": "echo 0"
   }
 }
