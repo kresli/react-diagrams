@@ -27,8 +27,8 @@ jobs:
           USE_SSH: true
           GIT_USER: git
         run: |
+          yarn install --frozen-lockfile
           cd packages/react-diagrams-docs
           git config --global user.email "jacko.eduard@gmail.com"
           git config --global user.name "kresli"
-          yarn install --frozen-lockfile
           yarn publish-gh-pages
