@@ -24,7 +24,7 @@ jobs:
           ssh-private-key: ${{ secrets.GH_PAGES_DEPLOY }}
       - run: yarn install ---frozen-lockfile
       - name: Build @kresli/react-diagrams
-        runs: |
+        run: |
           cd packages/react-diagrams
           yarn build
       - name: Release to GitHub Pages
