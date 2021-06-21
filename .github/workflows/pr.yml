@@ -1,6 +1,6 @@
 name: Pull Request
 
-on: 
+on:
   pull_request:
     branches: [main]
 
@@ -12,7 +12,5 @@ jobs:
       - uses: actions/setup-node@v1
         with:
           node-version: "12.x"
-      - name: build
-        run: yarn install --frozen-lockfile
-        run: yarn test:ci
-     
+      - run: yarn install --frozen-lockfile
+      - run: yarn test:ci
