@@ -1,11 +1,9 @@
-name: Pull Request
-
+name: PR check
 on:
   pull_request:
     branches: [main]
-
 jobs:
-  build:
+  checks:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v1
