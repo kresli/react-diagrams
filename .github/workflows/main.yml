@@ -22,12 +22,12 @@ jobs:
       - uses: webfactory/ssh-agent@v0.5.0
         with:
           ssh-private-key: ${{ secrets.GH_PAGES_DEPLOY }}
+      - run: yarn install ---frozen-lockfile
       - name: Release to GitHub Pages
         env:
           USE_SSH: true
           GIT_USER: git
         run: |
-          yarn install --frozen-lockfile
           cd packages/react-diagrams-docs
           git config --global user.email "jacko.eduard@gmail.com"
           git config --global user.name "kresli"
