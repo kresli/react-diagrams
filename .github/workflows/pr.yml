@@ -12,3 +12,8 @@ jobs:
           node-version: "14.x"
       - run: yarn install --frozen-lockfile
       - run: yarn test:ci
+      - uses: artiomtr/jest-coverage-report-action@v1.3
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          working-directory: packages/react-diagrams
+          package-manager: yarn
