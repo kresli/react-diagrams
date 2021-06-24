@@ -1,18 +1,22 @@
 import { useCallback, useMemo, useReducer } from "react";
 import { SchemaActionType, schemaReducer, validateSchema } from "../functions";
+import { createSchema } from "../functions/createSchema";
 import { getElementId, getELementType } from "../functions/getElementType";
 import { ElementType, Schema, SchemaNode } from "../types";
 
-export const useSchema = (initSchema: Schema) => {
-  validateSchema(initSchema);
+export const useSchema = (initSchema?: Partial<Schema>) => {
+  const schema = createSchema(initSchema);
+  validateSchema(schema);
   const [
     { links, nodes, position, scale, viewRef, dragLink, canvasRef },
     dispatchAction,
-  ] = useReducer(schemaReducer, initSchema);
+  ] = useReducer(schemaReducer, schema);
 
+  // @todo rename local to world as per new naming convention
   const clientToLocalPosition = useCallback(
     (clientX: number, clientY: number): [number, number] => {
       if (!viewRef) return [0, 0];
+      // @todo can we use clientToWorldPositionHere?
       const { left, top } = viewRef.getBoundingClientRect();
       return [(clientX - left) / scale, (clientY - top) / scale];
     },
@@ -43,6 +47,7 @@ export const useSchema = (initSchema: Schema) => {
     dispatchAction({ type: SchemaActionType.REMOVE_NODE, node });
   };
 
+  // @todo rename to elementsTypesFromPoint
   const elementsFromPoint = useCallback(
     (clientX: number, clientY: number): ElementType[] => {
       return document

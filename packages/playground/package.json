@@ -3,6 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "@kresli/react-diagrams": "*",
     "@testing-library/jest-dom": "^5.11.4",
     "@testing-library/react": "^11.1.0",
     "@testing-library/user-event": "^12.1.10",
@@ -10,18 +11,20 @@
     "@types/node": "^12.0.0",
     "@types/react": "^17.0.0",
     "@types/react-dom": "^17.0.0",
+    "jest-image-snapshot": "^4.5.0",
+    "playwright": "^1.12.2",
     "react": "^17.0.2",
     "react-dom": "^17.0.2",
     "react-scripts": "4.0.3",
+    "serve": "^12.0.0",
     "typescript": "^4.1.2",
-    "web-vitals": "^1.0.1",
-    "@kresli/react-diagrams": "*"
+    "web-vitals": "^1.0.1"
   },
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
-    "test": "react-scripts test",
-    "test:ci": "CI=true react-scripts test",
+    "test": "node scripts/pre-test.js && react-scripts test --detectOpenHandles",
+    "test:ci": "echo 0;",
     "eject": "react-scripts eject"
   },
   "eslintConfig": {
@@ -41,5 +44,10 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
+  },
+  "devDependencies": {
+    "@types/jest-image-snapshot": "^4.3.0",
+    "kill-port": "^1.6.1",
+    "serve": "^12.0.0"
   }
 }

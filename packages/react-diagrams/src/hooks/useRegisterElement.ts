@@ -4,6 +4,7 @@ import { ElementType } from "../types";
 import { useAction } from "./useAction";
 
 export function useRegisterElement<T extends HTMLElement | SVGElement>(
+  // @todo maybe we dont need to pass refObject but pure Element?
   ref: RefObject<T | null>,
   elementType: ElementType,
   id?: string

@@ -9,7 +9,6 @@ export * from "./LinkRender.default";
 export * from "./DiagramNode";
 export * from "./SchemaProvider";
 export * from "./DragLink";
-export * from "./ContextPopup";
 export * from "./Port";
 export * from "./Gate";
 export * from "./Link";

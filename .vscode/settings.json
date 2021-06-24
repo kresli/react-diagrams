@@ -1,0 +1,4 @@
+{
+  "jest.jestCommandLine": "yarn workspace @kresli/react-diagrams run test",
+  "typescript.tsdk": "node_modules/typescript/lib"
+}

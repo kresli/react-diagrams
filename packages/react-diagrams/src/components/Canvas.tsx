@@ -57,7 +57,7 @@ export const Canvas = memo(() => {
     )
   );
   return (
-    <DiagramRoot className="Diagram" ref={ref}>
+    <DiagramRoot className="Diagram" data-testid="canvas" ref={ref}>
       <ViewLayer />
     </DiagramRoot>
   );

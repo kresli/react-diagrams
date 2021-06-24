@@ -15,7 +15,7 @@ export const useDrag = (
   // we need to reasign always callback otherwise we would be out of sync
   // and we would call previous onDragging callback
   const [dragging, setDragging] = useState(false);
-  const onDrag = useRef<DragCallback>((null as any) as DragCallback);
+  const onDrag = useRef<DragCallback>(null as any as DragCallback);
   onDrag.current = onDragging;
 
   const mouseMove = useCallback(

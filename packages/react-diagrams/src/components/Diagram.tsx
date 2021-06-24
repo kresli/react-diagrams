@@ -2,10 +2,9 @@ import { FunctionComponent, memo, useEffect, useMemo } from "react";
 import { Canvas } from "./Canvas";
 import { Ctx, useContextMenu } from "../hooks";
 import { DefaultTheme, ThemeProvider } from "styled-components";
-import { ContextPopup, SchemaProvider } from "../components";
-import { v4 } from "uuid";
+import { SchemaProvider } from "../components";
 import React from "react";
-import { ElementType, SchemaNode } from "../types";
+import { ElementType, Schema, SchemaNode } from "../types";
 
 type ContextMenuElement =
   | { type: ElementType.CANVAS }
@@ -43,64 +42,61 @@ const theme: DefaultTheme = {
   },
 };
 
-export const Diagram = memo<Props>(
-  ({ schema, contextMenu: ContextMenuContent }) => {
-    const { canvas } = schema;
-    const {
-      ContextMenu,
-      setContextTrigger,
-      contextPosition,
-    } = useContextMenu();
+const useCtxMenu = (schema: Ctx, ContextMenuContent?: DiagramContextMenu) => {
+  const { ContextMenu, setContextTrigger, contextPosition } = useContextMenu();
+  const { canvas, clientToNode, elementsFromPoint, clientToLocalPosition } =
+    schema;
+  useEffect(() => {
+    setContextTrigger(canvas);
+  }, [canvas, setContextTrigger]);
+  return useMemo(() => {
+    if (!ContextMenuContent || !contextPosition) return null;
+    const [clientX, clientY] = contextPosition;
+    const [type] = elementsFromPoint(clientX, clientY);
+    const [worldX, worldY] = clientToLocalPosition(...contextPosition);
+    const getElement = (): ContextMenuElement | null => {
+      switch (type) {
+        case ElementType.CANVAS:
+          return { type };
+        case ElementType.PORT:
+          return { type };
+        case ElementType.LINK:
+          return { type };
+        case ElementType.NODE:
+          return {
+            type,
+            node: clientToNode(clientX, clientY)[0],
+          };
+        default:
+          return null;
+      }
+    };
+    const element = getElement();
+    if (!element) return null;
+    return (
+      <ContextMenu>
+        <ContextMenuContent element={element} worldX={worldX} worldY={worldY} />
+      </ContextMenu>
+    );
+  }, [
+    ContextMenu,
+    ContextMenuContent,
+    clientToLocalPosition,
+    clientToNode,
+    contextPosition,
+    elementsFromPoint,
+  ]);
+};
 
-    useEffect(() => {
-      setContextTrigger(canvas);
-    }, [canvas, setContextTrigger]);
-
-    const contextMenu = useMemo(() => {
-      if (!ContextMenuContent || !contextPosition) return null;
-      const [clientX, clientY] = contextPosition;
-      const [type] = schema.elementsFromPoint(clientX, clientY);
-      const [worldX, worldY] = schema.clientToLocalPosition(...contextPosition);
-      const getElement = (): ContextMenuElement => {
-        switch (type) {
-          case ElementType.CANVAS:
-            return { type };
-          case ElementType.PORT:
-            return { type };
-          case ElementType.LINK:
-            return { type };
-          case ElementType.NODE:
-            return {
-              type,
-              node: schema.clientToNode(clientX, clientY)[0],
-            };
-          default:
-            throw new Error("element not in case");
-        }
-      };
-      return (
-        <ContextMenu>
-          <ContextMenuContent
-            element={getElement()}
-            worldX={worldX}
-            worldY={worldY}
-          />
-        </ContextMenu>
-      );
-    }, [ContextMenu, ContextMenuContent, contextPosition, schema]);
+export const Diagram: FunctionComponent<Props> = memo(
+  ({ schema, contextMenu }) => {
+    const ContextMenu = useCtxMenu(schema, contextMenu);
     return (
       <ThemeProvider theme={theme}>
         <SchemaProvider schema={schema}>
           <Canvas />
-          {contextMenu}
+          {ContextMenu}
         </SchemaProvider>
-        {/* <ContextMenu>
-        <ContextPopup
-          onAddNode={onAddNode}
-          contextTypes={contextTypes}
-          onRemoveNode={onRemoveNode}
-        />
-      </ContextMenu> */}
       </ThemeProvider>
     );
   }
