@@ -33,7 +33,7 @@ export const LinksLayer = memo(() => {
       }}
     >
       {links}
-      {dragLink && <DragLink />}
+      {dragLink && <DragLink dragLink={dragLink} />}
     </svg>
   );
 });

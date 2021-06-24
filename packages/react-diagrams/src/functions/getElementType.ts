@@ -17,21 +17,25 @@ export function setElementType<T extends HTMLElement | SVGElement>(
   type: ElementType
 ) {
   (elem as any).setAttribute(`data-${ELEMENT_TYPE}`, type as string);
+  return elem;
 }
 
 export const setElementId = (elem: Elem, id: string) => {
   elem.setAttribute(`data-${ELEMENT_ID}`, id);
+  return elem;
 };
 
 export const getElementId = (elem: HTMLElement): string | undefined => {
   return elem.dataset[ELEMENT_ID];
 };
 
+export const getIdSelector = (id: string) => `[data-${ELEMENT_ID}="${id}"]`;
+
 export const queryElements = (
   type: ElementType,
   id?: string
 ): NodeListOf<HTMLElement> => {
   const typeSelector = `[data-${ELEMENT_TYPE}="${type}"]`;
-  const idSelector = id ? `[data-${ELEMENT_ID}="${id}"]` : "";
+  const idSelector = id ? getIdSelector(id) : "";
   return document.querySelectorAll(`${typeSelector}${idSelector}`);
 };

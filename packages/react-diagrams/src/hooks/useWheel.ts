@@ -1,21 +1,11 @@
-import { RefObject, useCallback, useLayoutEffect, useRef } from "react";
+import { RefObject, useCallback, useLayoutEffect } from "react";
 
 export function useWheel(
+  // @todo can we not to use refObject here?
   ref: RefObject<HTMLElement | null>,
   onZoom: (event: WheelEvent) => void
 ) {
-  // const zoom = useRef(onZoom);
-  // zoom.current = onZoom;
-  // return useCallback(
-  //   (element: HTMLElement) => {
-  //     if (!element) return;
-  //     function onWheel({ deltaY, clientX, clientY }: WheelEvent) {
-  //       onZoom({ deltaY, clientY, clientX });
-  //     }
-  //     element.addEventListener("wheel", onWheel);
-  //   },
-  //   [onZoom]
-  // );
+  // @todo do we need use useCallback here?
   const onWheel = useCallback((event: WheelEvent) => onZoom(event), [onZoom]);
   useLayoutEffect(() => {
     ref.current?.addEventListener("wheel", onWheel);

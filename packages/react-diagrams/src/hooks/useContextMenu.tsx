@@ -12,7 +12,7 @@ export const useContextMenu = () => {
       ev.preventDefault();
       setPosition([ev.clientX, ev.clientY]);
     };
-    const onMouseDown = (ev: MouseEvent) => setPosition(null);
+    const onMouseDown = () => setPosition(null);
     window.addEventListener("click", onMouseDown);
     triggerRef.addEventListener("contextmenu", onContextMenu);
     return () => {

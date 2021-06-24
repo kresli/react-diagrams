@@ -12,7 +12,6 @@ import { setElementType } from ".";
 import { setElementId } from "./getElementType";
 
 export enum SchemaActionType {
-  VIEWPORT_SET = "VIEWPORT_SET",
   VIEWPORT_MOVE = "VIEWPORT_MOVE",
   VIEWPORT_ZOOM = "VIEWPORT_ZOOM",
   NODE_MOVE = "NODE_MOVE",
@@ -118,10 +117,10 @@ export const schemaReducer = (schema: Schema, action: SchemaAction): Schema => {
       const { deltaY, clientX, clientY } = action;
       const { viewRef } = schema;
       if (!viewRef) return schema;
-      const factor = schema.scale * 0.1;
-      const scaleChange = deltaY < 0 ? -factor : factor;
-      const scale = schema.scale + scaleChange;
-      if (scale <= 0.1) return schema;
+      if (schema.scale <= 0.1 && deltaY < 0) return schema;
+      const scaleChange = schema.scale * (deltaY / 10);
+      let scale = schema.scale + scaleChange;
+      if (scale <= 0.1) scale = 0.1;
       const { left, top } = viewRef.getBoundingClientRect();
 
       const rootLeft = left - schema.position[0];
@@ -272,6 +271,6 @@ export const schemaReducer = (schema: Schema, action: SchemaAction): Schema => {
       };
     }
     default:
-      return schema;
+      throw new Error(`${(action as any).type} is not registered action.`);
   }
 };

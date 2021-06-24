@@ -4,13 +4,12 @@ import {
   useMemo,
   memo,
   useLayoutEffect,
-  useRef,
   useContext,
   useCallback,
 } from "react";
 import { ElementType, SchemaLink } from "../types";
 import { LinkRenderDefault } from "../components";
-import { useAction, useRegisterElement } from "../hooks";
+import { useAction } from "../hooks";
 import { getELementType, queryElements, SchemaActionType } from "../functions";
 import { ScaleContext, ViewportRefContext } from "../context";
 import React from "react";
@@ -31,6 +30,7 @@ function useNodeObserver(elementId: string): [number, number] {
     if (!element) return;
     const callback = () => {
       if (!element || !viewport) return;
+      // @todo can we use clientToWorldPositionHere?
       const { left, top } = element.getBoundingClientRect();
       const { left: viewLeft, top: viewTop } = viewport.getBoundingClientRect();
       const x = (left - viewLeft) / scale;
@@ -56,9 +56,10 @@ export const DiagramLink: FunctionComponent<{ link: SchemaLink }> = memo(
     const handleDoubleClick = useCallback(() => {
       action({ type: SchemaActionType.LINK_REMOVE, link: linkData });
     }, [action, linkData]);
-    const Render = useMemo(() => linkData.render || LinkRenderDefault, [
-      linkData.render,
-    ]);
+    const Render = useMemo(
+      () => linkData.render || LinkRenderDefault,
+      [linkData.render]
+    );
     const link = useMemo(() => {
       const { render, ...data } = linkData;
       return {
@@ -67,7 +68,6 @@ export const DiagramLink: FunctionComponent<{ link: SchemaLink }> = memo(
         end,
       };
     }, [end, linkData, start]);
-    // const lineRef = useRef<SVGLineElement>(null);
 
     return (
       <g pointerEvents="visible" onDoubleClick={handleDoubleClick}>
