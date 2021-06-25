@@ -39,3 +39,8 @@ export const queryElements = (
   const idSelector = id ? getIdSelector(id) : "";
   return document.querySelectorAll(`${typeSelector}${idSelector}`);
 };
+
+export const queryElement = (
+  type: ElementType,
+  id?: string
+): HTMLElement | null => queryElements(type, id)[0] || null;

@@ -22,16 +22,9 @@ export const DragLink: FunctionComponent<{ dragLink: SchemaDragLink }> = memo(
           movementY,
         });
       };
-      const onMouseDown = () => {
-        action({
-          type: SchemaActionType.DELETE_DRAGGING_LINK,
-        });
-      };
       window.addEventListener("mousemove", onMouseMove);
-      window.addEventListener("mousedown", onMouseDown);
       return () => {
         window.removeEventListener("mousemove", onMouseMove);
-        window.removeEventListener("mousedown", onMouseDown);
       };
     }, [action]);
     return <path d={line} stroke="white" fill="none" />;
