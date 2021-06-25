@@ -118,7 +118,7 @@ export const schemaReducer = (schema: Schema, action: SchemaAction): Schema => {
       const { viewRef } = schema;
       if (!viewRef) return schema;
       if (schema.scale <= 0.1 && deltaY < 0) return schema;
-      const scaleChange = schema.scale * (deltaY / 10);
+      const scaleChange = schema.scale * deltaY * 0.001;
       let scale = schema.scale + scaleChange;
       if (scale <= 0.1) scale = 0.1;
       const { left, top } = viewRef.getBoundingClientRect();
