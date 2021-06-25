@@ -1,5 +1,10 @@
 import "./App.css";
-import { Diagram, Schema, useSchema } from "@kresli/react-diagrams";
+import {
+  Diagram,
+  Schema,
+  useSchema,
+  DiagramContextMenuDefault,
+} from "@kresli/react-diagrams";
 
 const initialSchema: Schema = {
   dragLink: null,
@@ -30,19 +35,11 @@ const initialSchema: Schema = {
   scale: 1,
 };
 
-const DiagramQuickExample = () => {
+function App() {
   const schema = useSchema(initialSchema);
   return (
-    <div style={{ width: "100%", height: "100%" }}>
-      <Diagram schema={schema} />
-    </div>
-  );
-};
-
-function App() {
-  return (
     <div style={{ width: "100vw", height: "100vh" }}>
-      <DiagramQuickExample />
+      <Diagram schema={schema} contextMenu={DiagramContextMenuDefault} />
     </div>
   );
 }
