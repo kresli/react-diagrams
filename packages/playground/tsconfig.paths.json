@@ -1,0 +1,7 @@
+{
+  "compilerOptions": {
+    "paths": {
+      "@kresli/react-diagrams/*": ["../react-diagrams/src/*"]
+    }
+  }
+}

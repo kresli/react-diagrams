@@ -5,7 +5,7 @@
   "version": "0.0.1",
   "scripts": {
     "examples": "docusaurus-examples",
-    "start": "docusaurus start",
+    "start": "yarn --cwd ../react-diagrams start & docusaurus start",
     "build": "docusaurus build",
     "publish-gh-pages": "docusaurus deploy",
     "write-translations": "docusaurus write-translations",

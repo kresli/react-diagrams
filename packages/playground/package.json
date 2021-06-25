@@ -21,11 +21,11 @@
     "web-vitals": "^1.0.1"
   },
   "scripts": {
-    "start": "react-scripts start",
-    "build": "react-scripts build",
-    "test": "node scripts/pre-test.js && react-scripts test --detectOpenHandles",
+    "start": "react-app-rewired start",
+    "build": "react-app-rewired build",
+    "test": "node scripts/pre-test.js && react-app-rewired test --detectOpenHandles",
     "test:ci": "echo 0;",
-    "eject": "react-scripts eject"
+    "eject": "react-app-rewired eject"
   },
   "eslintConfig": {
     "extends": [
