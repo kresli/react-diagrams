@@ -54,6 +54,6 @@ test("zoom", () => {
   expect(schema.scale).toBe(1);
   expect(schema.position).toEqual([0, 0]);
   fireEvent.wheel(schema.canvas!, { deltaY: 2, clientX: 100, clientY: 50 });
-  expect(schema.scale).toBe(1.2);
-  expect(schema.position).toEqual([-20, -10]);
+  expect(schema.scale).toBe(1.002);
+  expect(schema.position).toEqual([-0.2, -0.1]);
 });

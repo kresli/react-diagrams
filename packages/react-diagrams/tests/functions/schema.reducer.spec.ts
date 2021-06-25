@@ -64,8 +64,8 @@ test(`Action ${VIEWPORT_ZOOM}`, () => {
     clientY: 30,
   } as const;
   const { position, scale } = schemaReducer(schema, action);
-  expect(position).toEqual([6, 18.5]);
-  expect(scale).toEqual(0.55);
+  expect(position).toEqual([9.96, 19.985]);
+  expect(scale).toEqual(0.5005);
 });
 test(`Action ${VIEWPORT_ZOOM} returns same if no viewRef`, () => {
   const schema = createSchema({
@@ -110,7 +110,7 @@ test(`Action ${VIEWPORT_ZOOM} min scale is 0.1`, () => {
     clientY: 30,
   } as const;
   const { scale } = schemaReducer(schema, action);
-  expect(scale).toEqual(0.1);
+  expect(scale).toEqual(0.4505);
 });
 test(`Action ${ADD_NODE}`, () => {
   const schema = createSchema();
