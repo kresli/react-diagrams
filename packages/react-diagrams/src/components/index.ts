@@ -12,3 +12,4 @@ export * from "./DragLink";
 export * from "./Port";
 export * from "./Gate";
 export * from "./Link";
+export * from "./DiagramContextMenu.default";
