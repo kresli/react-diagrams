@@ -21,6 +21,10 @@ export const useDrag = (
   const mouseMove = useCallback(
     (ev) => {
       if (!dragging) return;
+      if (ev.buttons !== 1) {
+        setDragging(false);
+        return;
+      }
       ev.preventDefault();
       ev.stopImmediatePropagation();
       onDrag.current(ev.movementX, ev.movementY);

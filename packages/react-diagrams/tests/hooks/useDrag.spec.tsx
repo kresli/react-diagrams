@@ -91,3 +91,23 @@ test("ignore if no ref", () => {
   );
   expect(onDragging).not.toHaveBeenCalled();
 });
+
+test("dont drag if button not pressed", () => {
+  const ref = {
+    current: document.createElement("div"),
+  };
+  const onDragging = jest.fn();
+  renderHook(() => useDrag(ref, onDragging));
+  fireEvent.mouseDown(ref.current, {
+    buttons: 1,
+  });
+  fireEvent(
+    window,
+    new MouseMoveEvent({
+      buttons: 0,
+      movementX: 123,
+      movementY: 456,
+    })
+  );
+  expect(onDragging).not.toHaveBeenCalled();
+});
