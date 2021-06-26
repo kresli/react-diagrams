@@ -9,7 +9,6 @@ export const DiagramContextMenuDefault: DiagramContextMenu = ({
   worldY,
 }) => {
   const actions = useAction();
-  console.log(element);
   switch (element.type) {
     case ElementType.CANVAS:
       const onAdd = () =>
@@ -21,14 +20,22 @@ export const DiagramContextMenuDefault: DiagramContextMenu = ({
             outputs: [{ id: `out${performance.now()}` }],
           },
         });
-      return <button onClick={onAdd}>create</button>;
+      return (
+        <button data-testid="BUTTON_ADD_NODE" onClick={onAdd}>
+          create
+        </button>
+      );
     case ElementType.NODE: {
       const onRemoveNode = () =>
         actions({
           type: SchemaActionType.REMOVE_NODE,
           node: element.node,
         });
-      return <button onClick={onRemoveNode}>remove node</button>;
+      return (
+        <button data-testid="BUTTON_NODE_REMOVE" onClick={onRemoveNode}>
+          remove node
+        </button>
+      );
     }
     case ElementType.PORT:
       return <div>port</div>;
