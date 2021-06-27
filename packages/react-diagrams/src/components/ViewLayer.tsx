@@ -1,3 +1,4 @@
+// @ts-nocheck
 import {
   FunctionComponent,
   memo,
@@ -6,7 +7,7 @@ import {
   useContext,
   useRef,
 } from "react";
-import { NodesLayer, LinksLayer } from "../components";
+import { NodesCanvas, LinksCanvas } from "../components";
 import { PositionContext, ScaleContext } from "../context";
 import { useRegisterElement } from "../hooks";
 import { ElementType } from "../types";
@@ -32,8 +33,8 @@ export const ViewLayer: FunctionComponent = memo(() => {
 
   return (
     <div className="viewLayer" style={viewLayerStyle} ref={ref}>
-      <NodesLayer />
-      <LinksLayer />
+      <NodesCanvas />
+      <LinksCanvas />
     </div>
   );
 });

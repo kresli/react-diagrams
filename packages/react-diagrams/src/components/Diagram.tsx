@@ -1,10 +1,19 @@
-import { FunctionComponent, memo, useEffect, useMemo } from "react";
-import { Canvas } from "./Canvas";
-import { Ctx, useContextMenu } from "../hooks";
+import {
+  CSSProperties,
+  FunctionComponent,
+  memo,
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+} from "react";
+import { DiagramCanvas } from "./DiagramCanvas";
+import { Ctx, useContextMenu, useDrag } from "../hooks";
 import { DefaultTheme, ThemeProvider } from "styled-components";
-import { SchemaProvider } from "../components";
+import { LinksCanvas, NodesCanvas, SchemaProvider } from "../components";
 import React from "react";
 import { ElementType, Schema, SchemaNode } from "../types";
+import { clientToWorldPosition } from "../functions";
 
 type ContextMenuElement =
   | { type: ElementType.CANVAS }
@@ -49,6 +58,7 @@ const useCtxMenu = (schema: Ctx, ContextMenuContent?: DiagramContextMenu) => {
   useEffect(() => {
     setContextTrigger(canvas);
   }, [canvas, setContextTrigger]);
+
   return useMemo(() => {
     if (!ContextMenuContent || !contextPosition) return null;
     const [clientX, clientY] = contextPosition;
@@ -90,14 +100,49 @@ const useCtxMenu = (schema: Ctx, ContextMenuContent?: DiagramContextMenu) => {
 
 export const Diagram: FunctionComponent<Props> = memo(
   ({ schema, contextMenu }) => {
-    const ContextMenu = useCtxMenu(schema, contextMenu);
-    return (
-      <ThemeProvider theme={theme}>
-        <SchemaProvider schema={schema}>
-          <Canvas />
-          {ContextMenu}
-        </SchemaProvider>
-      </ThemeProvider>
+    const {
+      nodes,
+      links,
+      scale,
+      position,
+      setViewRef,
+      moveNode,
+      moveCanvas,
+      zoomCanvas,
+    } = schema;
+    const [left, top] = position;
+    // const ContextMenu = useCtxMenu(schema, contextMenu);
+    const viewLayerStyle = useMemo(
+      () =>
+        ({
+          position: "absolute",
+          transform: `scale(${scale})`,
+          transformOrigin: "top left",
+          left,
+          top,
+        } as CSSProperties),
+      [left, top, scale]
     );
+
+    return (
+      <DiagramCanvas onCanvasMove={moveCanvas} onCanvasZoom={zoomCanvas}>
+        <div className="viewLayer" style={viewLayerStyle} ref={setViewRef}>
+          <NodesCanvas nodes={nodes} onNodeMove={moveNode} />
+          <LinksCanvas links={links} />
+        </div>
+        {/* {ContextMenu} */}
+      </DiagramCanvas>
+    );
+    // return (
+    //   <ThemeProvider theme={theme}>
+    //     <SchemaProvider schema={schema}>
+    //       <DiagramCanvas>
+    //         <NodesCanvas />
+    //         <LinksCanvas />
+    //       {ContextMenu}
+    //       </DiagramCanvas>
+    //     </SchemaProvider>
+    //   </ThemeProvider>
+    // );
   }
 );

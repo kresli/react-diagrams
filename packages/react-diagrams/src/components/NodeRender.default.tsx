@@ -81,9 +81,13 @@ const Content = styled.div`
 `;
 
 export const NodeRenderDefault: FunctionComponent<NodeRenderProps> = memo(
-  ({ inputs, outputs, label }) => (
+  ({ inputs, outputs, label, registerDragHolder }) => (
     <NodeRenderRoot>
-      <Title>{label}</Title>
+      <div style={{ display: "flex" }}>
+        <Title>{label}</Title>
+        <div ref={registerDragHolder}>✋</div>
+      </div>
+
       <Content className="io">
         <div
           className="Inputs"

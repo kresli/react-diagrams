@@ -49,29 +49,29 @@ function useNodeObserver(elementId: string): [number, number] {
 }
 
 export const DiagramLink: FunctionComponent<{ link: SchemaLink }> = memo(
-  ({ link: linkData }) => {
-    const action = useAction();
-    const start = useNodeObserver(linkData.input);
-    const end = useNodeObserver(linkData.output);
-    const handleDoubleClick = useCallback(() => {
-      action({ type: SchemaActionType.LINK_REMOVE, link: linkData });
-    }, [action, linkData]);
+  ({ link }) => {
+    // const action = useAction();
+    // const start = useNodeObserver(linkData.input);
+    // const end = useNodeObserver(linkData.output);
+    // const handleDoubleClick = useCallback(() => {
+    //   action({ type: SchemaActionType.LINK_REMOVE, link: linkData });
+    // }, [action, linkData]);
     const Render = useMemo(
-      () => linkData.render || LinkRenderDefault,
-      [linkData.render]
+      () => link.render || LinkRenderDefault,
+      [link.render]
     );
-    const link = useMemo(() => {
-      const { render, ...data } = linkData;
-      return {
-        ...data,
-        start,
-        end,
-      };
-    }, [end, linkData, start]);
+    // const link = useMemo(() => {
+    //   const { render, ...data } = linkData;
+    //   return {
+    //     ...data,
+    //     start,
+    //     end,
+    //   };
+    // }, [end, linkData, start]);
 
     return (
-      <g pointerEvents="visible" onDoubleClick={handleDoubleClick}>
-        <Render {...link} />
+      <g pointerEvents="visible">
+        <Render {...link} start={[50, 50]} end={[300, 300]} />
       </g>
     );
   }

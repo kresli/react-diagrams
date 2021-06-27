@@ -1,5 +1,10 @@
-import { useCallback, useMemo, useReducer } from "react";
-import { SchemaActionType, schemaReducer, validateSchema } from "../functions";
+import React, { useCallback, useMemo, useReducer } from "react";
+import {
+  clientToWorldPosition,
+  SchemaActionType,
+  schemaReducer,
+  validateSchema,
+} from "../functions";
 import { createSchema } from "../functions/createSchema";
 import { getElementId, getELementType } from "../functions/getElementType";
 import { ElementType, Schema, SchemaNode } from "../types";
@@ -39,13 +44,13 @@ export const useSchema = (initSchema?: Partial<Schema>) => {
     [nodes]
   );
 
-  const addNode = (node: Partial<SchemaNode>) => {
+  const addNode = useCallback((node: Partial<SchemaNode>) => {
     dispatchAction({ type: SchemaActionType.ADD_NODE, node });
-  };
+  }, []);
 
-  const removeNode = (node: SchemaNode) => {
+  const removeNode = useCallback((node: SchemaNode) => {
     dispatchAction({ type: SchemaActionType.REMOVE_NODE, node });
-  };
+  }, []);
 
   // @todo rename to elementsTypesFromPoint
   const elementsFromPoint = useCallback(
@@ -60,35 +65,65 @@ export const useSchema = (initSchema?: Partial<Schema>) => {
     []
   );
 
-  return useMemo(
-    () => ({
-      dispatchAction,
-      elementsFromPoint,
-      clientToLocalPosition,
-      clientToNode,
-      addNode,
-      removeNode,
-      dragLink,
-      nodes,
-      links,
-      scale,
-      position,
-      view: viewRef,
-      canvas: canvasRef,
-    }),
-    [
-      canvasRef,
-      clientToLocalPosition,
-      clientToNode,
-      dragLink,
-      elementsFromPoint,
-      links,
-      nodes,
-      position,
-      scale,
-      viewRef,
-    ]
+  const setViewRef = useCallback((element: HTMLElement | null) => {
+    if (!element) return;
+    dispatchAction({
+      type: SchemaActionType.REGISTER_ELEMENT_TYPE,
+      elementType: ElementType.VIEW,
+      element,
+      register: true,
+    });
+  }, []);
+
+  const moveNode = useCallback(
+    (node: SchemaNode, movementX: number, movementY: number) => {
+      if (!viewRef) throw new Error("should be able call without view");
+      dispatchAction({
+        type: SchemaActionType.NODE_MOVE,
+        movementX,
+        movementY,
+        node,
+      });
+    },
+    [viewRef]
   );
+
+  const moveCanvas = useCallback((movementX, movementY) => {
+    dispatchAction({
+      type: SchemaActionType.VIEWPORT_MOVE,
+      movementY,
+      movementX,
+    });
+  }, []);
+
+  const zoomCanvas = useCallback(({ clientY, clientX, deltaY }: WheelEvent) => {
+    dispatchAction({
+      type: SchemaActionType.VIEWPORT_ZOOM,
+      clientX,
+      clientY,
+      deltaY,
+    });
+  }, []);
+
+  return {
+    moveCanvas,
+    dispatchAction,
+    elementsFromPoint,
+    clientToLocalPosition,
+    clientToNode,
+    addNode,
+    removeNode,
+    dragLink,
+    nodes,
+    links,
+    scale,
+    position,
+    view: viewRef,
+    setViewRef,
+    canvas: canvasRef,
+    moveNode,
+    zoomCanvas,
+  };
 };
 
 export type Ctx = ReturnType<typeof useSchema>;

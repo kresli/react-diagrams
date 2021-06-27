@@ -6,7 +6,7 @@ import React from "react";
 export const Gate: FunctionComponent<{ port: SchemaPort }> = ({ port }) => {
   const { id } = port;
   const gateRef = useRef<HTMLDivElement | null>(null);
-  useRegisterElement(gateRef, ElementType.GATE, id);
+  // useRegisterElement(gateRef, ElementType.GATE, id);
   return (
     <div
       ref={gateRef}
