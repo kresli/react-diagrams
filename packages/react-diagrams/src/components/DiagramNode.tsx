@@ -20,7 +20,7 @@ interface Props {
 }
 
 export const DiagramNode: FunctionComponent<Props> = memo(
-  ({ node, onMove: onPositionChange }) => {
+  ({ node, onMove }) => {
     // const action = useAction();
     // const node = useMemo(
     //   () => ({
@@ -70,9 +70,9 @@ export const DiagramNode: FunctionComponent<Props> = memo(
       dragHolder,
       useCallback(
         (movementX, movementY) => {
-          onPositionChange(node, movementX, movementY);
+          onMove(node, movementX, movementY);
         },
-        [node, onPositionChange]
+        [node, onMove]
       )
     );
     return (

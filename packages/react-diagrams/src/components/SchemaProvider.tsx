@@ -16,7 +16,7 @@ export const SchemaProvider: FunctionComponent<{
 }> = ({ children, schema }) => {
   return (
     <ViewportRefContext.Provider value={schema.view}>
-      <SchemaActionContext.Provider value={schema.dispatchAction}>
+      <SchemaActionContext.Provider value={schema.action}>
         <NodesContext.Provider value={schema.nodes}>
           <LinksContext.Provider value={schema.links}>
             <ScaleContext.Provider value={schema.scale}>

@@ -7,10 +7,15 @@ import {
   useContext,
   useCallback,
 } from "react";
-import { ElementType, SchemaLink } from "../types";
+import { ElementType, Position, SchemaLink } from "../types";
 import { LinkRenderDefault } from "../components";
 import { useAction } from "../hooks";
-import { getELementType, queryElements, SchemaActionType } from "../functions";
+import {
+  getELementType,
+  queryElement,
+  queryElements,
+  SchemaActionType,
+} from "../functions";
 import { ScaleContext, ViewportRefContext } from "../context";
 import React from "react";
 
@@ -48,8 +53,18 @@ function useNodeObserver(elementId: string): [number, number] {
   return useMemo(() => [x, y], [x, y]);
 }
 
-export const DiagramLink: FunctionComponent<{ link: SchemaLink }> = memo(
-  ({ link }) => {
+type GateId = string;
+
+interface Props {
+  link: SchemaLink;
+  inputNodePostion: Position;
+  outputNodePosition: Position;
+}
+
+function stub(value: any) {}
+
+export const DiagramLink: FunctionComponent<Props> = memo(
+  ({ link, inputNodePostion, outputNodePosition }) => {
     // const action = useAction();
     // const start = useNodeObserver(linkData.input);
     // const end = useNodeObserver(linkData.output);
@@ -68,10 +83,18 @@ export const DiagramLink: FunctionComponent<{ link: SchemaLink }> = memo(
     //     end,
     //   };
     // }, [end, linkData, start]);
-
+    // const start = registeredGatesPosition.get(link.input);
+    // const end = registeredGatesPosition.get(link.output);
+    const start: Position = useMemo(() => {
+      stub(inputNodePostion);
+      const elem = queryElement(ElementType.GATE, link.input);
+      if (!elem) return [0, 0];
+      const { left, top } = elem.getBoundingClientRect();
+      return [left, top];
+    }, [inputNodePostion, link.input]);
     return (
       <g pointerEvents="visible">
-        <Render {...link} start={[50, 50]} end={[300, 300]} />
+        <Render {...link} start={start} end={[300, 300]} />
       </g>
     );
   }
