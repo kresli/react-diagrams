@@ -4,68 +4,30 @@ import {
   useCallback,
   useLayoutEffect,
   useMemo,
-  useRef,
   useState,
 } from "react";
 import { NodeRenderDefault } from ".";
-import { SchemaActionType } from "../functions/schema.reducer";
-import { useAction, useDrag } from "../hooks";
+import { useContextMenu, useDrag, useRegElement } from "../hooks";
 import { ElementType, SchemaNode } from "../types";
-import { useRegisterElement } from "../hooks";
-import React from "react";
-import { clientToWorldPosition } from "../functions";
+import { DiagramContextMenu } from "./Diagram";
 
 interface Props {
   node: SchemaNode;
   onMove: (node: SchemaNode, movementX: number, movementY: number) => void;
   recalculatePortsPosition: (node: SchemaNode) => void;
+  nodeContextMenu: DiagramContextMenu;
 }
 
 export const DiagramNode: FunctionComponent<Props> = memo(
-  ({ node, onMove, recalculatePortsPosition }) => {
-    // const action = useAction();
-    // const node = useMemo(
-    //   () => ({
-    //     render: NodeRenderDefault,
-    //     ...nodeData,
-    //   }),
-    //   [nodeData]
-    // );
+  ({
+    node,
+    onMove,
+    recalculatePortsPosition,
+    nodeContextMenu: NodeContextMenu,
+  }) => {
     const { position, id, render } = node;
     const [left, top] = position;
-    // const ref = useRef<HTMLDivElement | null>(null);
-    // const Render = nodeData.render;
-    // const props = useMemo(
-    //   () => ({
-    //     ...node,
-    //     inputs: inputs?.map((input) => ({
-    //       ...input,
-    //       key: input.id,
-    //     })),
-    //     outputs: outputs?.map((output) => ({
-    //       ...output,
-    //       key: output.id,
-    //     })),
-    //     data: data,
-    //   }),
-    //   [data, inputs, outputs, node]
-    // );
-
-    // useRegisterElement(ref, ElementType.NODE, node.id);
-    // useDrag(
-    //   ref,
-    //   useCallback(
-    //     (movementX, movementY) => {
-    //       action({
-    //         type: SchemaActionType.NODE_MOVE,
-    //         movementX,
-    //         movementY,
-    //         node,
-    //       });
-    //     },
-    //     [action, node]
-    //   )
-    // );
+    const [ref, setRef] = useState<HTMLElement | null>(null);
     const Render = useMemo(() => render || NodeRenderDefault, [render]);
     const [dragHolder, setDragHolder] = useState<HTMLElement | null>(null);
     useDrag(
@@ -80,6 +42,8 @@ export const DiagramNode: FunctionComponent<Props> = memo(
     useLayoutEffect(() => {
       recalculatePortsPosition(node);
     });
+    useRegElement(ref, ElementType.NODE, id);
+    const ContextMenu = useContextMenu(ref, NodeContextMenu);
     return (
       <div
         className="DiagramNode"
@@ -89,8 +53,19 @@ export const DiagramNode: FunctionComponent<Props> = memo(
           top,
           cursor: "default",
         }}
+        ref={setRef}
       >
         <Render key={id} {...node} registerDragHolder={setDragHolder} />
+        <ContextMenu />
+        {/* <ContextMenu> */}
+        {/* {(clientX, clientY, schema) => (
+            <NodeContextMenu
+              clientX={clientX}
+              clientY={clientY}
+              schema={schema}
+            />
+          )} */}
+        {/* </ContextMenu> */}
       </div>
     );
   }

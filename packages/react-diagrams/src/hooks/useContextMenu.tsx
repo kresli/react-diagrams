@@ -1,9 +1,20 @@
-import { FunctionComponent, memo, useEffect, useMemo, useState } from "react";
+import {
+  FunctionComponent,
+  memo,
+  ReactNode,
+  useEffect,
+  useMemo,
+  useState,
+} from "react";
 import React from "react";
+import { Ctx } from ".";
+import { DiagramContextMenu } from "../components";
 
 // @TODO: optimize
-export const useContextMenu = () => {
-  const [triggerRef, setTriggerRef] = useState<HTMLElement | null>(null);
+export const useContextMenu = (
+  triggerRef: HTMLElement | null,
+  ContextContent: DiagramContextMenu
+): FunctionComponent => {
   const [position, setPosition] = useState<[number, number] | null>(null);
   useEffect(() => {
     if (!triggerRef) return;
@@ -20,42 +31,35 @@ export const useContextMenu = () => {
       window.removeEventListener("click", onMouseDown);
     };
   }, [triggerRef]);
-  const ContextMenu: FunctionComponent = useMemo(() => {
-    return ({ children }) => (
-      <>
-        {position && (
-          <ContextMenuPopup x={position[0]} y={position[1]}>
-            {children}
-          </ContextMenuPopup>
-        )}
-      </>
+  const contextMenu = useMemo(() => {
+    if (!position) return <></>;
+    const [clientX, clientY] = position;
+    // console.log("show context");
+    return (
+      <ContextMenuPopup x={clientX} y={clientY}>
+        <ContextContent clientX={clientX} clientY={clientY} />
+      </ContextMenuPopup>
     );
-  }, [position]);
+  }, [ContextContent, position]);
 
-  return useMemo(
-    () => ({
-      ContextMenu,
-      setContextTrigger: setTriggerRef,
-      contextPosition: position,
-    }),
-    [ContextMenu, position]
-  );
+  return () => contextMenu;
 };
 
-const ContextMenuPopup: FunctionComponent<{ x: number; y: number }> = memo(
-  ({ children, x, y }) => {
-    return (
-      <div
-        style={{
-          background: "white",
-          position: "fixed",
-          left: x,
-          top: y,
-          zIndex: 99999,
-        }}
-      >
-        {children}
-      </div>
-    );
-  }
-);
+const ContextMenuPopup: FunctionComponent<{
+  x: number;
+  y: number;
+}> = memo(({ children, x, y }) => {
+  return (
+    <div
+      style={{
+        background: "white",
+        position: "fixed",
+        left: x,
+        top: y,
+        zIndex: 99999,
+      }}
+    >
+      {children}
+    </div>
+  );
+});

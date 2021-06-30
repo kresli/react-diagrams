@@ -71,7 +71,6 @@ export type SchemaAction =
     }
   | {
       type: SchemaActionType.CREATE_DRAGGING_LINK;
-      // direction: DragLinkDirection;
       portId: string;
       clientX: number;
       clientY: number;
@@ -293,12 +292,15 @@ export const schemaReducer = (schema: Schema, action: SchemaAction): Schema => {
         const elem = queryElement(ElementType.GATE, port.id);
         if (!elem) return;
         const { left, top } = elem.getBoundingClientRect();
-        portNodePosition[port.id] = clientToWorldPosition(
-          [left, top],
-          world,
-          schema.scale
-        );
-        console.log(portNodePosition);
+        const positon = clientToWorldPosition([left, top], world, schema.scale);
+        const original = portNodePosition[port.id];
+        if (
+          original &&
+          positon[0] === original[0] &&
+          positon[1] === original[1]
+        )
+          return;
+        portNodePosition[port.id] = positon;
       });
       return {
         ...schema,

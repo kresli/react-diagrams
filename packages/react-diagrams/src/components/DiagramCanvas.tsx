@@ -1,22 +1,13 @@
 import {
   memo,
-  useRef,
-  useCallback,
   FunctionComponent,
-  useContext,
   useState,
-  createContext,
   useMemo,
+  CSSProperties,
 } from "react";
 import styled from "styled-components";
-import { useAction, useDrag, useRegisterElement, useWheel } from "../hooks";
-import { ElementType } from "../types";
-import { ViewLayer } from ".";
-import {
-  clientToWorldPosition as _clientToWorldPosition,
-  SchemaActionType,
-} from "../functions";
-import React from "react";
+import { useContextMenu, useDrag, useWheel } from "../hooks";
+import { DiagramContextMenu } from "./Diagram";
 
 const DiagramRoot = styled.div`
   font-size: 14px;
@@ -34,85 +25,52 @@ const DiagramRoot = styled.div`
   overflow: hidden;
 `;
 
-// const useUtils = () => useUtilsContext();
-
-// const useUtilsContext = () => {
-//   const viewport = useRef<HTMLElement | null>(null);
-//   const setViewport = useCallback(
-//     (element: HTMLElement | null) => (viewport.current = element),
-//     []
-//   );
-
-//   const clientToWorldPosition = useCallback(
-//     (left: number, top: number) =>
-//       viewport.current
-//         ? _clientToWorldPosition([left, top], viewport.current, scale)
-//         : [0, 0],
-//     []
-//   );
-
-//   return useMemo(
-//     () => ({
-//       setViewport,
-//       viewport: viewport.current,
-//       clientToWorldPosition,
-//     }),
-//     []
-//   );
-// };
-
-// const UtilsContext = createContext<ReturnType<typeof useUtilsContext>>(null);
-
 interface Props {
   onCanvasMove: (movementX: number, movementY: number) => void;
   onCanvasZoom: (ev: WheelEvent) => void;
+  canvasContextMenu: DiagramContextMenu;
+  worldX: number;
+  worldY: number;
+  scale: number;
+  registerWorldRef: (element: HTMLElement | null) => void;
 }
 
+const World = styled.div<{ scale: number; worldX: number; worldY: number }>(
+  ({ scale, worldX, worldY }) => ({
+    position: "absolute",
+    transform: `scale(${scale})`,
+    transformOrigin: "top left",
+    left: worldX,
+    top: worldY,
+  })
+);
+
 export const DiagramCanvas: FunctionComponent<Props> = memo(
-  ({ children, onCanvasMove, onCanvasZoom }) => {
+  ({
+    children,
+    onCanvasMove,
+    onCanvasZoom,
+    canvasContextMenu: CanvasContextMenuContent,
+    worldX,
+    worldY,
+    scale,
+    registerWorldRef,
+  }) => {
     const [ref, setRef] = useState<HTMLElement | null>(null);
     useDrag(ref, onCanvasMove);
     useWheel(ref, onCanvasZoom);
-    // const action = useAction();
-    // useRegisterElement(ref, ElementType.CANVAS);
-    // useDrag(
-    //   ref,
-    //   useCallback(
-    //     (movementX, movementY) => {
-    //       action({
-    //         type: SchemaActionType.VIEWPORT_MOVE,
-    //         movementX,
-    //         movementY,
-    //       });
-    //     },
-    //     [action]
-    //   )
-    // );
-    // useWheel(
-    //   ref,
-    //   useCallback(
-    //     (ev) => {
-    //       ev.stopImmediatePropagation();
-    //       ev.preventDefault();
-    //       const { clientX, clientY, deltaY } = ev;
-    //       action({
-    //         type: SchemaActionType.VIEWPORT_ZOOM,
-    //         clientX,
-    //         clientY,
-    //         deltaY,
-    //       });
-    //     },
-    //     [action]
-    //   )
-    // );
-    // const viewportRef = useRef<HTMLDivElement | null>(null);
-    // const utils = useUtilsContext();
-
+    const ContextMenu = useContextMenu(ref, CanvasContextMenuContent);
     return (
       <DiagramRoot className="Diagram" data-testid="canvas" ref={setRef}>
-        {/* <UtilsContext.Provider value={utils}> */}
-        <div className="Viewport">{children}</div>
-        {/* </UtilsContext.Provider> */}
+        <World
+          ref={registerWorldRef}
+          worldX={worldX}
+          worldY={worldY}
+          scale={scale}
+        >
+          {children}
+        </World>
+        <ContextMenu />
       </DiagramRoot>
     );
   }
