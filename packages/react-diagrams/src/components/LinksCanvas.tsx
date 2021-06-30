@@ -12,20 +12,6 @@ interface Props {
 
 export const LinksCanvas: FunctionComponent<Props> = memo(
   ({ links, portNodePosition }) => {
-    // const dragLink = useContext(DragLinkContext);
-    // const { zIndex } = useTheme();
-    // const links = useMemo(
-    //   () =>
-    //     linksData.map((link) => {
-    //       const { isArray } = Array;
-    //       const { input, output } = link;
-    //       const key = `${isArray(input) ? "_" : input}${
-    //         isArray(output) ? "_" : output
-    //       }`;
-    //       return <DiagramLink key={key} link={link} />;
-    //     }),
-    //   [linksData]
-    // );
     const renderLinks = useMemo(
       () =>
         links.map((link) => {

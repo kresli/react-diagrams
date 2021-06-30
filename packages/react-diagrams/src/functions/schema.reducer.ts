@@ -5,6 +5,7 @@ import {
   SchemaNode,
   Position,
   SchemaDragLink,
+  SchemaPort,
 } from "../types";
 import { v4 } from "uuid";
 import { clientToWorldPosition } from "./clientToWorldPosition";
@@ -23,7 +24,7 @@ export enum SchemaActionType {
   CREATE_DRAGGING_LINK = "CREATE_DRAGGING_LINK",
   MOVE_DRAGGING_LINK = "MOVE_DRAGGING_LINK",
   DELETE_DRAGGING_LINK = "DELETE_DRAGGING_LINK",
-  RECALCULATE_NODE_POSITION = "RECALCULATE_NODE_POSITION",
+  RECALCULATE_PORTS_POSITION = "RECALCULATE_PORTS_POSITION",
 }
 
 export type SchemaAction =
@@ -84,7 +85,7 @@ export type SchemaAction =
       type: SchemaActionType.DELETE_DRAGGING_LINK;
     }
   | {
-      type: SchemaActionType.RECALCULATE_NODE_POSITION;
+      type: SchemaActionType.RECALCULATE_PORTS_POSITION;
       node: SchemaNode;
     };
 export const schemaReducer = (schema: Schema, action: SchemaAction): Schema => {
@@ -275,11 +276,16 @@ export const schemaReducer = (schema: Schema, action: SchemaAction): Schema => {
         dragLink: null,
       };
     }
-    case SchemaActionType.RECALCULATE_NODE_POSITION: {
-      // @todo: try use action.node directly
-      const node = schema.nodes.find(({ id }) => id === action.node.id);
+    case SchemaActionType.RECALCULATE_PORTS_POSITION: {
+      const { node } = action;
       if (!node) return schema;
-      const ports = [...(node.inputs || []), ...(node.outputs || [])];
+      if (!node.inputs && !node.outputs) return schema;
+      const world = schema.viewRef;
+      if (!world) return schema;
+
+      let ports: SchemaPort[] = [];
+      if (node.inputs) ports = [...node.inputs];
+      if (node.outputs) ports = [...node.outputs];
       const portNodePosition = {
         ...schema.portNodePosition,
       };
@@ -287,7 +293,12 @@ export const schemaReducer = (schema: Schema, action: SchemaAction): Schema => {
         const elem = queryElement(ElementType.GATE, port.id);
         if (!elem) return;
         const { left, top } = elem.getBoundingClientRect();
-        portNodePosition[port.id] = [left, top];
+        portNodePosition[port.id] = clientToWorldPosition(
+          [left, top],
+          world,
+          schema.scale
+        );
+        console.log(portNodePosition);
       });
       return {
         ...schema,

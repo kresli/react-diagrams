@@ -1,13 +1,8 @@
-import React, { useCallback, useMemo, useReducer } from "react";
-import {
-  clientToWorldPosition,
-  SchemaActionType,
-  schemaReducer,
-  validateSchema,
-} from "../functions";
+import React, { useCallback, useReducer } from "react";
+import { SchemaActionType, schemaReducer, validateSchema } from "../functions";
 import { createSchema } from "../functions/createSchema";
 import { getElementId, getELementType } from "../functions/getElementType";
-import { ElementType, Position, Schema, SchemaNode } from "../types";
+import { ElementType, Schema, SchemaNode } from "../types";
 
 export const useSchema = (initSchema?: Partial<Schema>) => {
   const schema = createSchema(initSchema);
@@ -26,8 +21,8 @@ export const useSchema = (initSchema?: Partial<Schema>) => {
     dispatchAction,
   ] = useReducer(schemaReducer, schema);
 
-  const recalculateNodePosition = useCallback((node: SchemaNode) => {
-    dispatchAction({ type: SchemaActionType.RECALCULATE_NODE_POSITION, node });
+  const recalculatePortsPosition = useCallback((node: SchemaNode) => {
+    dispatchAction({ type: SchemaActionType.RECALCULATE_PORTS_POSITION, node });
   }, []);
 
   // @todo rename local to world as per new naming convention
@@ -120,7 +115,6 @@ export const useSchema = (initSchema?: Partial<Schema>) => {
 
   return {
     moveCanvas,
-    // dispatchAction,
     action: dispatchAction,
     elementsFromPoint,
     clientToLocalPosition,
@@ -138,7 +132,7 @@ export const useSchema = (initSchema?: Partial<Schema>) => {
     moveNode,
     zoomCanvas,
     portNodePosition,
-    recalculateNodePosition,
+    recalculatePortsPosition,
   };
 };
 

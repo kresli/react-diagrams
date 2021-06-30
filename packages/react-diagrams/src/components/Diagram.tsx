@@ -110,7 +110,7 @@ export const Diagram: FunctionComponent<Props> = memo(
       moveCanvas,
       zoomCanvas,
       portNodePosition,
-      recalculateNodePosition,
+      recalculatePortsPosition: recalculateNodePosition,
     } = schema;
     const [left, top] = position;
     // const ContextMenu = useCtxMenu(schema, contextMenu);
