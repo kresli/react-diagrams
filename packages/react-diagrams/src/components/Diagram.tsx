@@ -110,6 +110,7 @@ export const Diagram: FunctionComponent<Props> = memo(
       moveCanvas,
       zoomCanvas,
       portNodePosition,
+      recalculateNodePosition,
     } = schema;
     const [left, top] = position;
     // const ContextMenu = useCtxMenu(schema, contextMenu);
@@ -128,7 +129,11 @@ export const Diagram: FunctionComponent<Props> = memo(
     return (
       <DiagramCanvas onCanvasMove={moveCanvas} onCanvasZoom={zoomCanvas}>
         <div className="viewLayer" style={viewLayerStyle} ref={setViewRef}>
-          <NodesCanvas nodes={nodes} onNodeMove={moveNode} />
+          <NodesCanvas
+            nodes={nodes}
+            onNodeMove={moveNode}
+            recalculatePortsPosition={recalculateNodePosition}
+          />
           <LinksCanvas links={links} portNodePosition={portNodePosition} />
         </div>
         {/* {ContextMenu} */}

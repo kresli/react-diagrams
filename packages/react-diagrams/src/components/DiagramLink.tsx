@@ -85,16 +85,16 @@ export const DiagramLink: FunctionComponent<Props> = memo(
     // }, [end, linkData, start]);
     // const start = registeredGatesPosition.get(link.input);
     // const end = registeredGatesPosition.get(link.output);
-    const start: Position = useMemo(() => {
-      stub(inputNodePostion);
-      const elem = queryElement(ElementType.GATE, link.input);
-      if (!elem) return [0, 0];
-      const { left, top } = elem.getBoundingClientRect();
-      return [left, top];
-    }, [inputNodePostion, link.input]);
+    // const start: Position = useMemo(() => {
+    //   stub(inputNodePostion);
+    //   const elem = queryElement(ElementType.GATE, link.input);
+    //   if (!elem) return [0, 0];
+    //   const { left, top } = elem.getBoundingClientRect();
+    //   return [left, top];
+    // }, [inputNodePostion, link.input]);
     return (
       <g pointerEvents="visible">
-        <Render {...link} start={start} end={[300, 300]} />
+        <Render {...link} start={inputNodePostion} end={outputNodePosition} />
       </g>
     );
   }

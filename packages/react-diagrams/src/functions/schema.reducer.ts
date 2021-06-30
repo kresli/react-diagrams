@@ -9,7 +9,7 @@ import {
 import { v4 } from "uuid";
 import { clientToWorldPosition } from "./clientToWorldPosition";
 import { setElementType } from ".";
-import { setElementId } from "./getElementType";
+import { queryElement, setElementId } from "./getElementType";
 
 export enum SchemaActionType {
   VIEWPORT_MOVE = "VIEWPORT_MOVE",
@@ -23,6 +23,7 @@ export enum SchemaActionType {
   CREATE_DRAGGING_LINK = "CREATE_DRAGGING_LINK",
   MOVE_DRAGGING_LINK = "MOVE_DRAGGING_LINK",
   DELETE_DRAGGING_LINK = "DELETE_DRAGGING_LINK",
+  RECALCULATE_NODE_POSITION = "RECALCULATE_NODE_POSITION",
 }
 
 export type SchemaAction =
@@ -81,6 +82,10 @@ export type SchemaAction =
     }
   | {
       type: SchemaActionType.DELETE_DRAGGING_LINK;
+    }
+  | {
+      type: SchemaActionType.RECALCULATE_NODE_POSITION;
+      node: SchemaNode;
     };
 export const schemaReducer = (schema: Schema, action: SchemaAction): Schema => {
   switch (action.type) {
@@ -268,6 +273,25 @@ export const schemaReducer = (schema: Schema, action: SchemaAction): Schema => {
       return {
         ...schema,
         dragLink: null,
+      };
+    }
+    case SchemaActionType.RECALCULATE_NODE_POSITION: {
+      // @todo: try use action.node directly
+      const node = schema.nodes.find(({ id }) => id === action.node.id);
+      if (!node) return schema;
+      const ports = [...(node.inputs || []), ...(node.outputs || [])];
+      const portNodePosition = {
+        ...schema.portNodePosition,
+      };
+      ports.forEach((port) => {
+        const elem = queryElement(ElementType.GATE, port.id);
+        if (!elem) return;
+        const { left, top } = elem.getBoundingClientRect();
+        portNodePosition[port.id] = [left, top];
+      });
+      return {
+        ...schema,
+        portNodePosition,
       };
     }
     default:

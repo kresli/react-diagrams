@@ -69,6 +69,7 @@ export interface SchemaDragLink {
 export interface Schema {
   dragLink: SchemaDragLink | null;
   registeredElements: RegisteredElements;
+  portNodePosition: Record<string, Position>;
   viewRef: null | HTMLDivElement;
   canvasRef: null | HTMLDivElement;
   position: [number, number];

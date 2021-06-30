@@ -10,20 +10,25 @@ import { getElementId, getELementType } from "../functions/getElementType";
 import { ElementType, Position, Schema, SchemaNode } from "../types";
 
 export const useSchema = (initSchema?: Partial<Schema>) => {
-  const portNodePosition: Record<string, Position> = {};
   const schema = createSchema(initSchema);
   validateSchema(schema);
   const [
-    { links, nodes, position, scale, viewRef, dragLink, canvasRef },
+    {
+      links,
+      nodes,
+      position,
+      scale,
+      viewRef,
+      dragLink,
+      canvasRef,
+      portNodePosition,
+    },
     dispatchAction,
   ] = useReducer(schemaReducer, schema);
 
-  // register ports
-  schema.nodes.forEach((node) => {
-    const { inputs, outputs, position } = node;
-    inputs?.forEach(({ id }) => (portNodePosition[id] = position));
-    outputs?.forEach(({ id }) => (portNodePosition[id] = position));
-  });
+  const recalculateNodePosition = useCallback((node: SchemaNode) => {
+    dispatchAction({ type: SchemaActionType.RECALCULATE_NODE_POSITION, node });
+  }, []);
 
   // @todo rename local to world as per new naming convention
   const clientToLocalPosition = useCallback(
@@ -133,6 +138,7 @@ export const useSchema = (initSchema?: Partial<Schema>) => {
     moveNode,
     zoomCanvas,
     portNodePosition,
+    recalculateNodePosition,
   };
 };
 

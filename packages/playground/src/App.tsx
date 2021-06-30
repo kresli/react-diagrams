@@ -9,6 +9,7 @@ import {
 const initialSchema: Schema = {
   dragLink: null,
   registeredElements: new Map(),
+  portNodePosition: {},
   canvasRef: null,
   viewRef: null,
   nodes: [

@@ -32,8 +32,7 @@ export const LinksCanvas: FunctionComponent<Props> = memo(
           const key = `${link.input}-${link.output}`;
           const inputNodePosition = portNodePosition[link.input];
           const outputNodePosition = portNodePosition[link.output];
-          if (!inputNodePosition || !outputNodePosition)
-            throw new Error("expected port to be registered");
+          if (!inputNodePosition || !outputNodePosition) return null;
           return (
             <DiagramLink
               key={key}

@@ -2,6 +2,7 @@ import {
   FunctionComponent,
   memo,
   useCallback,
+  useLayoutEffect,
   useMemo,
   useRef,
   useState,
@@ -17,10 +18,11 @@ import { clientToWorldPosition } from "../functions";
 interface Props {
   node: SchemaNode;
   onMove: (node: SchemaNode, movementX: number, movementY: number) => void;
+  recalculatePortsPosition: (node: SchemaNode) => void;
 }
 
 export const DiagramNode: FunctionComponent<Props> = memo(
-  ({ node, onMove }) => {
+  ({ node, onMove, recalculatePortsPosition }) => {
     // const action = useAction();
     // const node = useMemo(
     //   () => ({
@@ -75,6 +77,9 @@ export const DiagramNode: FunctionComponent<Props> = memo(
         [node, onMove]
       )
     );
+    useLayoutEffect(() => {
+      recalculatePortsPosition(node);
+    });
     return (
       <div
         className="DiagramNode"
