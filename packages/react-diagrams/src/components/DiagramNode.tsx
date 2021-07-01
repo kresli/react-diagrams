@@ -2,12 +2,15 @@ import {
   FunctionComponent,
   memo,
   useCallback,
+  useEffect,
   useLayoutEffect,
   useMemo,
   useState,
 } from "react";
+import styled from "styled-components";
 import { NodeRenderDefault } from ".";
-import { useContextMenu, useDrag, useRegElement } from "../hooks";
+import { useDrag, useRegElement } from "../hooks";
+import { useContextMenu } from "../hooks/useContextMenu";
 import { ElementType, SchemaNode } from "../types";
 import { DiagramContextMenu } from "./Diagram";
 
@@ -15,48 +18,60 @@ interface Props {
   node: SchemaNode;
   onMove: (node: SchemaNode, movementX: number, movementY: number) => void;
   recalculatePortsPosition: (node: SchemaNode) => void;
-  nodeContextMenu: DiagramContextMenu;
+  // nodeContextMenu: DiagramContextMenu;
+  onContextMenu: (ev: MouseEvent, node: SchemaNode) => void;
 }
+
+const DiagramNodeRoot = styled.div<{ left: number; top: number }>(
+  ({ left, top }) => ({
+    position: "absolute",
+    left,
+    top,
+    cursor: "default",
+  })
+);
 
 export const DiagramNode: FunctionComponent<Props> = memo(
   ({
     node,
     onMove,
     recalculatePortsPosition,
-    nodeContextMenu: NodeContextMenu,
+    // nodeContextMenu: NodeContextMenu,
+    onContextMenu,
   }) => {
     const { position, id, render } = node;
     const [left, top] = position;
     const [ref, setRef] = useState<HTMLElement | null>(null);
     const Render = useMemo(() => render || NodeRenderDefault, [render]);
     const [dragHolder, setDragHolder] = useState<HTMLElement | null>(null);
-    useDrag(
-      dragHolder,
-      useCallback(
-        (movementX, movementY) => {
-          onMove(node, movementX, movementY);
-        },
-        [node, onMove]
-      )
+    const onDrag = useCallback(
+      (movementX, movementY) => {
+        onMove(node, movementX, movementY);
+      },
+      [node, onMove]
     );
+    useDrag(dragHolder, onDrag);
     useLayoutEffect(() => {
       recalculatePortsPosition(node);
     });
     useRegElement(ref, ElementType.NODE, id);
-    const ContextMenu = useContextMenu(ref, NodeContextMenu);
+    // useContextMenu(ref, NodeContextMenu);
+    useContextMenu(
+      ref,
+      useCallback((ev) => onContextMenu(ev, node), [node, onContextMenu])
+    );
+    // useEffect(() => {
+    //   const context = (ev: MouseEvent) => {
+    //     ev.stopImmediatePropagation();
+    //     ev.preventDefault();
+    //     onContextMenu(ev, node);
+    //   };
+    //   ref?.addEventListener("contextmenu", context);
+    //   return () => ref?.removeEventListener("contextmenu", context);
+    // }, [node, onContextMenu, ref]);
     return (
-      <div
-        className="DiagramNode"
-        style={{
-          position: "absolute",
-          left,
-          top,
-          cursor: "default",
-        }}
-        ref={setRef}
-      >
+      <DiagramNodeRoot ref={setRef} left={left} top={top}>
         <Render key={id} {...node} registerDragHolder={setDragHolder} />
-        <ContextMenu />
         {/* <ContextMenu> */}
         {/* {(clientX, clientY, schema) => (
             <NodeContextMenu
@@ -66,7 +81,7 @@ export const DiagramNode: FunctionComponent<Props> = memo(
             />
           )} */}
         {/* </ContextMenu> */}
-      </div>
+      </DiagramNodeRoot>
     );
   }
 );

@@ -6,7 +6,8 @@ import {
   CSSProperties,
 } from "react";
 import styled from "styled-components";
-import { useContextMenu, useDrag, useWheel } from "../hooks";
+import { useDrag, useWheel } from "../hooks";
+import { useContextMenu } from "../hooks/useContextMenu";
 import { DiagramContextMenu } from "./Diagram";
 
 const DiagramRoot = styled.div`
@@ -28,7 +29,7 @@ const DiagramRoot = styled.div`
 interface Props {
   onCanvasMove: (movementX: number, movementY: number) => void;
   onCanvasZoom: (ev: WheelEvent) => void;
-  canvasContextMenu: DiagramContextMenu;
+  onContextMenu: (ev: MouseEvent) => void;
   worldX: number;
   worldY: number;
   scale: number;
@@ -50,7 +51,7 @@ export const DiagramCanvas: FunctionComponent<Props> = memo(
     children,
     onCanvasMove,
     onCanvasZoom,
-    canvasContextMenu: CanvasContextMenuContent,
+    onContextMenu,
     worldX,
     worldY,
     scale,
@@ -59,7 +60,8 @@ export const DiagramCanvas: FunctionComponent<Props> = memo(
     const [ref, setRef] = useState<HTMLElement | null>(null);
     useDrag(ref, onCanvasMove);
     useWheel(ref, onCanvasZoom);
-    const ContextMenu = useContextMenu(ref, CanvasContextMenuContent);
+    // useContextMenu(ref, CanvasContextMenuContent);
+    useContextMenu(ref, onContextMenu);
     return (
       <DiagramRoot className="Diagram" data-testid="canvas" ref={setRef}>
         <World
@@ -70,7 +72,7 @@ export const DiagramCanvas: FunctionComponent<Props> = memo(
         >
           {children}
         </World>
-        <ContextMenu />
+        {/* <ContextMenu /> */}
       </DiagramRoot>
     );
   }

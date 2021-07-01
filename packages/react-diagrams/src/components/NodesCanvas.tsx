@@ -1,4 +1,10 @@
-import { FunctionComponent, memo, useContext, useMemo } from "react";
+import {
+  FunctionComponent,
+  memo,
+  useCallback,
+  useContext,
+  useMemo,
+} from "react";
 import { useTheme } from "styled-components";
 import { DiagramNode } from ".";
 import { NodesContext } from "../context";
@@ -10,11 +16,11 @@ interface Props {
   nodes: SchemaNode[];
   onNodeMove: (node: SchemaNode, movementX: number, movementY: number) => void;
   recalculatePortsPosition: (node: SchemaNode) => void;
-  nodeContextMenu: DiagramContextMenu;
+  onNodeContextMenu: (ev: MouseEvent, node: SchemaNode) => void;
 }
 
 export const NodesCanvas: FunctionComponent<Props> = memo(
-  ({ nodes, onNodeMove, recalculatePortsPosition, nodeContextMenu }) => {
+  ({ nodes, onNodeMove, recalculatePortsPosition, onNodeContextMenu }) => {
     // const { zIndex } = useTheme();
     const renderNodes = useMemo(
       () =>
@@ -24,10 +30,11 @@ export const NodesCanvas: FunctionComponent<Props> = memo(
             node={node}
             onMove={onNodeMove}
             recalculatePortsPosition={recalculatePortsPosition}
-            nodeContextMenu={nodeContextMenu}
+            onContextMenu={onNodeContextMenu}
+            // nodeContextMenu={nodeContextMenu}
           />
         )),
-      [nodeContextMenu, nodes, onNodeMove, recalculatePortsPosition]
+      [nodes, onNodeContextMenu, onNodeMove, recalculatePortsPosition]
     );
     return (
       <div className="nodesLayer" style={{ position: "absolute" }}>

@@ -2,15 +2,16 @@ import {
   createContext,
   FunctionComponent,
   memo,
+  ReactNode,
+  useCallback,
   useContext,
-  useMemo,
   useRef,
+  useState,
 } from "react";
 import { DiagramCanvas } from "./DiagramCanvas";
 import { Ctx } from "../hooks";
-import { DefaultTheme } from "styled-components";
+import styled, { DefaultTheme } from "styled-components";
 import { LinksCanvas, NodesCanvas } from "../components";
-import { Schema } from "../types";
 import {
   CanvasContextMenuDefault,
   NodeContextMenuDefault,
@@ -20,14 +21,15 @@ import { SchemaActionContext } from "../context";
 export interface ContextMenuProps {
   clientX: number;
   clientY: number;
-  // schema: Ctx;
+  onClose: () => void;
 }
 
 export type DiagramContextMenu = FunctionComponent<ContextMenuProps>;
 
 interface Props {
   schema: Ctx;
-  canvasContextMenu: DiagramContextMenu;
+  // canvasContextMenu: DiagramContextMenu;
+  nodeContextMenu: DiagramContextMenu;
 }
 
 const theme: DefaultTheme = {
@@ -39,53 +41,6 @@ const theme: DefaultTheme = {
     borderRadius: "4pt",
   },
 };
-
-// const useCtxMenu = (schema: Ctx, ContextMenuContent?: DiagramContextMenu) => {
-//   const { ContextMenu, setContextTrigger, contextPosition } = useContextMenu();
-//   const { canvas, clientToNode, elementsFromPoint, clientToLocalPosition } =
-//     schema;
-//   useEffect(() => {
-//     setContextTrigger(canvas);
-//   }, [canvas, setContextTrigger]);
-
-//   return useMemo(() => {
-//     if (!ContextMenuContent || !contextPosition) return null;
-//     const [clientX, clientY] = contextPosition;
-//     const [type] = elementsFromPoint(clientX, clientY);
-//     const [worldX, worldY] = clientToLocalPosition(...contextPosition);
-//     const getElement = (): ContextMenuElement | null => {
-//       switch (type) {
-//         case ElementType.CANVAS:
-//           return { type };
-//         case ElementType.PORT:
-//           return { type };
-//         case ElementType.LINK:
-//           return { type };
-//         case ElementType.NODE:
-//           return {
-//             type,
-//             node: clientToNode(clientX, clientY)[0],
-//           };
-//         default:
-//           return null;
-//       }
-//     };
-//     const element = getElement();
-//     if (!element) return null;
-//     return (
-//       <ContextMenu>
-//         <ContextMenuContent element={element} worldX={worldX} worldY={worldY} />
-//       </ContextMenu>
-//     );
-//   }, [
-//     ContextMenu,
-//     ContextMenuContent,
-//     clientToLocalPosition,
-//     clientToNode,
-//     contextPosition,
-//     elementsFromPoint,
-//   ]);
-// };
 
 const useUtilsContext = (schema: Ctx) =>
   useRef({
@@ -112,28 +67,34 @@ export const Diagram: FunctionComponent<Props> = memo(({ schema }) => {
     recalculatePortsPosition,
   } = schema;
   const [worldX, worldY] = position;
-
   const utils = useUtilsContext(schema);
+  // const contextMenuState = useState<FunctionComponent | null>(null);
+  // const [ContextMenu] = contextMenuState;
+  const [contextMenu, setContextMenu] = useState<ReactNode | null>(null);
 
-  // const CanvasContextMenu: DiagramContextMenu = useMemo(
-  //   () =>
-  //     ({ clientX, clientY }) =>
-  //       <CanvasContextMenuDefault clientX={clientX} clientY={clientY} />,
-  //   []
-  // );
+  const onNodeContextMenu = useCallback(
+    ({ clientX, clientY }: MouseEvent) =>
+      setContextMenu(
+        <NodeContextMenuDefault
+          clientX={clientX}
+          clientY={clientY}
+          onClose={() => setContextMenu(null)}
+        />
+      ),
+    []
+  );
 
-  // const NodeContextMenu: DiagramContextMenu = useMemo(
-  //   () =>
-  //     ({ clientX, clientY }) =>
-  //       (
-  //         <NodeContextMenuDefault
-  //           clientX={clientX}
-  //           clientY={clientY}
-  //           clientToNode={clientToNode}
-  //         />
-  //       ),
-  //   [clientToNode]
-  // );
+  const onCanvasContextMenu = useCallback(
+    ({ clientX, clientY }: MouseEvent) =>
+      setContextMenu(
+        <CanvasContextMenuDefault
+          clientX={clientX}
+          clientY={clientY}
+          onClose={() => setContextMenu(null)}
+        />
+      ),
+    []
+  );
 
   return (
     <UtilsContext.Provider value={utils}>
@@ -141,7 +102,7 @@ export const Diagram: FunctionComponent<Props> = memo(({ schema }) => {
         <DiagramCanvas
           onCanvasMove={moveCanvas}
           onCanvasZoom={zoomCanvas}
-          canvasContextMenu={CanvasContextMenuDefault}
+          onContextMenu={onCanvasContextMenu}
           worldX={worldX}
           worldY={worldY}
           scale={scale}
@@ -151,10 +112,11 @@ export const Diagram: FunctionComponent<Props> = memo(({ schema }) => {
             nodes={nodes}
             onNodeMove={moveNode}
             recalculatePortsPosition={recalculatePortsPosition}
-            nodeContextMenu={NodeContextMenuDefault}
+            onNodeContextMenu={onNodeContextMenu}
           />
           <LinksCanvas links={links} portNodePosition={portNodePosition} />
           {/* {ContextMenu} */}
+          {contextMenu}
         </DiagramCanvas>
       </SchemaActionContext.Provider>
     </UtilsContext.Provider>

@@ -37,7 +37,6 @@ export function useRegElement<T extends HTMLElement>(
   elementType: ElementType,
   id?: string
 ) {
-  console.log("ele", element);
   if (!element) return;
   setElementType(element, elementType);
   if (id) setElementId(element, id);

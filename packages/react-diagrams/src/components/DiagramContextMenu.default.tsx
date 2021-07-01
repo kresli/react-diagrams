@@ -1,4 +1,5 @@
-import { FunctionComponent } from "react";
+import { FunctionComponent, useCallback } from "react";
+import styled from "styled-components";
 import { DiagramContextMenu } from "../components";
 import { SchemaActionType } from "../functions";
 import { Ctx, useAction } from "../hooks";
@@ -46,13 +47,24 @@ import { ContextMenuProps, useUtils } from "./Diagram";
 //   }
 // };
 
+const ContextMenuPopup = styled.div<{ clientX: number; clientY: number }>(
+  ({ clientX, clientY }) => ({
+    background: "white",
+    position: "fixed",
+    left: clientX,
+    top: clientY,
+    zIndex: 99999,
+  })
+);
+
 export const CanvasContextMenuDefault: FunctionComponent<ContextMenuProps> = ({
   clientX,
   clientY,
+  onClose,
 }) => {
   const actions = useAction();
 
-  const onAdd = () =>
+  const onAdd = () => {
     actions({
       type: SchemaActionType.ADD_NODE,
       node: {
@@ -61,28 +73,37 @@ export const CanvasContextMenuDefault: FunctionComponent<ContextMenuProps> = ({
         outputs: [{ id: `out${performance.now()}` }],
       },
     });
+    onClose();
+  };
   return (
-    <button data-testid="BUTTON_ADD_NODE" onClick={onAdd}>
-      create
-    </button>
+    <ContextMenuPopup clientX={clientX} clientY={clientY}>
+      <button data-testid="BUTTON_ADD_NODE" onClick={onAdd}>
+        create
+      </button>
+    </ContextMenuPopup>
   );
 };
 
 export const NodeContextMenuDefault: DiagramContextMenu = ({
   clientX,
   clientY,
+  onClose,
 }) => {
   const actions = useAction();
   const { clientToNode } = useUtils();
 
-  const onRemoveNode = () =>
+  const onRemoveNode = useCallback(() => {
     actions({
       type: SchemaActionType.REMOVE_NODE,
       node: clientToNode(clientX, clientY)[0],
     });
+    onClose();
+  }, [actions, clientToNode, clientX, clientY, onClose]);
   return (
-    <button data-testid="BUTTON_NODE_REMOVE" onClick={onRemoveNode}>
-      remove node
-    </button>
+    <ContextMenuPopup clientX={clientX} clientY={clientY}>
+      <button data-testid="BUTTON_NODE_REMOVE" onClick={onRemoveNode}>
+        remove node
+      </button>
+    </ContextMenuPopup>
   );
 };

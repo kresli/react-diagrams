@@ -4,6 +4,7 @@ import {
   Schema,
   useSchema,
   CanvasContextMenuDefault,
+  NodeContextMenuDefault,
 } from "@kresli/react-diagrams";
 
 const initialSchema: Schema = {
@@ -40,7 +41,7 @@ function App() {
   const schema = useSchema(initialSchema);
   return (
     <div style={{ width: "100vw", height: "100vh" }}>
-      <Diagram schema={schema} canvasContextMenu={CanvasContextMenuDefault} />
+      <Diagram schema={schema} nodeContextMenu={NodeContextMenuDefault} />
     </div>
   );
 }
