@@ -1,53 +1,12 @@
-import { FunctionComponent, useCallback } from "react";
+import { FunctionComponent, useCallback, useEffect } from "react";
+import { createPortal } from "react-dom";
 import styled from "styled-components";
 import { DiagramContextMenu } from "../components";
 import { SchemaActionType } from "../functions";
-import { Ctx, useAction } from "../hooks";
-import { ElementType, SchemaNode } from "../types";
+import { useAction } from "../hooks";
 import { ContextMenuProps, useUtils } from "./Diagram";
 
-// export const DiagramContextMenuDefault: DiagramContextMenu = ({
-//   element,
-//   worldX,
-//   worldY,
-// }) => {
-//   const actions = useAction();
-//   switch (element.type) {
-//     case ElementType.CANVAS:
-//       const onAdd = () =>
-//         actions({
-//           type: SchemaActionType.ADD_NODE,
-//           node: {
-//             position: [worldX, worldY],
-//             inputs: [{ id: `in${performance.now()}` }],
-//             outputs: [{ id: `out${performance.now()}` }],
-//           },
-//         });
-//       return (
-//         <button data-testid="BUTTON_ADD_NODE" onClick={onAdd}>
-//           create
-//         </button>
-//       );
-//     case ElementType.NODE: {
-//       const onRemoveNode = () =>
-//         actions({
-//           type: SchemaActionType.REMOVE_NODE,
-//           node: element.node,
-//         });
-//       return (
-//         <button data-testid="BUTTON_NODE_REMOVE" onClick={onRemoveNode}>
-//           remove node
-//         </button>
-//       );
-//     }
-//     case ElementType.PORT:
-//       return <div>port</div>;
-//     case ElementType.LINK:
-//       return <div>link</div>;
-//   }
-// };
-
-const ContextMenuPopup = styled.div<{ clientX: number; clientY: number }>(
+const ContextMenuPopupRoot = styled.div<{ clientX: number; clientY: number }>(
   ({ clientX, clientY }) => ({
     background: "white",
     position: "fixed",
@@ -57,26 +16,44 @@ const ContextMenuPopup = styled.div<{ clientX: number; clientY: number }>(
   })
 );
 
+const ContextMenuPopup: FunctionComponent<{
+  clientX: number;
+  clientY: number;
+  onClose: () => void;
+}> = ({ children, clientX, clientY, onClose }) => {
+  useEffect(() => {
+    window.addEventListener("click", onClose);
+    return () => window.removeEventListener("click", onClose);
+  }, [onClose]);
+  return createPortal(
+    <ContextMenuPopupRoot clientX={clientX} clientY={clientY}>
+      {children}
+    </ContextMenuPopupRoot>,
+    document.body
+  );
+};
+
 export const CanvasContextMenuDefault: FunctionComponent<ContextMenuProps> = ({
   clientX,
   clientY,
   onClose,
 }) => {
   const actions = useAction();
+  const { clientToWorldPosition } = useUtils();
 
-  const onAdd = () => {
+  const onAdd = useCallback(() => {
+    console.log(clientToWorldPosition(clientX, clientY));
     actions({
       type: SchemaActionType.ADD_NODE,
       node: {
-        position: [clientX, clientY],
+        position: clientToWorldPosition(clientX, clientY),
         inputs: [{ id: `in${performance.now()}` }],
         outputs: [{ id: `out${performance.now()}` }],
       },
     });
-    onClose();
-  };
+  }, [actions, clientToWorldPosition, clientX, clientY]);
   return (
-    <ContextMenuPopup clientX={clientX} clientY={clientY}>
+    <ContextMenuPopup clientX={clientX} clientY={clientY} onClose={onClose}>
       <button data-testid="BUTTON_ADD_NODE" onClick={onAdd}>
         create
       </button>
@@ -97,10 +74,9 @@ export const NodeContextMenuDefault: DiagramContextMenu = ({
       type: SchemaActionType.REMOVE_NODE,
       node: clientToNode(clientX, clientY)[0],
     });
-    onClose();
-  }, [actions, clientToNode, clientX, clientY, onClose]);
+  }, [actions, clientToNode, clientX, clientY]);
   return (
-    <ContextMenuPopup clientX={clientX} clientY={clientY}>
+    <ContextMenuPopup clientX={clientX} clientY={clientY} onClose={onClose}>
       <button data-testid="BUTTON_NODE_REMOVE" onClick={onRemoveNode}>
         remove node
       </button>

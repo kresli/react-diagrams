@@ -5,13 +5,12 @@ import {
   ReactNode,
   useCallback,
   useContext,
+  useMemo,
   useRef,
   useState,
 } from "react";
-import { DiagramCanvas } from "./DiagramCanvas";
 import { Ctx } from "../hooks";
-import styled, { DefaultTheme } from "styled-components";
-import { LinksCanvas, NodesCanvas } from "../components";
+import { DiagramCanvas, LinksCanvas, NodesCanvas } from "../components";
 import {
   CanvasContextMenuDefault,
   NodeContextMenuDefault,
@@ -28,30 +27,23 @@ export type DiagramContextMenu = FunctionComponent<ContextMenuProps>;
 
 interface Props {
   schema: Ctx;
-  // canvasContextMenu: DiagramContextMenu;
   nodeContextMenu: DiagramContextMenu;
 }
 
-const theme: DefaultTheme = {
-  zIndex: {
-    linksLayer: 100,
-    nodesLayer: 200,
-  },
-  node: {
-    borderRadius: "4pt",
-  },
-};
-
 const useUtilsContext = (schema: Ctx) =>
-  useRef({
-    clientToNode: schema.clientToNode,
-  });
+  useMemo(
+    () => ({
+      clientToNode: schema.clientToNode,
+      clientToWorldPosition: schema.clientToLocalPosition,
+    }),
+    [schema.clientToLocalPosition, schema.clientToNode]
+  );
 
 const UtilsContext = createContext<ReturnType<typeof useUtilsContext>>(
   null as any
 );
 
-export const useUtils = () => useContext(UtilsContext).current;
+export const useUtils = () => useContext(UtilsContext);
 
 export const Diagram: FunctionComponent<Props> = memo(({ schema }) => {
   const {
@@ -66,11 +58,10 @@ export const Diagram: FunctionComponent<Props> = memo(({ schema }) => {
     portNodePosition,
     recalculatePortsPosition,
   } = schema;
+
   const [worldX, worldY] = position;
-  const utils = useUtilsContext(schema);
-  // const contextMenuState = useState<FunctionComponent | null>(null);
-  // const [ContextMenu] = contextMenuState;
   const [contextMenu, setContextMenu] = useState<ReactNode | null>(null);
+  const utils = useUtilsContext(schema);
 
   const onNodeContextMenu = useCallback(
     ({ clientX, clientY }: MouseEvent) =>
@@ -115,7 +106,6 @@ export const Diagram: FunctionComponent<Props> = memo(({ schema }) => {
             onNodeContextMenu={onNodeContextMenu}
           />
           <LinksCanvas links={links} portNodePosition={portNodePosition} />
-          {/* {ContextMenu} */}
           {contextMenu}
         </DiagramCanvas>
       </SchemaActionContext.Provider>
