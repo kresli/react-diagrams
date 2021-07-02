@@ -3,6 +3,7 @@ import { SchemaActionType } from "../functions";
 import { useAction } from "../hooks";
 import React from "react";
 import { SchemaDragLink } from "../types";
+import { DRAG_LINK } from "../testIds";
 
 export const DragLink: FunctionComponent<{ dragLink: SchemaDragLink }> = memo(
   ({ dragLink }) => {
@@ -27,6 +28,6 @@ export const DragLink: FunctionComponent<{ dragLink: SchemaDragLink }> = memo(
         window.removeEventListener("mousemove", onMouseMove);
       };
     }, [action]);
-    return <path d={line} stroke="white" fill="none" />;
+    return <path data-testid={DRAG_LINK} d={line} stroke="white" fill="none" />;
   }
 );

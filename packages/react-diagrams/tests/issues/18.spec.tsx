@@ -1,6 +1,7 @@
 import { useSchema, Diagram, ElementType } from "../../src";
-import { render, fireEvent } from "@testing-library/react";
+import { screen, render, fireEvent } from "@testing-library/react";
 import { queryElement } from "../../src/functions";
+import { PORT } from "../../src/testIds";
 
 test("create link on dargLink end", async () => {
   let schema!: ReturnType<typeof useSchema>;
@@ -15,16 +16,16 @@ test("create link on dargLink end", async () => {
   };
   render(<App />);
 
-  const portOut = queryElement(ElementType.PORT, "out-a")!;
-  expect(portOut).toBeDefined();
-  const portIn = queryElement(ElementType.PORT, "in-a")!;
-  expect(portIn).toBeDefined();
+  // const portOut = queryElement(ElementType.PORT, "out-a")!;
+  // expect(portOut).toBeDefined();
+  // const portIn = queryElement(ElementType.PORT, "in-a")!;
+  // expect(portIn).toBeDefined();
 
   expect(schema.links).toHaveLength(0);
   expect(schema.dragLink).toBeNull();
-  fireEvent.click(portOut);
+  fireEvent.click(screen.queryByTestId(PORT("out-a"))!);
   expect(schema.dragLink).not.toBeNull();
-  fireEvent.click(portIn);
+  fireEvent.click(screen.queryByTestId(PORT("in-a"))!);
   expect(schema.links).toHaveLength(1);
   expect(schema.dragLink).toBeNull();
 });

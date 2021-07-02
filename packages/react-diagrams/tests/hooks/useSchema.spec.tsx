@@ -6,22 +6,28 @@ test("basic", () => {
   const { result } = renderHook(() => useSchema());
   expect(result.current).toMatchInlineSnapshot(`
     Object {
+      "action": [Function],
       "addNode": [Function],
       "canvas": null,
       "clientToLocalPosition": [Function],
       "clientToNode": [Function],
-      "dispatchAction": [Function],
       "dragLink": null,
       "elementsFromPoint": [Function],
       "links": Array [],
+      "moveCanvas": [Function],
+      "moveNode": [Function],
       "nodes": Array [],
+      "portNodePosition": Object {},
       "position": Array [
         0,
         0,
       ],
+      "recalculatePortsPosition": [Function],
       "removeNode": [Function],
       "scale": 1,
+      "setViewRef": [Function],
       "view": null,
+      "zoomCanvas": [Function],
     }
   `);
 });

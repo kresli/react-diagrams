@@ -1,5 +1,6 @@
-import { render, fireEvent } from "@testing-library/react";
+import { render, fireEvent, screen } from "@testing-library/react";
 import { Diagram, useSchema } from "../../src";
+import { LINK } from "../../src/testIds";
 
 test("basic", async () => {
   const App = () => {
@@ -8,12 +9,12 @@ test("basic", async () => {
         { id: "node-a", position: [0, 0], outputs: [{ id: "port-a" }] },
         { id: "node-b", position: [0, 0], inputs: [{ id: "port-b" }] },
       ],
-      links: [{ input: "port-a", output: "port-b" }],
+      links: [{ input: "port-b", output: "port-a" }],
     });
     return <Diagram schema={schema} />;
   };
-  const app = render(<App />);
-  const val = app.container.querySelector(`[data-diagramelementtype="LINK"]`);
+  render(<App />);
+  const val = screen.getByTestId(LINK({ output: "port-a", input: "port-b" }));
   expect(val).toBeDefined();
 });
 
@@ -25,13 +26,13 @@ test("double click removes link", async () => {
         { id: "node-a", position: [0, 0], outputs: [{ id: "port-a" }] },
         { id: "node-b", position: [0, 0], inputs: [{ id: "port-b" }] },
       ],
-      links: [{ input: "port-a", output: "port-b" }],
+      links: [{ input: "port-b", output: "port-a" }],
     });
     schema = _schema;
     return <Diagram schema={schema} />;
   };
-  const app = render(<App />);
-  const link = app.container.querySelector(`[data-diagramelementtype="LINK"]`)!;
+  render(<App />);
+  const link = screen.getByTestId(LINK({ output: "port-a", input: "port-b" }));
   expect(link).toBeDefined();
   fireEvent.doubleClick(link);
   expect(schema.links).toHaveLength(0);

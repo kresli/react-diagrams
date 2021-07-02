@@ -6,7 +6,6 @@ import {
   useCallback,
   useContext,
   useMemo,
-  useRef,
   useState,
 } from "react";
 import { Ctx } from "../hooks";
@@ -27,7 +26,6 @@ export type DiagramContextMenu = FunctionComponent<ContextMenuProps>;
 
 interface Props {
   schema: Ctx;
-  nodeContextMenu: DiagramContextMenu;
 }
 
 const useUtilsContext = (schema: Ctx) =>
@@ -51,6 +49,7 @@ export const Diagram: FunctionComponent<Props> = memo(({ schema }) => {
     links,
     scale,
     position,
+    dragLink,
     setViewRef,
     moveNode,
     moveCanvas,
@@ -58,6 +57,9 @@ export const Diagram: FunctionComponent<Props> = memo(({ schema }) => {
     portNodePosition,
     recalculatePortsPosition,
   } = schema;
+
+  // @ts-ignore
+  window.$diagram = schema;
 
   const [worldX, worldY] = position;
   const [contextMenu, setContextMenu] = useState<ReactNode | null>(null);
@@ -105,21 +107,14 @@ export const Diagram: FunctionComponent<Props> = memo(({ schema }) => {
             recalculatePortsPosition={recalculatePortsPosition}
             onNodeContextMenu={onNodeContextMenu}
           />
-          <LinksCanvas links={links} portNodePosition={portNodePosition} />
+          <LinksCanvas
+            links={links}
+            portNodePosition={portNodePosition}
+            dragLink={dragLink}
+          />
           {contextMenu}
         </DiagramCanvas>
       </SchemaActionContext.Provider>
     </UtilsContext.Provider>
   );
-  // return (
-  //   <ThemeProvider theme={theme}>
-  //     <SchemaProvider schema={schema}>
-  //       <DiagramCanvas>
-  //         <NodesCanvas />
-  //         <LinksCanvas />
-  //       {ContextMenu}
-  //       </DiagramCanvas>
-  //     </SchemaProvider>
-  //   </ThemeProvider>
-  // );
 });

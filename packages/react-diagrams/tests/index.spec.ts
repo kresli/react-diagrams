@@ -5,17 +5,17 @@ test("type", () => {
 test("basic", () => {
   expect(api).toMatchInlineSnapshot(`
     Object {
-      "Canvas": Object {
-        "$$typeof": Symbol(react.memo),
-        "compare": null,
-        "type": [Function],
-      },
+      "CanvasContextMenuDefault": [Function],
       "Diagram": Object {
         "$$typeof": Symbol(react.memo),
         "compare": null,
         "type": [Function],
       },
-      "DiagramContextMenuDefault": [Function],
+      "DiagramCanvas": Object {
+        "$$typeof": Symbol(react.memo),
+        "compare": null,
+        "type": [Function],
+      },
       "DiagramLink": Object {
         "$$typeof": Symbol(react.memo),
         "compare": null,
@@ -56,9 +56,9 @@ test("basic", () => {
           "$$typeof": Symbol(react.forward_ref),
           "attrs": Array [],
           "componentStyle": e {
-            "baseHash": -1457503223,
+            "baseHash": 1698917756,
             "baseStyle": undefined,
-            "componentId": "sc-gKAaRy",
+            "componentId": "sc-fujyAs",
             "isStatic": false,
             "rules": Array [
               "
@@ -76,24 +76,29 @@ test("basic", () => {
           "foldedComponentIds": Array [],
           "render": [Function],
           "shouldForwardProp": undefined,
-          "styledComponentId": "sc-gKAaRy",
-          "target": [Function],
+          "styledComponentId": "sc-fujyAs",
+          "target": Object {
+            "$$typeof": Symbol(react.memo),
+            "compare": null,
+            "type": [Function],
+          },
           "toString": [Function],
           "warnTooManyClasses": [Function],
           "withComponent": [Function],
         },
       },
-      "LinksLayer": Object {
+      "LinksCanvas": Object {
         "$$typeof": Symbol(react.memo),
         "compare": null,
         "type": [Function],
       },
+      "NodeContextMenuDefault": [Function],
       "NodeRenderDefault": Object {
         "$$typeof": Symbol(react.memo),
         "compare": null,
         "type": [Function],
       },
-      "NodesLayer": Object {
+      "NodesCanvas": Object {
         "$$typeof": Symbol(react.memo),
         "compare": null,
         "type": [Function],
@@ -115,6 +120,7 @@ test("basic", () => {
         "LINK_REMOVE": "LINK_REMOVE",
         "MOVE_DRAGGING_LINK": "MOVE_DRAGGING_LINK",
         "NODE_MOVE": "NODE_MOVE",
+        "RECALCULATE_PORTS_POSITION": "RECALCULATE_PORTS_POSITION",
         "REGISTER_ELEMENT_TYPE": "REGISTER_ELEMENT_TYPE",
         "REMOVE_NODE": "REMOVE_NODE",
         "VIEWPORT_MOVE": "VIEWPORT_MOVE",
@@ -128,6 +134,7 @@ test("basic", () => {
       },
       "useAction": [Function],
       "useSchema": [Function],
+      "useUtils": [Function],
     }
   `);
 });

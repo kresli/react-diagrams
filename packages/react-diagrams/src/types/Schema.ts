@@ -10,6 +10,7 @@ interface RenderPortProps extends SchemaPort {
 }
 
 export interface NodeRenderProps {
+  id: string;
   inputs?: SchemaPort[];
   outputs?: SchemaPort[];
   label?: string;

@@ -1,10 +1,4 @@
-import {
-  useCallback,
-  useLayoutEffect,
-  RefObject,
-  useRef,
-  useState,
-} from "react";
+import { useCallback, useLayoutEffect, useRef, useState } from "react";
 
 type DragCallback = (movementX: number, movementY: number) => void;
 

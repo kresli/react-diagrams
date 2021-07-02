@@ -1,6 +1,10 @@
-import { FunctionComponent, useCallback, useEffect } from "react";
+import { FunctionComponent, useCallback, useEffect, useRef } from "react";
 import { createPortal } from "react-dom";
 import styled from "styled-components";
+import {
+  CONTEXT_MENU_ADD_NODE_BUTTON,
+  CONTEXT_MENU_REMOVE_NODE_BUTTON,
+} from "../testIds";
 import { DiagramContextMenu } from "../components";
 import { SchemaActionType } from "../functions";
 import { useAction } from "../hooks";
@@ -21,12 +25,23 @@ const ContextMenuPopup: FunctionComponent<{
   clientY: number;
   onClose: () => void;
 }> = ({ children, clientX, clientY, onClose }) => {
+  const ref = useRef<HTMLDivElement | null>(null);
   useEffect(() => {
+    const isInsideClick = (ev: MouseEvent, element: HTMLDivElement) =>
+      [...document.elementsFromPoint(ev.clientX, ev.clientY)].includes(element);
+    const mouseDown = (ev: MouseEvent) => {
+      if (!ref.current) return;
+      if (!isInsideClick(ev, ref.current)) onClose();
+    };
+    window.addEventListener("mousedown", mouseDown);
     window.addEventListener("click", onClose);
-    return () => window.removeEventListener("click", onClose);
+    return () => {
+      window.removeEventListener("mousedown", mouseDown);
+      window.removeEventListener("click", onClose);
+    };
   }, [onClose]);
   return createPortal(
-    <ContextMenuPopupRoot clientX={clientX} clientY={clientY}>
+    <ContextMenuPopupRoot clientX={clientX} clientY={clientY} ref={ref}>
       {children}
     </ContextMenuPopupRoot>,
     document.body
@@ -42,19 +57,18 @@ export const CanvasContextMenuDefault: FunctionComponent<ContextMenuProps> = ({
   const { clientToWorldPosition } = useUtils();
 
   const onAdd = useCallback(() => {
-    console.log(clientToWorldPosition(clientX, clientY));
     actions({
       type: SchemaActionType.ADD_NODE,
       node: {
         position: clientToWorldPosition(clientX, clientY),
-        inputs: [{ id: `in${performance.now()}` }],
-        outputs: [{ id: `out${performance.now()}` }],
+        inputs: [{ id: `input.${performance.now()}` }],
+        outputs: [{ id: `output.${performance.now()}` }],
       },
     });
   }, [actions, clientToWorldPosition, clientX, clientY]);
   return (
     <ContextMenuPopup clientX={clientX} clientY={clientY} onClose={onClose}>
-      <button data-testid="BUTTON_ADD_NODE" onClick={onAdd}>
+      <button data-testid={CONTEXT_MENU_ADD_NODE_BUTTON} onClick={onAdd}>
         create
       </button>
     </ContextMenuPopup>
@@ -77,7 +91,10 @@ export const NodeContextMenuDefault: DiagramContextMenu = ({
   }, [actions, clientToNode, clientX, clientY]);
   return (
     <ContextMenuPopup clientX={clientX} clientY={clientY} onClose={onClose}>
-      <button data-testid="BUTTON_NODE_REMOVE" onClick={onRemoveNode}>
+      <button
+        data-testid={CONTEXT_MENU_REMOVE_NODE_BUTTON}
+        onClick={onRemoveNode}
+      >
         remove node
       </button>
     </ContextMenuPopup>

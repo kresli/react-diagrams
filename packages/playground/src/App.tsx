@@ -1,11 +1,5 @@
 import "./App.css";
-import {
-  Diagram,
-  Schema,
-  useSchema,
-  CanvasContextMenuDefault,
-  NodeContextMenuDefault,
-} from "@kresli/react-diagrams";
+import { Diagram, Schema, useSchema } from "@kresli/react-diagrams";
 
 const initialSchema: Schema = {
   dragLink: null,
@@ -29,8 +23,8 @@ const initialSchema: Schema = {
   ],
   links: [
     {
-      input: "1",
-      output: "3",
+      input: "3",
+      output: "1",
     },
   ],
   position: [0, 0],
@@ -41,7 +35,7 @@ function App() {
   const schema = useSchema(initialSchema);
   return (
     <div style={{ width: "100vw", height: "100vh" }}>
-      <Diagram schema={schema} nodeContextMenu={NodeContextMenuDefault} />
+      <Diagram schema={schema} />
     </div>
   );
 }

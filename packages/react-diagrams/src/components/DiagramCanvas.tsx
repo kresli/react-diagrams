@@ -6,6 +6,7 @@ import {
   CSSProperties,
 } from "react";
 import styled from "styled-components";
+import { DIAGRAM } from "../testIds";
 import { useDrag, useWheel } from "../hooks";
 import { useContextMenu } from "../hooks/useContextMenu";
 import { DiagramContextMenu } from "./Diagram";
@@ -63,7 +64,7 @@ export const DiagramCanvas: FunctionComponent<Props> = memo(
     // useContextMenu(ref, CanvasContextMenuContent);
     useContextMenu(ref, onContextMenu);
     return (
-      <DiagramRoot className="Diagram" data-testid="canvas" ref={setRef}>
+      <DiagramRoot data-testid={DIAGRAM} ref={setRef}>
         <World
           ref={registerWorldRef}
           worldX={worldX}

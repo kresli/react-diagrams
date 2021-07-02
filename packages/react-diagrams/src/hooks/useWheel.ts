@@ -1,4 +1,4 @@
-import { RefObject, useCallback, useLayoutEffect } from "react";
+import { useCallback, useLayoutEffect } from "react";
 
 export function useWheel(
   // @todo can we not to use refObject here?

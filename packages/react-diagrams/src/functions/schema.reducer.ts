@@ -147,6 +147,20 @@ export const schemaReducer = (schema: Schema, action: SchemaAction): Schema => {
         position: [0, 0],
         ...action.node,
       };
+      {
+        // validate ports
+        const ports = new Set(
+          schema.nodes
+            .map(({ inputs = [], outputs = [] }) => [...inputs, ...outputs])
+            .flat()
+            .map(({ id }) => id)
+        );
+        const nodePorts = [...(node.inputs || []), ...(node.outputs || [])].map(
+          ({ id }) => id
+        );
+        if (nodePorts.some((id) => ports.has(id)))
+          throw new Error(`port id must be unique.`);
+      }
       const nodes: SchemaNode[] = [...schema.nodes, node];
       return {
         ...schema,
@@ -218,8 +232,8 @@ export const schemaReducer = (schema: Schema, action: SchemaAction): Schema => {
         const isForward = schema.nodes.find(({ outputs }) =>
           outputs?.find(({ id }) => id === schema.dragLink!.portId)
         );
-        const input = isForward ? schema.dragLink.portId : action.portId;
-        const output = isForward ? action.portId : schema.dragLink.portId;
+        const output = isForward ? schema.dragLink.portId : action.portId;
+        const input = isForward ? action.portId : schema.dragLink.portId;
         return schemaReducer(
           {
             ...schema,
@@ -283,8 +297,8 @@ export const schemaReducer = (schema: Schema, action: SchemaAction): Schema => {
       if (!world) return schema;
 
       let ports: SchemaPort[] = [];
-      if (node.inputs) ports = [...node.inputs];
-      if (node.outputs) ports = [...node.outputs];
+      if (node.inputs) ports = [...ports, ...node.inputs];
+      if (node.outputs) ports = [...ports, ...node.outputs];
       const portNodePosition = {
         ...schema.portNodePosition,
       };

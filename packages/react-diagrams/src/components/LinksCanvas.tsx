@@ -1,17 +1,16 @@
-import { FunctionComponent, memo, useContext, useMemo } from "react";
-import { useTheme } from "styled-components";
+import { FunctionComponent, memo, useMemo } from "react";
 import { DiagramLink, DragLink } from ".";
-import { DragLinkContext, LinksContext } from "../context";
-import React from "react";
-import { Position, SchemaLink, SchemaNode } from "../types";
+import { Position, SchemaDragLink, SchemaLink } from "../types";
+import { LINKS_CANVAS } from "../testIds";
 
 interface Props {
   links: SchemaLink[];
   portNodePosition: Record<string, Position>;
+  dragLink: SchemaDragLink | null;
 }
 
 export const LinksCanvas: FunctionComponent<Props> = memo(
-  ({ links, portNodePosition }) => {
+  ({ links, portNodePosition, dragLink }) => {
     const renderLinks = useMemo(
       () =>
         links.map((link) => {
@@ -32,7 +31,7 @@ export const LinksCanvas: FunctionComponent<Props> = memo(
     );
     return (
       <svg
-        className="LinksLayer"
+        data-testid={LINKS_CANVAS}
         style={{
           position: "absolute",
           pointerEvents: "none",
@@ -43,7 +42,7 @@ export const LinksCanvas: FunctionComponent<Props> = memo(
         }}
       >
         {renderLinks}
-        {/* {dragLink && <DragLink dragLink={dragLink} />} */}
+        {dragLink && <DragLink dragLink={dragLink} />}
       </svg>
     );
   }
