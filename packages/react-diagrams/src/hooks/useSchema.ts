@@ -96,22 +96,26 @@ export const useSchema = (initSchema?: Partial<Schema>) => {
     [viewRef]
   );
 
-  const moveCanvas = useCallback((movementX, movementY) => {
-    dispatchAction({
-      type: SchemaActionType.VIEWPORT_MOVE,
-      movementY,
-      movementX,
-    });
-  }, []);
+  const moveCanvas = useCallback(
+    (movementX, movementY) =>
+      dispatchAction({
+        type: SchemaActionType.VIEWPORT_MOVE,
+        movementY,
+        movementX,
+      }),
+    []
+  );
 
-  const zoomCanvas = useCallback(({ clientY, clientX, deltaY }: WheelEvent) => {
-    dispatchAction({
-      type: SchemaActionType.VIEWPORT_ZOOM,
-      clientX,
-      clientY,
-      deltaY,
-    });
-  }, []);
+  const zoomCanvas = useCallback(
+    ({ clientY, clientX, deltaY }: WheelEvent) =>
+      dispatchAction({
+        type: SchemaActionType.VIEWPORT_ZOOM,
+        clientX,
+        clientY,
+        deltaY,
+      }),
+    []
+  );
 
   return {
     moveCanvas,

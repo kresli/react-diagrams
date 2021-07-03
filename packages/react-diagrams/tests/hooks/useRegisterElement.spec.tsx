@@ -1,7 +1,6 @@
 import { renderHook } from "@testing-library/react-hooks";
 import { FunctionComponent } from "react";
-import { ElementType } from "../../src";
-import { SchemaActionContext } from "../../src/context";
+import { ElementType, SchemaActionContext } from "../../src";
 import { useRegisterElement } from "../../src/hooks";
 
 test("basic", () => {

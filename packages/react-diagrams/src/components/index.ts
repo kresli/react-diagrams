@@ -1,7 +1,6 @@
 export * from "./Diagram";
 export * from "./NodesCanvas";
 export * from "./LinksCanvas";
-export * from "./ViewLayer";
 export * from "./DiagramLink";
 export * from "./DiagramCanvas";
 export * from "./DiagramNode";

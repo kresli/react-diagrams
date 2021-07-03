@@ -1,11 +1,7 @@
 import { useCallback } from "react";
-import {
-  DiagramContextMenu,
-  useUtils,
-  ContextMenuPopup,
-} from "../../components";
+import { DiagramContextMenu, ContextMenuPopup } from "../../components";
 import { SchemaActionType } from "../../functions";
-import { useAction } from "../../hooks";
+import { useAction, useUtils } from "../../hooks";
 import { CONTEXT_MENU_REMOVE_NODE_BUTTON } from "../../testIds";
 
 export const NodeContextMenuDefault: DiagramContextMenu = ({

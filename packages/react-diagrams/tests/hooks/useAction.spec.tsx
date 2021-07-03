@@ -1,6 +1,5 @@
-import { useAction } from "../../src";
+import { SchemaActionContext, useAction } from "../../src";
 import { renderHook } from "@testing-library/react-hooks";
-import { SchemaActionContext } from "../../src/context";
 import { FunctionComponent } from "react";
 
 test("basic", () => {

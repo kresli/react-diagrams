@@ -1,7 +1,7 @@
 import { FunctionComponent, useCallback } from "react";
-import { ContextMenuPopup, ContextMenuProps, useUtils } from "../../components";
+import { ContextMenuPopup, ContextMenuProps } from "../../components";
 import { SchemaActionType } from "../../functions";
-import { useAction } from "../../hooks";
+import { useAction, useUtils } from "../../hooks";
 import { CONTEXT_MENU_ADD_NODE_BUTTON } from "../../testIds";
 
 export const CanvasContextMenuDefault: FunctionComponent<ContextMenuProps> = ({

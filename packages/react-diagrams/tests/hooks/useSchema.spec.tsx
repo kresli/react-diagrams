@@ -1,6 +1,10 @@
 import { act, renderHook } from "@testing-library/react-hooks";
 import { ElementType, useSchema } from "../../src";
-import { setElementId, setElementType } from "../../src/functions";
+import {
+  SchemaActionType,
+  setElementId,
+  setElementType,
+} from "../../src/functions";
 
 test("basic", () => {
   const { result } = renderHook(() => useSchema());
@@ -118,4 +122,17 @@ test("removeNode", () => {
   expect(result.current.nodes).toHaveLength(1);
   act(() => result.current.removeNode(result.current.nodes[0]));
   expect(result.current.nodes).toHaveLength(0);
+});
+
+test("moveCanvas", () => {
+  const { result } = renderHook(() => useSchema());
+  expect(result.current.position).toEqual([0, 0]);
+  result.current.moveCanvas(10, 20);
+  expect(result.current.position).toEqual([10, 20]);
+});
+
+test("zoomCanvas not to throw error", () => {
+  const schema = renderHook(() => useSchema()).result.current;
+  const ev = { clientX: 10, clientY: 20, deltaY: 1 };
+  expect(() => schema.zoomCanvas(ev as WheelEvent)).not.toThrow();
 });

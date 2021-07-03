@@ -11,6 +11,7 @@ import { v4 } from "uuid";
 import { clientToWorldPosition } from "./clientToWorldPosition";
 import { setElementType } from ".";
 import { queryElement, setElementId } from "./getElementType";
+import { validateSchema } from "./validateSchema";
 
 export enum SchemaActionType {
   VIEWPORT_MOVE = "VIEWPORT_MOVE",
@@ -147,25 +148,13 @@ export const schemaReducer = (schema: Schema, action: SchemaAction): Schema => {
         position: [0, 0],
         ...action.node,
       };
-      {
-        // validate ports
-        const ports = new Set(
-          schema.nodes
-            .map(({ inputs = [], outputs = [] }) => [...inputs, ...outputs])
-            .flat()
-            .map(({ id }) => id)
-        );
-        const nodePorts = [...(node.inputs || []), ...(node.outputs || [])].map(
-          ({ id }) => id
-        );
-        if (nodePorts.some((id) => ports.has(id)))
-          throw new Error(`port id must be unique.`);
-      }
       const nodes: SchemaNode[] = [...schema.nodes, node];
-      return {
+      const generatedSchema: Schema = {
         ...schema,
         nodes,
       };
+      validateSchema(generatedSchema);
+      return generatedSchema;
     }
     case SchemaActionType.REMOVE_NODE: {
       const nodes = schema.nodes.filter((node) => node !== action.node);
