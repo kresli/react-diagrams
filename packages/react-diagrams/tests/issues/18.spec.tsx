@@ -1,6 +1,5 @@
-import { useSchema, Diagram, ElementType } from "../../src";
+import { useSchema, Diagram } from "../../src";
 import { screen, render, fireEvent } from "@testing-library/react";
-import { queryElement } from "../../src/functions";
 import { PORT } from "../../src/testIds";
 
 test("create link on dargLink end", async () => {

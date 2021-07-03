@@ -10,3 +10,4 @@ export const LINK = ({ input, output }: { input: string; output: string }) =>
 export const NODE = (id: string) => `NODE_${id}`;
 export const LINKS_CANVAS = "LINKS_CANVAS";
 export const DRAG_LINK = "DRAG_LINK";
+export const CONTEXT_MENU_POPUP = "CONTEXT_MENU_POPUP";

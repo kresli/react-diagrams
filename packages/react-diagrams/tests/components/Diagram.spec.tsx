@@ -1,9 +1,26 @@
-import { useSchema, Diagram, ElementType, ContextMenuProps } from "../../src";
-import { fireEvent, render, screen } from "@testing-library/react";
-import { setElementId, setElementType } from "../../src/functions";
+import { Diagram } from "../../src/components";
+import { render, fireEvent, screen } from "@testing-library/react";
+import { Ctx, useSchema } from "../../src/hooks";
+import { CONTEXT_MENU_POPUP, NODE } from "../../src/testIds";
 
-test("dummy", () => {
-  expect(true).toBeTruthy();
+test("node context", () => {
+  let schema: Ctx;
+  const App = () => {
+    schema = useSchema({
+      nodes: [{ id: "node-a", position: [0, 0] }],
+    });
+    return (
+      <>
+        <div data-testid="close-popup" />
+        <Diagram schema={schema} />
+      </>
+    );
+  };
+  render(<App />);
+  fireEvent.contextMenu(screen.queryByTestId(NODE("node-a"))!);
+  expect(screen.queryByTestId(CONTEXT_MENU_POPUP)!).toBeDefined();
+  fireEvent.click(screen.queryByTestId("close-popup")!);
+  expect(screen.queryByTestId(CONTEXT_MENU_POPUP)!).toBeNull();
 });
 
 // test(`${ElementType.PORT}`, async () => {

@@ -1,10 +1,10 @@
 import { FunctionComponent, memo, useMemo } from "react";
 import styled, { CSSProperties } from "styled-components";
-import { NodeRenderProps, SchemaPort, PortType } from "../types";
-import { Port } from "../components";
-import { Gate } from "./Gate";
+import { NodeRenderProps, SchemaPort, PortType } from "../../types";
+import { Port } from "..";
+import { Gate } from "../Gate";
 import React from "react";
-import { NODE_DRAG_HOLDER } from "../testIds";
+import { NODE_DRAG_HOLDER } from "../../testIds";
 
 const PortRoot = styled.div<{ type: PortType }>`
   width: 12px;

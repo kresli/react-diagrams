@@ -9,11 +9,13 @@ import {
   useState,
 } from "react";
 import { Ctx } from "../hooks";
-import { DiagramCanvas, LinksCanvas, NodesCanvas } from "../components";
 import {
-  CanvasContextMenuDefault,
+  DiagramCanvas,
+  LinksCanvas,
+  NodesCanvas,
   NodeContextMenuDefault,
-} from "./DiagramContextMenu.default";
+  CanvasContextMenuDefault,
+} from "../components";
 import { SchemaActionContext } from "../context";
 
 export interface ContextMenuProps {
