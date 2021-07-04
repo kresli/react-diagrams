@@ -24,4 +24,4 @@ jobs:
           cd packages/react-diagrams-docs
           git config --global user.email "jacko.eduard@gmail.com"
           git config --global user.name "kresli"
-          yarn publish-gh-pages
+          # yarn publish-gh-pages
