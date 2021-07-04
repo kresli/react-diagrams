@@ -10,10 +10,12 @@ interface RenderPortProps extends SchemaPort {
 }
 
 export interface NodeRenderProps {
-  inputs?: RenderPortProps[];
-  outputs?: RenderPortProps[];
+  id: string;
+  inputs?: SchemaPort[];
+  outputs?: SchemaPort[];
   label?: string;
   data?: any;
+  registerDragHolder: (element: HTMLElement | null) => void;
 }
 export type DiagramNodeRender = FunctionComponent<NodeRenderProps>;
 
@@ -68,6 +70,7 @@ export interface SchemaDragLink {
 export interface Schema {
   dragLink: SchemaDragLink | null;
   registeredElements: RegisteredElements;
+  portNodePosition: Record<string, Position>;
   viewRef: null | HTMLDivElement;
   canvasRef: null | HTMLDivElement;
   position: [number, number];

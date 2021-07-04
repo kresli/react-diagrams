@@ -1,17 +1,8 @@
-import {
-  useCallback,
-  useLayoutEffect,
-  RefObject,
-  useRef,
-  useState,
-} from "react";
+import { useCallback, useLayoutEffect, useRef, useState } from "react";
 
 type DragCallback = (movementX: number, movementY: number) => void;
 
-export const useDrag = (
-  ref: RefObject<HTMLElement | null>,
-  onDragging: DragCallback
-) => {
+export const useDrag = (ref: HTMLElement | null, onDragging: DragCallback) => {
   // we need to reasign always callback otherwise we would be out of sync
   // and we would call previous onDragging callback
   const [dragging, setDragging] = useState(false);
@@ -49,7 +40,8 @@ export const useDrag = (
   );
 
   useLayoutEffect(() => {
-    ref.current?.addEventListener("mousedown", onMouseDown);
+    if (!ref) return;
+    ref.addEventListener("mousedown", onMouseDown);
     window.addEventListener("mouseup", onMouseUp);
     window.addEventListener("mousemove", mouseMove);
     return () => {

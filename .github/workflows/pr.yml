@@ -3,16 +3,32 @@ on:
   pull_request:
     branches: [main]
 jobs:
-  checks:
+  react-diagrams:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v1
-      - uses: actions/setup-node@v1
-        with:
-          node-version: "14.x"
-      - run: yarn install --frozen-lockfile
-      - uses: artiomtr/jest-coverage-report-action@v2.0-rc.1
+      - name: Checkout repo
+        uses: actions/checkout@master
+      - name: Set the correct Node version using nvm
+        shell: bash -l {0}
+        run: nvm install
+      - name: Install Dependencies
+        run: yarn install --frozen-lockfile
+      - name: Test and collect coverage
+        uses: artiomtr/jest-coverage-report-action@v2.0-rc.1
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           working-directory: "packages/react-diagrams"
           package-manager: yarn
+  # react-diagrams-docs:
+  #   runs-on: ubuntu-latest
+  #   steps:
+  #     - name: Checkout repo
+  #       uses: actions/checkout@master
+  #     - name: Set the correct Node version using nvm
+  #       shell: bash -l {0}
+  #       run: nvm install
+  #     - name: Build
+  #       run: |
+  #         yarn install --frozen-lockfile
+  #         cd packages/react-diagrams-docs
+  #         yarn build

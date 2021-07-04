@@ -5,11 +5,13 @@ import {
   SchemaNode,
   Position,
   SchemaDragLink,
+  SchemaPort,
 } from "../types";
 import { v4 } from "uuid";
 import { clientToWorldPosition } from "./clientToWorldPosition";
 import { setElementType } from ".";
-import { setElementId } from "./getElementType";
+import { queryElement, setElementId } from "./getElementType";
+import { validateSchema } from "./validateSchema";
 
 export enum SchemaActionType {
   VIEWPORT_MOVE = "VIEWPORT_MOVE",
@@ -23,6 +25,7 @@ export enum SchemaActionType {
   CREATE_DRAGGING_LINK = "CREATE_DRAGGING_LINK",
   MOVE_DRAGGING_LINK = "MOVE_DRAGGING_LINK",
   DELETE_DRAGGING_LINK = "DELETE_DRAGGING_LINK",
+  RECALCULATE_PORTS_POSITION = "RECALCULATE_PORTS_POSITION",
 }
 
 export type SchemaAction =
@@ -69,7 +72,6 @@ export type SchemaAction =
     }
   | {
       type: SchemaActionType.CREATE_DRAGGING_LINK;
-      // direction: DragLinkDirection;
       portId: string;
       clientX: number;
       clientY: number;
@@ -81,6 +83,10 @@ export type SchemaAction =
     }
   | {
       type: SchemaActionType.DELETE_DRAGGING_LINK;
+    }
+  | {
+      type: SchemaActionType.RECALCULATE_PORTS_POSITION;
+      node: SchemaNode;
     };
 export const schemaReducer = (schema: Schema, action: SchemaAction): Schema => {
   switch (action.type) {
@@ -143,10 +149,12 @@ export const schemaReducer = (schema: Schema, action: SchemaAction): Schema => {
         ...action.node,
       };
       const nodes: SchemaNode[] = [...schema.nodes, node];
-      return {
+      const generatedSchema: Schema = {
         ...schema,
         nodes,
       };
+      validateSchema(generatedSchema);
+      return generatedSchema;
     }
     case SchemaActionType.REMOVE_NODE: {
       const nodes = schema.nodes.filter((node) => node !== action.node);
@@ -213,8 +221,8 @@ export const schemaReducer = (schema: Schema, action: SchemaAction): Schema => {
         const isForward = schema.nodes.find(({ outputs }) =>
           outputs?.find(({ id }) => id === schema.dragLink!.portId)
         );
-        const input = isForward ? schema.dragLink.portId : action.portId;
-        const output = isForward ? action.portId : schema.dragLink.portId;
+        const output = isForward ? schema.dragLink.portId : action.portId;
+        const input = isForward ? action.portId : schema.dragLink.portId;
         return schemaReducer(
           {
             ...schema,
@@ -268,6 +276,38 @@ export const schemaReducer = (schema: Schema, action: SchemaAction): Schema => {
       return {
         ...schema,
         dragLink: null,
+      };
+    }
+    case SchemaActionType.RECALCULATE_PORTS_POSITION: {
+      const { node } = action;
+      if (!node) return schema;
+      if (!node.inputs && !node.outputs) return schema;
+      const world = schema.viewRef;
+      if (!world) return schema;
+
+      let ports: SchemaPort[] = [];
+      if (node.inputs) ports = [...ports, ...node.inputs];
+      if (node.outputs) ports = [...ports, ...node.outputs];
+      const portNodePosition = {
+        ...schema.portNodePosition,
+      };
+      ports.forEach((port) => {
+        const elem = queryElement(ElementType.GATE, port.id);
+        if (!elem) return;
+        const { left, top } = elem.getBoundingClientRect();
+        const positon = clientToWorldPosition([left, top], world, schema.scale);
+        const original = portNodePosition[port.id];
+        if (
+          original &&
+          positon[0] === original[0] &&
+          positon[1] === original[1]
+        )
+          return;
+        portNodePosition[port.id] = positon;
+      });
+      return {
+        ...schema,
+        portNodePosition,
       };
     }
     default:

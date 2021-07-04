@@ -1,5 +1,5 @@
 import { RefObject, useLayoutEffect } from "react";
-import { SchemaActionType } from "../functions";
+import { SchemaActionType, setElementId, setElementType } from "../functions";
 import { ElementType } from "../types";
 import { useAction } from "./useAction";
 
@@ -30,4 +30,14 @@ export function useRegisterElement<T extends HTMLElement | SVGElement>(
         id,
       });
   }, [action, elementType, id, ref]);
+}
+
+export function useRegElement<T extends HTMLElement>(
+  element: T | null,
+  elementType: ElementType,
+  id?: string
+) {
+  if (!element) return;
+  setElementType(element, elementType);
+  if (id) setElementId(element, id);
 }

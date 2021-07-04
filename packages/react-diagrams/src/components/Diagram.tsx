@@ -1,103 +1,101 @@
-import { FunctionComponent, memo, useEffect, useMemo } from "react";
-import { Canvas } from "./Canvas";
-import { Ctx, useContextMenu } from "../hooks";
-import { DefaultTheme, ThemeProvider } from "styled-components";
-import { SchemaProvider } from "../components";
-import React from "react";
-import { ElementType, Schema, SchemaNode } from "../types";
-
-type ContextMenuElement =
-  | { type: ElementType.CANVAS }
-  | {
-      type: ElementType.NODE;
-      node: SchemaNode;
-    }
-  | {
-      type: ElementType.PORT;
-    }
-  | {
-      type: ElementType.LINK;
-    };
+import {
+  FunctionComponent,
+  memo,
+  ReactNode,
+  useCallback,
+  useState,
+} from "react";
+import { Ctx } from "../hooks";
+import {
+  DiagramCanvas,
+  LinksCanvas,
+  NodesCanvas,
+  NodeContextMenuDefault,
+  CanvasContextMenuDefault,
+  SchemaProvider,
+} from "../components";
 
 export interface ContextMenuProps {
-  worldX: number;
-  worldY: number;
-  element: ContextMenuElement;
+  clientX: number;
+  clientY: number;
+  onClose: () => void;
 }
 
 export type DiagramContextMenu = FunctionComponent<ContextMenuProps>;
 
 interface Props {
   schema: Ctx;
-  contextMenu?: DiagramContextMenu;
 }
 
-const theme: DefaultTheme = {
-  zIndex: {
-    linksLayer: 100,
-    nodesLayer: 200,
-  },
-  node: {
-    borderRadius: "4pt",
-  },
-};
+export const Diagram: FunctionComponent<Props> = memo(({ schema }) => {
+  const {
+    nodes,
+    links,
+    scale,
+    position,
+    dragLink,
+    setViewRef,
+    moveNode,
+    moveCanvas,
+    zoomCanvas,
+    portNodePosition,
+    recalculatePortsPosition,
+  } = schema;
 
-const useCtxMenu = (schema: Ctx, ContextMenuContent?: DiagramContextMenu) => {
-  const { ContextMenu, setContextTrigger, contextPosition } = useContextMenu();
-  const { canvas, clientToNode, elementsFromPoint, clientToLocalPosition } =
-    schema;
-  useEffect(() => {
-    setContextTrigger(canvas);
-  }, [canvas, setContextTrigger]);
-  return useMemo(() => {
-    if (!ContextMenuContent || !contextPosition) return null;
-    const [clientX, clientY] = contextPosition;
-    const [type] = elementsFromPoint(clientX, clientY);
-    const [worldX, worldY] = clientToLocalPosition(...contextPosition);
-    const getElement = (): ContextMenuElement | null => {
-      switch (type) {
-        case ElementType.CANVAS:
-          return { type };
-        case ElementType.PORT:
-          return { type };
-        case ElementType.LINK:
-          return { type };
-        case ElementType.NODE:
-          return {
-            type,
-            node: clientToNode(clientX, clientY)[0],
-          };
-        default:
-          return null;
-      }
-    };
-    const element = getElement();
-    if (!element) return null;
-    return (
-      <ContextMenu>
-        <ContextMenuContent element={element} worldX={worldX} worldY={worldY} />
-      </ContextMenu>
-    );
-  }, [
-    ContextMenu,
-    ContextMenuContent,
-    clientToLocalPosition,
-    clientToNode,
-    contextPosition,
-    elementsFromPoint,
-  ]);
-};
+  // @ts-ignore
+  window.$diagram = schema;
 
-export const Diagram: FunctionComponent<Props> = memo(
-  ({ schema, contextMenu }) => {
-    const ContextMenu = useCtxMenu(schema, contextMenu);
-    return (
-      <ThemeProvider theme={theme}>
-        <SchemaProvider schema={schema}>
-          <Canvas />
-          {ContextMenu}
-        </SchemaProvider>
-      </ThemeProvider>
-    );
-  }
-);
+  const [worldX, worldY] = position;
+  const [contextMenu, setContextMenu] = useState<ReactNode | null>(null);
+
+  const onNodeContextMenu = useCallback(
+    ({ clientX, clientY }: MouseEvent) =>
+      setContextMenu(
+        <NodeContextMenuDefault
+          clientX={clientX}
+          clientY={clientY}
+          onClose={() => setContextMenu(null)}
+        />
+      ),
+    []
+  );
+
+  const onCanvasContextMenu = useCallback(
+    ({ clientX, clientY }: MouseEvent) =>
+      setContextMenu(
+        <CanvasContextMenuDefault
+          clientX={clientX}
+          clientY={clientY}
+          onClose={() => setContextMenu(null)}
+        />
+      ),
+    []
+  );
+
+  return (
+    <SchemaProvider schema={schema}>
+      <DiagramCanvas
+        onCanvasMove={moveCanvas}
+        onCanvasZoom={zoomCanvas}
+        onContextMenu={onCanvasContextMenu}
+        worldX={worldX}
+        worldY={worldY}
+        scale={scale}
+        registerWorldRef={setViewRef}
+      >
+        <NodesCanvas
+          nodes={nodes}
+          onNodeMove={moveNode}
+          recalculatePortsPosition={recalculatePortsPosition}
+          onNodeContextMenu={onNodeContextMenu}
+        />
+        <LinksCanvas
+          links={links}
+          portNodePosition={portNodePosition}
+          dragLink={dragLink}
+        />
+        {contextMenu}
+      </DiagramCanvas>
+    </SchemaProvider>
+  );
+});

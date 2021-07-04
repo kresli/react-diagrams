@@ -1,34 +1,35 @@
-import { FunctionComponent } from "react";
-import {
-  DragLinkContext,
-  LinksContext,
-  NodesContext,
-  PositionContext,
-  ScaleContext,
-  SchemaActionContext,
-  ViewportRefContext,
-} from "../context";
+import { createContext, Dispatch, FunctionComponent, useMemo } from "react";
 import { Ctx } from "../hooks";
 import React from "react";
+import { SchemaAction } from "../functions";
+
+const useUtilsContext = (schema: Ctx) =>
+  useMemo(
+    () => ({
+      clientToNode: schema.clientToNode,
+      clientToWorldPosition: schema.clientToLocalPosition,
+    }),
+    [schema.clientToLocalPosition, schema.clientToNode]
+  );
+
+export const UtilsContext = createContext<ReturnType<typeof useUtilsContext>>(
+  null as any
+);
+
+export const SchemaActionContext = createContext<Dispatch<SchemaAction>>(
+  null as any as Dispatch<SchemaAction>
+);
 
 export const SchemaProvider: FunctionComponent<{
   schema: Ctx;
 }> = ({ children, schema }) => {
+  const utils = useUtilsContext(schema);
+
   return (
-    <ViewportRefContext.Provider value={schema.view}>
-      <SchemaActionContext.Provider value={schema.dispatchAction}>
-        <NodesContext.Provider value={schema.nodes}>
-          <LinksContext.Provider value={schema.links}>
-            <ScaleContext.Provider value={schema.scale}>
-              <PositionContext.Provider value={schema.position}>
-                <DragLinkContext.Provider value={schema.dragLink}>
-                  {children}
-                </DragLinkContext.Provider>
-              </PositionContext.Provider>
-            </ScaleContext.Provider>
-          </LinksContext.Provider>
-        </NodesContext.Provider>
+    <UtilsContext.Provider value={utils}>
+      <SchemaActionContext.Provider value={schema.action}>
+        {children}
       </SchemaActionContext.Provider>
-    </ViewportRefContext.Provider>
+    </UtilsContext.Provider>
   );
 };

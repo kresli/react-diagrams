@@ -1,5 +1,6 @@
 import { useSchema, Diagram } from "../../src";
-import { render, fireEvent } from "@testing-library/react";
+import { screen, render, fireEvent } from "@testing-library/react";
+import { NODE_DRAG_HOLDER } from "../../src/testIds";
 class MouseMoveEvent extends MouseEvent {
   movementX: number;
   movementY: number;
@@ -17,8 +18,9 @@ test("basic", () => {
     });
     return <Diagram schema={schema} />;
   };
-  const app = render(<App />);
-  const node = app.container.querySelector(`[data-diagramelementid="node-a"]`);
+  render(<App />);
+  // const node = app.container.querySelector(`[data-diagramelementid="node-a"]`);
+  const node = screen.getByTestId(NODE_DRAG_HOLDER("node-a"));
   expect(node).toBeDefined();
   fireEvent.mouseDown(node!, { buttons: 1 });
   fireEvent(

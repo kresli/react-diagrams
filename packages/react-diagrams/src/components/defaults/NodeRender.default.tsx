@@ -1,9 +1,10 @@
 import { FunctionComponent, memo, useMemo } from "react";
 import styled, { CSSProperties } from "styled-components";
-import { NodeRenderProps, SchemaPort, PortType } from "../types";
-import { Port } from "../components";
-import { Gate } from "./Gate";
+import { NodeRenderProps, SchemaPort, PortType } from "../../types";
+import { Port } from "..";
+import { Gate } from "../Gate";
 import React from "react";
+import { NODE_DRAG_HOLDER } from "../../testIds";
 
 const PortRoot = styled.div<{ type: PortType }>`
   width: 12px;
@@ -81,9 +82,16 @@ const Content = styled.div`
 `;
 
 export const NodeRenderDefault: FunctionComponent<NodeRenderProps> = memo(
-  ({ inputs, outputs, label }) => (
+  ({ id, inputs, outputs, label, registerDragHolder }) => (
     <NodeRenderRoot>
-      <Title>{label}</Title>
+      <div
+        style={{ display: "flex" }}
+        ref={registerDragHolder}
+        data-testid={NODE_DRAG_HOLDER(id)}
+      >
+        <Title>{label}</Title>
+      </div>
+
       <Content className="io">
         <div
           className="Inputs"

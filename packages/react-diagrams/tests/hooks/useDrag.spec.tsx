@@ -1,4 +1,4 @@
-import { useCallback, useRef, useState } from "react";
+import { useCallback, useState } from "react";
 import { useDrag } from "../../src/hooks";
 import { render, fireEvent, screen } from "@testing-library/react";
 import { renderHook } from "@testing-library/react-hooks";
@@ -16,7 +16,7 @@ class MouseMoveEvent extends MouseEvent {
 test("simple", () => {
   const App = () => {
     const [[x, y], setMovement] = useState([0, 0]);
-    const ref = useRef<HTMLDivElement>(null);
+    const [ref, setRef] = useState<HTMLDivElement | null>(null);
     useDrag(
       ref,
       useCallback(
@@ -27,7 +27,7 @@ test("simple", () => {
 
     return (
       <div>
-        <div data-testid="element" ref={ref}>
+        <div data-testid="element" ref={setRef}>
           {x}:{y}
         </div>
       </div>
@@ -73,11 +73,8 @@ test("simple", () => {
 });
 
 test("ignore if no ref", () => {
-  const ref = {
-    current: null,
-  };
   const onDragging = jest.fn();
-  renderHook(() => useDrag(ref, onDragging));
+  renderHook(() => useDrag(null, onDragging));
   fireEvent.mouseDown(window, {
     buttons: 1,
   });
@@ -93,12 +90,10 @@ test("ignore if no ref", () => {
 });
 
 test("dont drag if button not pressed", () => {
-  const ref = {
-    current: document.createElement("div"),
-  };
+  const ref = document.createElement("div");
   const onDragging = jest.fn();
   renderHook(() => useDrag(ref, onDragging));
-  fireEvent.mouseDown(ref.current, {
+  fireEvent.mouseDown(ref, {
     buttons: 1,
   });
   fireEvent(

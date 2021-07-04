@@ -1,147 +1,137 @@
-import { useSchema, Diagram, ElementType, ContextMenuProps } from "../../src";
-import { fireEvent, render, screen } from "@testing-library/react";
-import { setElementId, setElementType } from "../../src/functions";
+import { Diagram } from "../../src/components";
+import { render, fireEvent, screen } from "@testing-library/react";
+import { Ctx, useSchema } from "../../src/hooks";
+import { CONTEXT_MENU_POPUP, NODE } from "../../src/testIds";
 
-test(`${ElementType.CANVAS}`, async () => {
-  let schema!: ReturnType<typeof useSchema>;
-  const contextMenuId = "my-context-menu";
-  let contextMenuProps!: ContextMenuProps;
-  const ContextMenu = (props: ContextMenuProps) => {
-    contextMenuProps = props;
-    return <div data-testid={contextMenuId}>my context</div>;
-  };
+test("node context", () => {
+  let schema: Ctx;
   const App = () => {
-    const _schema = useSchema();
-    schema = _schema;
-    return <Diagram schema={_schema} contextMenu={ContextMenu} />;
-  };
-  render(<App />);
-  await expect(screen.findByTestId(contextMenuId)).rejects.toThrowError();
-  document.elementsFromPoint = jest
-    .fn()
-    .mockReturnValue([
-      setElementType(document.createElement("div"), ElementType.CANVAS),
-    ]);
-  fireEvent.contextMenu(schema.canvas!);
-  await expect(screen.findByTestId(contextMenuId)).resolves.toBeDefined();
-  expect(contextMenuProps).toEqual({
-    element: {
-      type: ElementType.CANVAS,
-    },
-    worldX: 0,
-    worldY: 0,
-  });
-});
-
-test(`${ElementType.PORT}`, async () => {
-  let schema!: ReturnType<typeof useSchema>;
-  const contextMenuId = "my-context-menu";
-  let contextMenuProps!: ContextMenuProps;
-  const ContextMenu = (props: ContextMenuProps) => {
-    contextMenuProps = props;
-    return <div data-testid={contextMenuId}>my context</div>;
-  };
-  const App = () => {
-    const _schema = useSchema();
-    schema = _schema;
-    return <Diagram schema={_schema} contextMenu={ContextMenu} />;
-  };
-  render(<App />);
-  await expect(screen.findByTestId(contextMenuId)).rejects.toThrowError();
-  document.elementsFromPoint = jest
-    .fn()
-    .mockReturnValue([
-      setElementType(document.createElement("div"), ElementType.PORT),
-    ]);
-  fireEvent.contextMenu(schema.canvas!);
-  await expect(screen.findByTestId(contextMenuId)).resolves.toBeDefined();
-  expect(contextMenuProps).toEqual({
-    element: {
-      type: ElementType.PORT,
-    },
-    worldX: 0,
-    worldY: 0,
-  });
-});
-
-test(`${ElementType.LINK}`, async () => {
-  let schema!: ReturnType<typeof useSchema>;
-  const contextMenuId = "my-context-menu";
-  let contextMenuProps!: ContextMenuProps;
-  const ContextMenu = (props: ContextMenuProps) => {
-    contextMenuProps = props;
-    return <div data-testid={contextMenuId}>my context</div>;
-  };
-  const App = () => {
-    const _schema = useSchema();
-    schema = _schema;
-    return <Diagram schema={_schema} contextMenu={ContextMenu} />;
-  };
-  render(<App />);
-  await expect(screen.findByTestId(contextMenuId)).rejects.toThrowError();
-  document.elementsFromPoint = jest
-    .fn()
-    .mockReturnValue([
-      setElementType(document.createElement("div"), ElementType.LINK),
-    ]);
-  fireEvent.contextMenu(schema.canvas!);
-  await expect(screen.findByTestId(contextMenuId)).resolves.toBeDefined();
-  expect(contextMenuProps).toEqual({
-    element: {
-      type: ElementType.LINK,
-    },
-    worldX: 0,
-    worldY: 0,
-  });
-});
-
-test(`${ElementType.NODE}`, async () => {
-  let schema!: ReturnType<typeof useSchema>;
-  const contextMenuId = "my-context-menu";
-  let contextMenuProps!: ContextMenuProps;
-  const ContextMenu = (props: ContextMenuProps) => {
-    contextMenuProps = props;
-    return <div data-testid={contextMenuId}>my context</div>;
-  };
-  const App = () => {
-    const _schema = useSchema({
-      nodes: [{ id: "node-1", position: [0, 0] }],
+    schema = useSchema({
+      nodes: [{ id: "node-a", position: [0, 0] }],
     });
-    schema = _schema;
-    return <Diagram schema={_schema} contextMenu={ContextMenu} />;
+    return (
+      <>
+        <div data-testid="close-popup" />
+        <Diagram schema={schema} />
+      </>
+    );
   };
   render(<App />);
-  await expect(screen.findByTestId(contextMenuId)).rejects.toThrowError();
-  const element = setElementId(
-    setElementType(document.createElement("div"), ElementType.NODE),
-    "node-1"
-  );
-  document.elementsFromPoint = jest.fn().mockReturnValue([element]);
-  fireEvent.contextMenu(schema.canvas!);
-  await expect(screen.findByTestId(contextMenuId)).resolves.toBeDefined();
-  expect(contextMenuProps).toEqual({
-    element: {
-      type: ElementType.NODE,
-      node: schema.nodes[0],
-    },
-    worldX: 0,
-    worldY: 0,
-  });
+  fireEvent.contextMenu(screen.queryByTestId(NODE("node-a"))!);
+  expect(screen.queryByTestId(CONTEXT_MENU_POPUP)!).toBeDefined();
+  fireEvent.click(screen.queryByTestId("close-popup")!);
+  expect(screen.queryByTestId(CONTEXT_MENU_POPUP)!).toBeNull();
 });
-test("trhow if non existing type", async () => {
-  let schema!: ReturnType<typeof useSchema>;
-  const contextMenuId = "my-context-menu";
-  const ContextMenu = (props: ContextMenuProps) => {
-    return <div data-testid={contextMenuId}>my context</div>;
-  };
-  const App = () => {
-    const _schema = useSchema();
-    schema = _schema;
-    return <Diagram schema={_schema} contextMenu={ContextMenu} />;
-  };
-  render(<App />);
-  await expect(screen.findByTestId(contextMenuId)).rejects.toThrowError();
-  document.elementsFromPoint = jest.fn().mockReturnValue([]);
-  fireEvent.contextMenu(schema.canvas!);
-  await expect(screen.findByTestId(contextMenuId)).rejects.toThrowError();
-});
+
+// test(`${ElementType.PORT}`, async () => {
+//   let schema!: ReturnType<typeof useSchema>;
+//   const contextMenuId = "my-context-menu";
+//   let contextMenuProps!: ContextMenuProps;
+//   const ContextMenu = (props: ContextMenuProps) => {
+//     contextMenuProps = props;
+//     return <div data-testid={contextMenuId}>my context</div>;
+//   };
+//   const App = () => {
+//     const _schema = useSchema();
+//     schema = _schema;
+//     return <Diagram schema={_schema} contextMenu={ContextMenu} />;
+//   };
+//   render(<App />);
+//   await expect(screen.findByTestId(contextMenuId)).rejects.toThrowError();
+//   document.elementsFromPoint = jest
+//     .fn()
+//     .mockReturnValue([
+//       setElementType(document.createElement("div"), ElementType.PORT),
+//     ]);
+//   fireEvent.contextMenu(schema.canvas!);
+//   await expect(screen.findByTestId(contextMenuId)).resolves.toBeDefined();
+//   expect(contextMenuProps).toEqual({
+//     element: {
+//       type: ElementType.PORT,
+//     },
+//     worldX: 0,
+//     worldY: 0,
+//   });
+// });
+
+// test(`${ElementType.LINK}`, async () => {
+//   let schema!: ReturnType<typeof useSchema>;
+//   const contextMenuId = "my-context-menu";
+//   let contextMenuProps!: ContextMenuProps;
+//   const ContextMenu = (props: ContextMenuProps) => {
+//     contextMenuProps = props;
+//     return <div data-testid={contextMenuId}>my context</div>;
+//   };
+//   const App = () => {
+//     const _schema = useSchema();
+//     schema = _schema;
+//     return <Diagram schema={_schema} contextMenu={ContextMenu} />;
+//   };
+//   render(<App />);
+//   await expect(screen.findByTestId(contextMenuId)).rejects.toThrowError();
+//   document.elementsFromPoint = jest
+//     .fn()
+//     .mockReturnValue([
+//       setElementType(document.createElement("div"), ElementType.LINK),
+//     ]);
+//   fireEvent.contextMenu(schema.canvas!);
+//   await expect(screen.findByTestId(contextMenuId)).resolves.toBeDefined();
+//   expect(contextMenuProps).toEqual({
+//     element: {
+//       type: ElementType.LINK,
+//     },
+//     worldX: 0,
+//     worldY: 0,
+//   });
+// });
+
+// test(`${ElementType.NODE}`, async () => {
+//   let schema!: ReturnType<typeof useSchema>;
+//   const contextMenuId = "my-context-menu";
+//   let contextMenuProps!: ContextMenuProps;
+//   const ContextMenu = (props: ContextMenuProps) => {
+//     contextMenuProps = props;
+//     return <div data-testid={contextMenuId}>my context</div>;
+//   };
+//   const App = () => {
+//     const _schema = useSchema({
+//       nodes: [{ id: "node-1", position: [0, 0] }],
+//     });
+//     schema = _schema;
+//     return <Diagram schema={_schema} contextMenu={ContextMenu} />;
+//   };
+//   render(<App />);
+//   await expect(screen.findByTestId(contextMenuId)).rejects.toThrowError();
+//   const element = setElementId(
+//     setElementType(document.createElement("div"), ElementType.NODE),
+//     "node-1"
+//   );
+//   document.elementsFromPoint = jest.fn().mockReturnValue([element]);
+//   fireEvent.contextMenu(schema.canvas!);
+//   await expect(screen.findByTestId(contextMenuId)).resolves.toBeDefined();
+//   expect(contextMenuProps).toEqual({
+//     element: {
+//       type: ElementType.NODE,
+//       node: schema.nodes[0],
+//     },
+//     worldX: 0,
+//     worldY: 0,
+//   });
+// });
+// test("trhow if non existing type", async () => {
+//   let schema!: ReturnType<typeof useSchema>;
+//   const contextMenuId = "my-context-menu";
+//   const ContextMenu = (props: ContextMenuProps) => {
+//     return <div data-testid={contextMenuId}>my context</div>;
+//   };
+//   const App = () => {
+//     const _schema = useSchema();
+//     schema = _schema;
+//     return <Diagram schema={_schema} contextMenu={ContextMenu} />;
+//   };
+//   render(<App />);
+//   await expect(screen.findByTestId(contextMenuId)).rejects.toThrowError();
+//   document.elementsFromPoint = jest.fn().mockReturnValue([]);
+//   fireEvent.contextMenu(schema.canvas!);
+//   await expect(screen.findByTestId(contextMenuId)).rejects.toThrowError();
+// });

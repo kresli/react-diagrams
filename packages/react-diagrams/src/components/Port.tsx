@@ -1,9 +1,10 @@
-import { FunctionComponent, memo, useRef, useCallback } from "react";
-import { SchemaPort, ElementType } from "../types";
+import { FunctionComponent, memo, useRef, useCallback, useEffect } from "react";
+import { SchemaPort } from "../types";
 import { SchemaActionType } from "../functions";
-import { useAction, useRegisterElement } from "../hooks";
+import { useAction } from "../hooks";
 import { CSSProperties } from "styled-components";
 import React from "react";
+import { PORT } from "../testIds";
 
 export const Port: FunctionComponent<{
   port: SchemaPort;
@@ -12,10 +13,12 @@ export const Port: FunctionComponent<{
   const { id } = port;
   const action = useAction();
   const ref = useRef<HTMLDivElement | null>(null);
-  useRegisterElement(ref, ElementType.PORT, id);
   const onClick = useCallback(
-    ({ clientX, clientY }: React.MouseEvent) => {
+    (ev: MouseEvent) => {
       if (!ref.current) return;
+      const { clientX, clientY } = ev;
+      ev.stopPropagation();
+      ev.preventDefault();
       action({
         type: SchemaActionType.CREATE_DRAGGING_LINK,
         clientX,
@@ -26,14 +29,14 @@ export const Port: FunctionComponent<{
     [action, id]
   );
 
-  // useLayoutEffect(() => {
-  //   ref.current?.addEventListener("mousedown", (ev) =>
-  //     ev.stopImmediatePropagation()
-  //   );
-  // }, []);
+  // this should be switched to inline <div onCLick onMouse> with react 18
+
+  useEffect(() => {
+    ref.current?.addEventListener("click", onClick);
+  }, [onClick]);
 
   return (
-    <div ref={ref} onClick={onClick} style={style}>
+    <div data-testid={PORT(id)} ref={ref} style={style}>
       {children}
     </div>
   );

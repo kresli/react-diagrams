@@ -1,14 +1,24 @@
-import { Schema } from '../types';
+import { Schema } from "../types";
 
 export function validateSchema(schema: Schema) {
+  validateNodes(schema);
+  validatePorts(schema);
+  return true;
+}
+
+export function validateNodes(schema: Schema) {
   const nodesId = schema.nodes.map(({ id }) => id);
   if (new Set(nodesId).size !== nodesId.length)
-    throw new Error('nodes id must be unique');
-  const portsId = schema.nodes
-    .map(node => [...(node.inputs || []), ...(node.outputs || [])])
+    throw new Error("nodes id must be unique");
+  return true;
+}
+
+export function validatePorts(schema: Schema) {
+  const portsIds = schema.nodes
+    .map(({ inputs = [], outputs = [] }) => [...inputs, ...outputs])
     .flat()
-    .map(port => port.id);
-  if (new Set(portsId).size !== portsId.length)
-    throw new Error('port id must be unique');
+    .map(({ id }) => id);
+  if (portsIds.length !== new Set(portsIds).size)
+    throw new Error(`port id must be unique`);
   return true;
 }

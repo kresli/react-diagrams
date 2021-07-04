@@ -1,6 +1,7 @@
 import { Schema } from "../types";
 
 export const createSchema = (schema?: Partial<Schema>): Schema => ({
+  portNodePosition: {},
   dragLink: null,
   viewRef: null,
   canvasRef: null,

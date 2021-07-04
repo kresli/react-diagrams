@@ -1,6 +1,6 @@
-import { render, fireEvent } from "@testing-library/react";
-import { Diagram, ElementType, useSchema } from "../../src";
-import { queryElement } from "../../src/functions";
+import { render, fireEvent, screen } from "@testing-library/react";
+import { Diagram, useSchema } from "../../src";
+import { DRAG_LINK, LINK, PORT } from "../../src/testIds";
 
 class MouseMoveEvent extends MouseEvent {
   movementX: number;
@@ -25,19 +25,24 @@ test("basic", () => {
     return <Diagram schema={schema} />;
   };
   render(<App />);
-  expect(queryElement(ElementType.LINK)).toBeNull();
-  fireEvent.click(queryElement(ElementType.PORT, "port-b")!);
+  // expect(queryElement(ElementType.LINK)).toBeNull();
+  // expect(screen.getByTestId(LINKS_CANVAS).childElementCount).toBe(0);
+  fireEvent.click(screen.getByTestId(PORT("port-a"))!);
   expect(schema.dragLink).toEqual({
     end: [0, 0],
     start: [0, 0],
-    portId: "port-b",
+    portId: "port-a",
   });
+  expect(screen.getByTestId(DRAG_LINK)).toBeDefined();
   fireEvent(window, new MouseMoveEvent({ movementX: 100, movementY: 200 }));
   expect(schema.dragLink).toEqual({
     end: [100, 200],
     start: [0, 0],
-    portId: "port-b",
+    portId: "port-a",
   });
-  expect(queryElement(ElementType.LINK)).toBeDefined();
-  fireEvent.mouseDown(window, queryElement(ElementType.PORT, "port-b")!);
+  // expect(screen.getByTestId(LINKS_CANVAS).childElementCount).toBe(0);
+  fireEvent.click(screen.getByTestId(PORT("port-b"))!);
+  // fireEvent.mouseDown(window, queryElement(ElementType.PORT, "port-b")!);
+  const id = LINK({ output: "port-a", input: "port-b" });
+  expect(screen.getByTestId(id)).toBeDefined();
 });

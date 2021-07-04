@@ -23,5 +23,5 @@
     "noEmit": true,
     "jsx": "react-jsx"
   },
-  "include": [ "src", "stories", "tests" ]
+  "include": [ "src", "stories", "tests", "testIds.ts" ]
 }

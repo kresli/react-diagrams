@@ -4,22 +4,17 @@ import { fireEvent } from "@testing-library/react";
 
 test("basic", () => {
   const onWheel = jest.fn();
-  const ref = {
-    current: document.createElement("div"),
-  };
+  const ref = document.createElement("div");
   const wheelEvent = new MouseEvent("wheel");
   renderHook(() => useWheel(ref, onWheel));
-  fireEvent(ref.current, wheelEvent);
+  fireEvent(ref, wheelEvent);
   expect(onWheel).toHaveBeenCalledWith(wheelEvent);
 });
 
 test("ignore wheel if no ref assigned", () => {
   const onWheel = jest.fn();
-  const ref = {
-    current: null,
-  };
   const wheelEvent = new MouseEvent("wheel");
-  renderHook(() => useWheel(ref, onWheel));
+  renderHook(() => useWheel(null, onWheel));
   fireEvent(window, wheelEvent);
   expect(onWheel).not.toHaveBeenCalled();
 });
