@@ -6,7 +6,7 @@ jobs:
   react-diagrams:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v1
+      - uses: actions/checkout@master
       - run: nvm install
       - run: yarn install --frozen-lockfile
       - uses: artiomtr/jest-coverage-report-action@v2.0-rc.1
@@ -14,11 +14,11 @@ jobs:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           working-directory: "packages/react-diagrams"
           package-manager: yarn
-  # react-diagrams-docs:
-  #   runs-on: ubuntu-latest
-  #   steps:
-  #     - uses: actions/checkout@v1
-  #     run: |
-  #       nvm install
-  #       cd packages/react-diagrams-docs
-  #       yarn build
+  react-diagrams-docs:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@master
+      - run: nvm install
+      - run: |
+        cd packages/react-diagrams-docs
+        yarn build
