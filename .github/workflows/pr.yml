@@ -14,11 +14,11 @@ jobs:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           working-directory: "packages/react-diagrams"
           package-manager: yarn
-  react-diagrams-docs:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v1
-      run: |
-        nvm install
-        cd packages/react-diagrams-docs
-        yarn build
+  # react-diagrams-docs:
+  #   runs-on: ubuntu-latest
+  #   steps:
+  #     - uses: actions/checkout@v1
+  #     run: |
+  #       nvm install
+  #       cd packages/react-diagrams-docs
+  #       yarn build
