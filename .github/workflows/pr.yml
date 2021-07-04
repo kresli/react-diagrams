@@ -9,7 +9,7 @@ jobs:
       - name: Checkout repo
         uses: actions/checkout@master
       - name: Set the correct Node version using nvm
-        shell: bash -l {0} 
+        shell: bash -l {0}
         run: nvm install
       - name: Install Dependencies
         run: yarn install --frozen-lockfile
@@ -25,9 +25,9 @@ jobs:
       - name: Checkout repo
         uses: actions/checkout@master
       - name: Set the correct Node version using nvm
-        shell: bash -l {0} 
+        shell: bash -l {0}
         run: nvm install
+      - name: Select docs
+        run: cd packages/react-diagrams-docs
       - name: Build
-        run: |
-        cd packages/react-diagrams-docs
-        yarn build
+        run: yarn build
