@@ -27,7 +27,7 @@ jobs:
       - name: Set the correct Node version using nvm
         shell: bash -l {0}
         run: nvm install
-      - name: Select docs
-        run: cd packages/react-diagrams-docs
       - name: Build
-        run: yarn build
+        run: |
+          cd packages/react-diagrams-docs
+          yarn build
