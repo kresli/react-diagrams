@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useCallback } from "react";
 import {
   Diagram,
   DiagramContextMenu,
@@ -8,10 +8,10 @@ import {
   useAction,
   SchemaActionType,
   createSchema,
+  DiagramOnContextType,
 } from "@kresli/react-diagrams";
 
 const initData: Schema = createSchema({
-  registeredElements: new Map(),
   nodes: [
     {
       id: "1",
@@ -30,8 +30,6 @@ const initData: Schema = createSchema({
       output: "1",
     },
   ],
-  position: [0, 0],
-  scale: 1,
 });
 
 // const ContextMenu: DiagramContextMenu = ({ element, worldX, worldY }) => {
@@ -65,11 +63,22 @@ const initData: Schema = createSchema({
 //   return null;
 // };
 
+const NodeContextMenu = () => {
+  return <div>i'm context menu</div>;
+};
+
 const Example = () => {
   const schema = useSchema(initData);
+  const onContextMenu: DiagramOnContextType = useCallback(
+    ({ clientX, clientY, type }) => {
+      switch (type) {
+      }
+    },
+    []
+  );
   return (
     <div style={{ width: "100%", height: 500 }}>
-      <Diagram schema={schema} />
+      <Diagram schema={schema} onContextMenu={onContextMenu} />
     </div>
   );
 };

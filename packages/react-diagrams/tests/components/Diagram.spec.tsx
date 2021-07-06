@@ -1,7 +1,7 @@
-import { Diagram } from "../../src/components";
+import { Diagram, OnContextTypeDataType } from "../../src/components";
 import { render, fireEvent, screen } from "@testing-library/react";
 import { Ctx, useSchema } from "../../src/hooks";
-import { CONTEXT_MENU_POPUP, NODE } from "../../src/testIds";
+import { CONTEXT_MENU_POPUP, DIAGRAM, NODE } from "../../src/testIds";
 
 test("node context", () => {
   let schema: Ctx;
@@ -21,6 +21,31 @@ test("node context", () => {
   expect(screen.queryByTestId(CONTEXT_MENU_POPUP)!).toBeDefined();
   fireEvent.click(screen.queryByTestId("close-popup")!);
   expect(screen.queryByTestId(CONTEXT_MENU_POPUP)!).toBeNull();
+});
+
+test("onContextMenu", () => {
+  let schema: Ctx;
+  const onContextMenu = jest.fn();
+  const App = () => {
+    schema = useSchema({
+      nodes: [{ id: "node-a", position: [0, 0] }],
+    });
+    return <Diagram schema={schema} onContextMenu={onContextMenu} />;
+  };
+  render(<App />);
+  expect(onContextMenu).not.toHaveBeenCalled();
+  fireEvent.contextMenu(screen.queryByTestId(DIAGRAM)!);
+  expect(onContextMenu).lastCalledWith({
+    clientX: 0,
+    clientY: 0,
+    type: OnContextTypeDataType.CANVAS,
+  });
+  fireEvent.contextMenu(screen.queryByTestId(NODE("node-a"))!);
+  expect(onContextMenu).lastCalledWith({
+    clientX: 0,
+    clientY: 0,
+    type: OnContextTypeDataType.NODE,
+  });
 });
 
 // test(`${ElementType.PORT}`, async () => {
