@@ -1,11 +1,12 @@
-import { Schema, useSchema, Diagram } from "@kresli/react-diagrams";
+import {
+  Schema,
+  useSchema,
+  Diagram,
+  createSchema,
+} from "@kresli/react-diagrams";
 import React from "react";
 
-const initialSchema: Schema = {
-  dragLink: null,
-  registeredElements: new Map(),
-  canvasRef: null,
-  viewRef: null,
+const initialSchema: Schema = createSchema({
   nodes: [
     {
       id: "node_a",
@@ -22,13 +23,13 @@ const initialSchema: Schema = {
   ],
   links: [
     {
-      input: "1",
-      output: "3",
+      input: "3",
+      output: "1",
     },
   ],
   position: [0, 0] as [number, number],
   scale: 1,
-};
+});
 
 const DiagramQuickExample = () => {
   const schema = useSchema(initialSchema);

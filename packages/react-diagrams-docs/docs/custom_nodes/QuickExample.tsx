@@ -1,6 +1,7 @@
 import React, { memo, useMemo } from "react";
 import { CSSProperties } from "styled-components";
 import {
+  createSchema,
   Diagram,
   DiagramNodeRender,
   Gate,
@@ -49,11 +50,7 @@ const CustomNode: DiagramNodeRender = memo(({ outputs }) => {
   );
 });
 
-const initData: Schema = {
-  dragLink: null,
-  registeredElements: new Map(),
-  canvasRef: null,
-  viewRef: null,
+const initData = createSchema({
   nodes: [
     {
       id: "1",
@@ -69,13 +66,13 @@ const initData: Schema = {
   ],
   links: [
     {
-      input: "1",
-      output: "3",
+      input: "3",
+      output: "1",
     },
   ],
   position: [0, 0],
   scale: 1,
-};
+});
 
 const Example = () => {
   const schema = useSchema(initData);

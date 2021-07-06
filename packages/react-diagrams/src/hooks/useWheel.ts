@@ -6,7 +6,14 @@ export function useWheel(
   onZoom: (event: WheelEvent) => void
 ) {
   // @todo do we need use useCallback here?
-  const onWheel = useCallback((event: WheelEvent) => onZoom(event), [onZoom]);
+  const onWheel = useCallback(
+    (event: WheelEvent) => {
+      event.stopImmediatePropagation();
+      event.preventDefault();
+      onZoom(event);
+    },
+    [onZoom]
+  );
   useLayoutEffect(() => {
     ref?.addEventListener("wheel", onWheel);
   }, [onWheel, ref]);
