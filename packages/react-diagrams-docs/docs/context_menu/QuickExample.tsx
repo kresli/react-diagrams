@@ -1,12 +1,8 @@
-import React, { useCallback } from "react";
+import React, { useCallback, useState } from "react";
 import {
   Diagram,
-  DiagramContextMenu,
-  ElementType,
   Schema,
   useSchema,
-  useAction,
-  SchemaActionType,
   createSchema,
   DiagramOnContextType,
 } from "@kresli/react-diagrams";
@@ -32,53 +28,22 @@ const initData: Schema = createSchema({
   ],
 });
 
-// const ContextMenu: DiagramContextMenu = ({ element, worldX, worldY }) => {
-//   const actions = useAction();
-//   console.log(element);
-//   switch (element.type) {
-//     case ElementType.CANVAS:
-//       const onAdd = () =>
-//         actions({
-//           type: SchemaActionType.ADD_NODE,
-//           node: {
-//             position: [worldX, worldY],
-//             inputs: [{ id: `in${performance.now()}` }],
-//             outputs: [{ id: `out${performance.now()}` }],
-//           },
-//         });
-//       return <button onClick={onAdd}>create</button>;
-//     case ElementType.NODE: {
-//       const onRemoveNode = () =>
-//         actions({
-//           type: SchemaActionType.REMOVE_NODE,
-//           node: element.node,
-//         });
-//       return <button onClick={onRemoveNode}>remove node</button>;
-//     }
-//     case ElementType.PORT:
-//       return <div>port</div>;
-//     case ElementType.LINK:
-//       return <div>link</div>;
-//   }
-//   return null;
-// };
-
-const NodeContextMenu = () => {
-  return <div>i'm context menu</div>;
-};
-
 const Example = () => {
   const schema = useSchema(initData);
+  const [contextPosition, setContextPosition] =
+    useState<string>("No context menu");
   const onContextMenu: DiagramOnContextType = useCallback(
     ({ clientX, clientY, type }) => {
-      switch (type) {
-      }
+      setContextPosition(`context menu "${type}" on [${clientX}, ${clientY}]`);
     },
     []
   );
   return (
-    <div style={{ width: "100%", height: 500 }}>
+    <div style={{ width: "100%", height: 500, position: "relative" }}>
       <Diagram schema={schema} onContextMenu={onContextMenu} />
+      {contextPosition && (
+        <div style={{ position: "absolute", top: 0 }}>{contextPosition}</div>
+      )}
     </div>
   );
 };
