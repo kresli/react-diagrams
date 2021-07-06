@@ -4,6 +4,7 @@ import {
   Diagram,
   Link,
   SchemaLinkRender,
+  createSchema,
 } from "@kresli/react-diagrams";
 import React, { useMemo } from "react";
 
@@ -16,11 +17,7 @@ const CustomLink: SchemaLinkRender = ({ start, end }) => {
   return <Link d={points} stroke="blue" fill="none" />;
 };
 
-const initialSchema: Schema = {
-  dragLink: null,
-  registeredElements: new Map(),
-  canvasRef: null,
-  viewRef: null,
+const initialSchema = createSchema({
   nodes: [
     {
       id: "1",
@@ -35,14 +32,14 @@ const initialSchema: Schema = {
   ],
   links: [
     {
-      input: "1",
-      output: "3",
+      input: "3",
+      output: "1",
       render: CustomLink,
     },
   ],
   position: [0, 0],
   scale: 1,
-};
+});
 
 const DiagramQuickExample = () => {
   const schema = useSchema(initialSchema);

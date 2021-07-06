@@ -143,8 +143,8 @@ test(`Action ${REMOVE_NODE} removes connected links too`, () => {
       { id: "node_3", position: [0, 0], inputs: [{ id: "port-4" }] },
     ],
     links: [
-      { input: "port-1", output: "port-2" },
-      { input: "port-3", output: "port-4" },
+      { output: "port-1", input: "port-2" },
+      { output: "port-3", input: "port-4" },
     ],
   });
   const action = {
@@ -235,7 +235,7 @@ test(`Action ${LINK_REMOVE}`, () => {
       { id: "node-a", position: [0, 0], outputs: [{ id: "port-a" }] },
       { id: "node-b", position: [0, 0], inputs: [{ id: "port-b" }] },
     ],
-    links: [{ input: "port-a", output: "port-b" }],
+    links: [{ output: "port-a", input: "port-b" }],
   });
   expect(schema.nodes).toHaveLength(2);
   expect(schema.links).toHaveLength(1);
