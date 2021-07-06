@@ -43,7 +43,7 @@ export const Diagram: FunctionComponent<Props> = memo(({ schema }) => {
   } = schema;
 
   // @ts-ignore
-  window.$diagram = schema;
+  // window.$diagram = schema;
 
   const [worldX, worldY] = position;
   const [contextMenu, setContextMenu] = useState<ReactNode | null>(null);
