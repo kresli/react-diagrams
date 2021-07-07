@@ -11,8 +11,9 @@ jobs:
         shell: bash -l {0}
         run: nvm install
       - run: yarn install --frozen-lockfile
-      - run: cd packages/react-diagrams
-      - run: yarn build
+      - run: |
+        cd packages/react-diagrams
+        yarn build
   publish-react-diagrams-docs:
     runs-on: ubuntu-latest
     steps:
@@ -33,7 +34,7 @@ jobs:
           cd packages/react-diagrams-docs
           git config --global user.email "jacko.eduard@gmail.com"
           git config --global user.name "kresli"
-          # yarn publish-gh-pages
+          yarn publish-gh-pages
 
 #   build-docs:
 #     runs-on: ubuntu-latest
