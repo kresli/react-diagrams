@@ -36,31 +36,3 @@ jobs:
           git config --global user.email "jacko.eduard@gmail.com"
           git config --global user.name "kresli"
           yarn publish-gh-pages
-
-#   build-docs:
-#     runs-on: ubuntu-latest
-#     needs: build
-#     steps:
-#       - name: Checkout repo
-#         uses: actions/checkout@master
-#       - name: Set the correct Node version using nvm
-#         shell: bash -l {0}
-#         run: nvm install
-#       - name: Setup ssh
-#         uses: webfactory/ssh-agent@v0.5.0
-#         with:
-#           ssh-private-key: ${{ secrets.GH_PAGES_DEPLOY }}
-#       - name: Build @kresli/react-diagrams
-#         run: |
-#           yarn install ---frozen-lockfile
-#           cd packages/react-diagrams
-#           yarn build
-#       - name: Release to GitHub Pages
-#         env:
-#           USE_SSH: true
-#           GIT_USER: git
-#         run: |
-#           cd packages/react-diagrams-docs
-#           git config --global user.email "jacko.eduard@gmail.com"
-#           git config --global user.name "kresli"
-#           # yarn publish-gh-pages
