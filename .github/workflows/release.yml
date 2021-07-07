@@ -13,8 +13,8 @@ jobs:
       - run: yarn install --frozen-lockfile
       - name: Build
         run: |
-        cd packages/react-diagrams
-        yarn build
+          cd packages/react-diagrams
+          yarn build
   publish-react-diagrams-docs:
     runs-on: ubuntu-latest
     steps:
