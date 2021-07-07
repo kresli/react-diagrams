@@ -7,21 +7,20 @@ jobs:
     runs-on: ubuntu-latest
     steps: 
       - uses: actions/checkout@master
-      - shell: bash
-      - run: nvm install
+      - name: Set the correct Node version using nvm
+        shell: bash
+        run: nvm install
       - run: yarn install --frozen-lockfile
   build-react-diagrams:
     runs-on: ubuntu-latest
     needs: init
     steps:
-      - shell: bash
       - run: cd packages/react-diagrams
       - run: yarn build
   build-react-diagrams-docs:
     runs-on: ubuntu-latest
     needs: build-react-diagrams
     steps:
-      - shell: bash
       - name: Setup ssh
         uses: webfactory/ssh-agent@v0.5.0
         with:
