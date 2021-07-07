@@ -11,7 +11,8 @@ jobs:
         shell: bash -l {0}
         run: nvm install
       - run: yarn install --frozen-lockfile
-      - run: |
+      - name: Build
+        run: |
         cd packages/react-diagrams
         yarn build
   publish-react-diagrams-docs:
