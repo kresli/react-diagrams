@@ -8,7 +8,7 @@
     "start": "yarn --cwd ../react-diagrams start & docusaurus start",
     "build": "yarn --cwd ../react-diagrams build && docusaurus build",
     "publish-gh-pages": "docusaurus deploy",
-    "write-translations": "docusaurus write-translations",
+    "write-translations": "yarn --cwd ../react-diagrams build && docusaurus write-translations",
     "test:ci": "echo 0;"
   },
   "dependencies": {
