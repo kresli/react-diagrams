@@ -8,13 +8,14 @@ jobs:
     steps: 
       - uses: actions/checkout@master
       - name: Set the correct Node version using nvm
-        shell: bash
+        shell: bash -l {0}
         run: nvm install
       - run: yarn install --frozen-lockfile
   build-react-diagrams:
     runs-on: ubuntu-latest
     needs: init
     steps:
+      - run: node -v
       - run: cd packages/react-diagrams
       - run: yarn build
   build-react-diagrams-docs:
